@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MyWebApp1.Data;
 using MyWebApp1.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace MyWebApp1.Controllers
 {
@@ -10,9 +15,11 @@ namespace MyWebApp1.Controllers
     public class UsersController : ControllerBase
     {
         private readonly MyDbContext dbContext;
-        public UsersController(MyDbContext dbContext)
+        private readonly IConfiguration configuration;
+        public UsersController(MyDbContext dbContext, IConfiguration configuration)
         {
             this.dbContext = dbContext;
+            this.configuration = configuration;
         }
 
         [HttpPost]
@@ -49,7 +56,30 @@ namespace MyWebApp1.Controllers
             var user = dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password);
             if (user != null)
             {
-                return Ok(user);
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, configuration["Jwt:subject"]),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("UserId", user.UserId.ToString()),
+                    new Claim("Email", user.Email.ToString()),
+
+                };
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+                var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(
+                    configuration["Jwt:issuer"],
+                    configuration["Jwt:Audience"],
+                    claims,
+                    expires : DateTime.UtcNow.AddMinutes(60),
+                    signingCredentials: signIn
+                    );
+
+                string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+                return Ok(new { Token = tokenValue, User = user });
+
+
+                //return Ok(user);
             }
             return NoContent();
         }
@@ -61,6 +91,8 @@ namespace MyWebApp1.Controllers
             return Ok(dbContext.Users.ToList());
         }
 
+
+        //[Authorize]
         [HttpGet]
         [Route("GetUser")]
         public IActionResult GetUser(int id)
@@ -71,6 +103,7 @@ namespace MyWebApp1.Controllers
             else
                 return NoContent();
         }
+
 
         [HttpPut]
         [Route("UpdateProfile")]

@@ -149,8 +149,6 @@ E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\MyWebApp1.
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Azure.Core.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Azure.Identity.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Humanizer.dll
-E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\System.Net.Http.Formatting.dll
-E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\System.Web.Http.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
@@ -175,8 +173,6 @@ E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Microsoft.
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Mono.TextTemplating.dll
-E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Newtonsoft.Json.dll
-E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -280,3 +276,4 @@ E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\obj\Debug\net8.0\refint\MyW
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\obj\Debug\net8.0\MyWebApp1.pdb
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\obj\Debug\net8.0\MyWebApp1.genruntimeconfig.cache
 E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\obj\Debug\net8.0\ref\MyWebApp1.dll
+E:\SE_FALL2024_S5\SWP391\PawFund\MyWebApp1\MyWebApp1\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
