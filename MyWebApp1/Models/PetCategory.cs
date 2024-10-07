@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWebApp1.Models
 {
+    [Table(name: "PetCategory")]
+
     public class PetCategory
     {
         [Key]

@@ -1,8 +1,11 @@
 ﻿using MyWebApp1.Entities;
 using MyWebApp1.Models.MyWebApp1.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWebApp1.Models
 {
+    [Table(name: "Adoption")]
+
     public class Adoption
     {
         public int AdoptionId { get; set; }
