@@ -7,11 +7,14 @@ using MyWebApp1.Models;
 using MyWebApp1.Configuration;
 using MyWebApp1.Services;
 using MyWebApp1.Extensions;
+using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddCustomServices(builder.Configuration); // Thêm tất cả dịch vụ từ lớp mở rộng
+
+builder.Services.Configure<GoogleOptions>(builder.Configuration.GetSection("Google"));
 
 builder.Services.AddDbContext<MyDbContext>(e => e.UseSqlServer(builder.Configuration.GetConnectionString("DBCS")));
 
