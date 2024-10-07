@@ -5,11 +5,14 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace MyWebApp1.Configuration
 {
     public static class DependencyInjection
     {
+       
+
         public static IServiceCollection AddRepository(this IServiceCollection services)
         {
             return services;

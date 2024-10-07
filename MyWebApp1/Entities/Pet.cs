@@ -1,4 +1,6 @@
-﻿namespace MyWebApp1.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MyWebApp1.Entities
 {
     public class Pet
     {
@@ -11,6 +13,7 @@
         public string MedicalCondition { get; set; }
         public string ContactPhoneNumber { get; set; }
         public string ContactEmail { get; set; }
+        [ForeignKey("PetCategoryId")]
         public int PetCategoryId { get; set; } 
         public bool IsAdopted { get; set; }  
         public bool IsApproved { get; set; }  

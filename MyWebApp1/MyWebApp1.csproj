@@ -25,4 +25,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="E:\SE_FALL2024_S5\SWP391\PawFund\PawFund\MyWebApp1\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="E:\SE_FALL2024_S5\SWP391\PawFund\PawFund\MyWebApp1\.editorconfig" />
+  </ItemGroup>
+
 </Project>
