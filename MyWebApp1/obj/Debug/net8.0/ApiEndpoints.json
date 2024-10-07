@@ -1,5 +1,31 @@
 [
   {
+    "ContainingType": "MyWebApp1.Controllers.PetsController",
+    "Method": "AddNewPet",
+    "RelativePath": "api/Pets/AddNewPet",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "petDTO",
+        "Type": "MyWebApp1.Models.PetDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.UsersController",
+    "Method": "GetCurrentLoginUser",
+    "RelativePath": "api/Users/GetCurrentLoginUser",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MyWebApp1.Controllers.UsersController",
     "Method": "GetUser",
     "RelativePath": "api/Users/GetUser",
@@ -34,8 +60,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "loginDTO",
-        "Type": "MyWebApp1.Models.LoginDTO",
+        "Name": "login",
+        "Type": "MyWebApp1.Models.Login",
         "IsRequired": true
       }
     ],
