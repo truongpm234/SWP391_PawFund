@@ -41,3 +41,6 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+
+# Ignore appsettings.json
+MyWebApp1/bin/Debug/net8.0/appsettings.json
