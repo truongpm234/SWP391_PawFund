@@ -1,7 +1,10 @@
 ﻿using MyWebApp1.Models.MyWebApp1.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWebApp1.Models
 {
+    [Table(name: "Transaction")]
+
     public class Transaction
     {
         public int TransactionId { get; set; }

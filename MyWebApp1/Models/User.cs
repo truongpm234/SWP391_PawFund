@@ -5,6 +5,7 @@ namespace MyWebApp1.Models
 {
     namespace MyWebApp1.Entities
     {
+        [Table(name:"User")]
         public class User
         {
             [Key]

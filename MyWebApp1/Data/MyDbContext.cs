@@ -34,16 +34,18 @@ namespace MyWebApp1.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Định nghĩa khóa chính tổng hợp cho UserRole
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite key
 
-            // Định nghĩa kiểu dữ liệu cho TransactionAmount
             modelBuilder.Entity<MyWebApp1.Models.Transaction>()
                 .Property(t => t.TransactionAmount)
                 .HasColumnType("decimal(18,2)"); // 18 là tổng số chữ số, 2 là số chữ số sau dấu thập phân
+            
+            modelBuilder.Entity<Pet>()
+               .HasOne(p => p.PetCategory)
+               .WithMany()
+               .HasForeignKey(p => p.PetCategoryId);
 
-            // Định nghĩa tên bảng cho User
             modelBuilder.Entity<User>().ToTable("User");
         }
 

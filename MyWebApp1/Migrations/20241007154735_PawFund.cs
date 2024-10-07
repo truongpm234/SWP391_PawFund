@@ -6,28 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MyWebApp1.Migrations
 {
     /// <inheritdoc />
-    public partial class SyncUserIdIdentity : Migration
+    public partial class PawFund : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "PetCategories",
-                columns: table => new
-                {
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Row3 = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PetCategories", x => x.CategoryId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pets",
+                name: "Pet",
                 columns: table => new
                 {
                     PetId = table.Column<int>(type: "int", nullable: false)
@@ -46,11 +31,25 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pets", x => x.PetId);
+                    table.PrimaryKey("PK_Pet", x => x.PetId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Roles",
+                name: "PetCategory",
+                columns: table => new
+                {
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PetCategory", x => x.CategoryId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Role",
                 columns: table => new
                 {
                     RoleId = table.Column<int>(type: "int", nullable: false)
@@ -59,11 +58,11 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.RoleId);
+                    table.PrimaryKey("PK_Role", x => x.RoleId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TransactionStatuses",
+                name: "TransactionStatus",
                 columns: table => new
                 {
                     TransactionStatusId = table.Column<int>(type: "int", nullable: false)
@@ -72,11 +71,11 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TransactionStatuses", x => x.TransactionStatusId);
+                    table.PrimaryKey("PK_TransactionStatus", x => x.TransactionStatusId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TransactionTypes",
+                name: "TransactionType",
                 columns: table => new
                 {
                     TransactionTypeId = table.Column<int>(type: "int", nullable: false)
@@ -85,7 +84,7 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TransactionTypes", x => x.TransactionTypeId);
+                    table.PrimaryKey("PK_TransactionType", x => x.TransactionTypeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,7 +109,7 @@ namespace MyWebApp1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PetImages",
+                name: "PetImage",
                 columns: table => new
                 {
                     PetImageId = table.Column<int>(type: "int", nullable: false)
@@ -122,17 +121,17 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PetImages", x => x.PetImageId);
+                    table.PrimaryKey("PK_PetImage", x => x.PetImageId);
                     table.ForeignKey(
-                        name: "FK_PetImages_Pets_PetId",
+                        name: "FK_PetImage_Pet_PetId",
                         column: x => x.PetId,
-                        principalTable: "Pets",
+                        principalTable: "Pet",
                         principalColumn: "PetId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Adoptions",
+                name: "Adoption",
                 columns: table => new
                 {
                     AdoptionId = table.Column<int>(type: "int", nullable: false)
@@ -144,15 +143,15 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Adoptions", x => x.AdoptionId);
+                    table.PrimaryKey("PK_Adoption", x => x.AdoptionId);
                     table.ForeignKey(
-                        name: "FK_Adoptions_Pets_PetId",
+                        name: "FK_Adoption_Pet_PetId",
                         column: x => x.PetId,
-                        principalTable: "Pets",
+                        principalTable: "Pet",
                         principalColumn: "PetId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Adoptions_User_UserId",
+                        name: "FK_Adoption_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
@@ -160,7 +159,7 @@ namespace MyWebApp1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DonationEvents",
+                name: "DonationEvent",
                 columns: table => new
                 {
                     EventId = table.Column<int>(type: "int", nullable: false)
@@ -175,9 +174,9 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DonationEvents", x => x.EventId);
+                    table.PrimaryKey("PK_DonationEvent", x => x.EventId);
                     table.ForeignKey(
-                        name: "FK_DonationEvents_User_UserCreatedId",
+                        name: "FK_DonationEvent_User_UserCreatedId",
                         column: x => x.UserCreatedId,
                         principalTable: "User",
                         principalColumn: "UserId",
@@ -185,7 +184,7 @@ namespace MyWebApp1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRoles",
+                name: "UserRole",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
@@ -193,15 +192,15 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_UserRole", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_UserRoles_Roles_RoleId",
+                        name: "FK_UserRole_Role_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Roles",
+                        principalTable: "Role",
                         principalColumn: "RoleId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRoles_User_UserId",
+                        name: "FK_UserRole_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
@@ -209,7 +208,7 @@ namespace MyWebApp1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DonationImages",
+                name: "DonationImage",
                 columns: table => new
                 {
                     ImageId = table.Column<int>(type: "int", nullable: false)
@@ -220,17 +219,17 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DonationImages", x => x.ImageId);
+                    table.PrimaryKey("PK_DonationImage", x => x.ImageId);
                     table.ForeignKey(
-                        name: "FK_DonationImages_DonationEvents_DonationEventId",
+                        name: "FK_DonationImage_DonationEvent_DonationEventId",
                         column: x => x.DonationEventId,
-                        principalTable: "DonationEvents",
+                        principalTable: "DonationEvent",
                         principalColumn: "EventId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
+                name: "Transaction",
                 columns: table => new
                 {
                     TransactionId = table.Column<int>(type: "int", nullable: false)
@@ -245,26 +244,26 @@ namespace MyWebApp1.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transactions", x => x.TransactionId);
+                    table.PrimaryKey("PK_Transaction", x => x.TransactionId);
                     table.ForeignKey(
-                        name: "FK_Transactions_DonationEvents_DonationEventId",
+                        name: "FK_Transaction_DonationEvent_DonationEventId",
                         column: x => x.DonationEventId,
-                        principalTable: "DonationEvents",
+                        principalTable: "DonationEvent",
                         principalColumn: "EventId");
                     table.ForeignKey(
-                        name: "FK_Transactions_TransactionStatuses_TransactionStatusId",
+                        name: "FK_Transaction_TransactionStatus_TransactionStatusId",
                         column: x => x.TransactionStatusId,
-                        principalTable: "TransactionStatuses",
+                        principalTable: "TransactionStatus",
                         principalColumn: "TransactionStatusId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transactions_TransactionTypes_TransactionTypeId",
+                        name: "FK_Transaction_TransactionType_TransactionTypeId",
                         column: x => x.TransactionTypeId,
-                        principalTable: "TransactionTypes",
+                        principalTable: "TransactionType",
                         principalColumn: "TransactionTypeId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transactions_User_UserId",
+                        name: "FK_Transaction_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
@@ -272,53 +271,53 @@ namespace MyWebApp1.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Adoptions_PetId",
-                table: "Adoptions",
+                name: "IX_Adoption_PetId",
+                table: "Adoption",
                 column: "PetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Adoptions_UserId",
-                table: "Adoptions",
+                name: "IX_Adoption_UserId",
+                table: "Adoption",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DonationEvents_UserCreatedId",
-                table: "DonationEvents",
+                name: "IX_DonationEvent_UserCreatedId",
+                table: "DonationEvent",
                 column: "UserCreatedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DonationImages_DonationEventId",
-                table: "DonationImages",
+                name: "IX_DonationImage_DonationEventId",
+                table: "DonationImage",
                 column: "DonationEventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PetImages_PetId",
-                table: "PetImages",
+                name: "IX_PetImage_PetId",
+                table: "PetImage",
                 column: "PetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_DonationEventId",
-                table: "Transactions",
+                name: "IX_Transaction_DonationEventId",
+                table: "Transaction",
                 column: "DonationEventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_TransactionStatusId",
-                table: "Transactions",
+                name: "IX_Transaction_TransactionStatusId",
+                table: "Transaction",
                 column: "TransactionStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_TransactionTypeId",
-                table: "Transactions",
+                name: "IX_Transaction_TransactionTypeId",
+                table: "Transaction",
                 column: "TransactionTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_UserId",
-                table: "Transactions",
+                name: "IX_Transaction_UserId",
+                table: "Transaction",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRoles_RoleId",
-                table: "UserRoles",
+                name: "IX_UserRole_RoleId",
+                table: "UserRole",
                 column: "RoleId");
         }
 
@@ -326,37 +325,37 @@ namespace MyWebApp1.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Adoptions");
+                name: "Adoption");
 
             migrationBuilder.DropTable(
-                name: "DonationImages");
+                name: "DonationImage");
 
             migrationBuilder.DropTable(
-                name: "PetCategories");
+                name: "PetCategory");
 
             migrationBuilder.DropTable(
-                name: "PetImages");
+                name: "PetImage");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "Transaction");
 
             migrationBuilder.DropTable(
-                name: "UserRoles");
+                name: "UserRole");
 
             migrationBuilder.DropTable(
-                name: "Pets");
+                name: "Pet");
 
             migrationBuilder.DropTable(
-                name: "DonationEvents");
+                name: "DonationEvent");
 
             migrationBuilder.DropTable(
-                name: "TransactionStatuses");
+                name: "TransactionStatus");
 
             migrationBuilder.DropTable(
-                name: "TransactionTypes");
+                name: "TransactionType");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Role");
 
             migrationBuilder.DropTable(
                 name: "User");

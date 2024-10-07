@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyWebApp1.Data;
 
@@ -11,9 +12,11 @@ using MyWebApp1.Data;
 namespace MyWebApp1.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241007154735_PawFund")]
+    partial class PawFund
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,8 +74,6 @@ namespace MyWebApp1.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PetId");
-
-                    b.HasIndex("PetCategoryId");
 
                     b.ToTable("Pet");
                 });
@@ -372,17 +373,6 @@ namespace MyWebApp1.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRole");
-                });
-
-            modelBuilder.Entity("MyWebApp1.Entities.Pet", b =>
-                {
-                    b.HasOne("MyWebApp1.Models.PetCategory", "PetCategory")
-                        .WithMany()
-                        .HasForeignKey("PetCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PetCategory");
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.Adoption", b =>
