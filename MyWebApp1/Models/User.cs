@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyWebApp1.Models
 {
-    namespace MyWebApp1.Entities
+    namespace MyWebApp1.Models
     {
         [Table(name:"User")]
         public class User
         {
             [Key]
-            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
             public int UserId { get; set; }
             public string Username { get; set; }
             public string Fullname { get; set; }

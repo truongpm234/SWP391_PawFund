@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyWebApp1.DTO;
 using MyWebApp1.Models;
+using MyWebApp1.Models.MyWebApp1.Models;
 using MyWebApp1.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -21,10 +23,11 @@ namespace MyWebApp1.Controllers
 
         [HttpPost]
         [Route("Registration")]
-        public IActionResult Registration(UserDTO userDTO)
+        public IActionResult Registration(RegisterUserDTO userDTO)
         {
             try
             {
+                // Gọi hàm Register từ UserService, truyền vào userDTO
                 var result = _userService.Register(userDTO);
                 return Ok(result);
             }
@@ -36,7 +39,7 @@ namespace MyWebApp1.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public IActionResult Login(Login login)
+        public IActionResult Login(LoginDTO login)
         {
             try
             {
@@ -71,8 +74,8 @@ namespace MyWebApp1.Controllers
 
         [Authorize]
         [HttpPut]
-        [Route("UpdateProfile")]
-        public IActionResult UpdateProfile(int userId, UserDTO userDTO)
+        [Route("UpdateProfile/{userId}")]
+        public IActionResult UpdateProfile(int userId, UpdateProfileDTO userDTO)
         {
             try
             {
@@ -84,6 +87,7 @@ namespace MyWebApp1.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
 
         [Authorize]
         [HttpGet]
@@ -99,14 +103,14 @@ namespace MyWebApp1.Controllers
 
             try
             {
-                // Loại bỏ tiền tố "Bearer " để lấy token
+                // Bỏ wa "Bearer " để lấy token
                 var token = authHeader.Substring("Bearer ".Length).Trim();
 
-                // Giải mã token để lấy thông tin
+                //  lấy thông tin token
                 var jwtHandler = new JwtSecurityTokenHandler();
                 var jwtToken = jwtHandler.ReadJwtToken(token);
 
-                // Lấy userId từ claim trong token
+                // Lấy userId từ claim
                 var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "UserId");
                 if (userIdClaim == null)
                 {
@@ -121,7 +125,7 @@ namespace MyWebApp1.Controllers
 
                 if (user != null)
                 {
-                    // Trả về thông tin người dùng
+                    // Trả thông tin người dùng
                     var userInfo = new
                     {
                         Fullname = user.Fullname, 

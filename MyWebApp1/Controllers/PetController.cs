@@ -23,11 +23,11 @@ namespace MyWebApp1.Controllers
 
         [HttpPost]
         [Route("AddNewPet")]
-        public async Task<IActionResult> AddNewPet([FromBody] PetDTO petDTO)
+        public async Task<IActionResult> AddNewPet([FromBody] Pet pet)
         {
             try
             {
-                var newPet = await _petService.AddNewPet(petDTO);
+                var newPet = await _petService.AddNewPet(pet);
                 return Ok(newPet);
             }
             catch (Exception ex)

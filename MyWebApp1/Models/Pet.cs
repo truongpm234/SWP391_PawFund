@@ -1,8 +1,7 @@
-﻿using MyWebApp1.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MyWebApp1.Entities
+namespace MyWebApp1.Models
 {
     [Table("Pet")]
     public class Pet
@@ -23,8 +22,6 @@ namespace MyWebApp1.Entities
         public int PetCategoryId { get; set; }
         public bool IsAdopted { get; set; }
         public bool IsApproved { get; set; }
-
-        // Thuộc tính điều hướng
-        public virtual PetCategory PetCategory { get; set; } // Thêm thuộc tính điều hướng
+        public virtual PetCategory PetCategory { get; set; }
     }
 }
