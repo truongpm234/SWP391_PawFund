@@ -35,29 +35,9 @@ namespace MyWebApp1.Services
             return pet;
         }
 
-        public async Task<List<PetResponse>> GetAllPets()
+        public async Task<List<Pet>> GetAllPets()
         {
-            var pets = await _context.Pets.ToListAsync();
-            var petList = new List<PetResponse>();
-            foreach (var item in pets)
-            {
-                var petResponse = new PetResponse()
-                {
-                    PetId = item.PetId,
-                    PetName = item.PetName,
-                    Address = item.Address,
-                    MedicalCondition = item.MedicalCondition,
-                    ContactPhoneNumber = item.ContactPhoneNumber,
-                    ContactEmail = item.ContactEmail,
-                    Age = item.Age,
-                    Gender = item.Gender,
-                    PetType = item.PetType,
-                    IsAdopted = item.IsAdopted,
-                    IsApproved = item.IsApproved
-                };
-                petList.Add(petResponse);
-            }
-            return petList;
+            return await _context.Pets.ToListAsync();
         }
 
         public async Task<PetResponse> GetPet(int petId)
