@@ -50,8 +50,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "petDTO",
-        "Type": "MyWebApp1.Models.PetDTO",
+        "Name": "pet",
+        "Type": "MyWebApp1.Models.Pet",
         "IsRequired": true
       }
     ],
@@ -161,7 +161,7 @@
     "Parameters": [
       {
         "Name": "login",
-        "Type": "MyWebApp1.Models.Login",
+        "Type": "MyWebApp1.DTO.LoginDTO",
         "IsRequired": true
       }
     ],
@@ -177,7 +177,7 @@
     "Parameters": [
       {
         "Name": "userDTO",
-        "Type": "MyWebApp1.Models.UserDTO",
+        "Type": "MyWebApp1.DTO.RegisterUserDTO",
         "IsRequired": true
       }
     ],
@@ -186,7 +186,7 @@
   {
     "ContainingType": "MyWebApp1.Controllers.UsersController",
     "Method": "UpdateProfile",
-    "RelativePath": "api/Users/UpdateProfile",
+    "RelativePath": "api/Users/UpdateProfile/{userId}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -194,11 +194,11 @@
       {
         "Name": "userId",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "userDTO",
-        "Type": "MyWebApp1.Models.UserDTO",
+        "Type": "MyWebApp1.DTO.UpdateProfileDTO",
         "IsRequired": true
       }
     ],

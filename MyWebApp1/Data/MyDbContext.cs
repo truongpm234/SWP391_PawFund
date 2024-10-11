@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic.FileIO;
-using MyWebApp1.Entities;
 using MyWebApp1.Models;
-using MyWebApp1.Models.MyWebApp1.Entities;
+using MyWebApp1.Models.MyWebApp1.Models;
 using System.Data;
 using System.Transactions;
 
@@ -36,6 +35,25 @@ namespace MyWebApp1.Data
 
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite key
+
+            modelBuilder.Entity<PetCategory>().ToTable("PetCategory");
+            modelBuilder.Entity<MyWebApp1.Models.TransactionStatus>().ToTable("TransactionStatus");
+            modelBuilder.Entity<Role>().ToTable("Role");
+            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<Pet>().ToTable("Pet");
+            modelBuilder.Entity<UserRole>().ToTable("UserRole");
+            modelBuilder.Entity<Adoption>().ToTable("Adoption");
+            modelBuilder.Entity<PetImage>().ToTable("PetImage");
+            modelBuilder.Entity<DonationEvent>().ToTable("DonationEvent");
+            modelBuilder.Entity<DonationImage>().ToTable("DonationImage");
+            modelBuilder.Entity<DonationEvent>().ToTable("DonationEvent");
+            modelBuilder.Entity<TransactionType>().ToTable("TransactionType");
+            modelBuilder.Entity<MyWebApp1.Models.Transaction>().ToTable("Transaction");
+
+
+
+
+
 
             modelBuilder.Entity<MyWebApp1.Models.Transaction>()
                 .Property(t => t.TransactionAmount)

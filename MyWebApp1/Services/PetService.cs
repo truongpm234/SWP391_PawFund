@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp1.Data;
-using MyWebApp1.Entities;
 using MyWebApp1.Models;
 using MyWebApp1.Payload.Request;
 using MyWebApp1.Payload.Response;
@@ -16,21 +15,21 @@ namespace MyWebApp1.Services
             _context = context;
         }
 
-        public async Task<Pet> AddNewPet(Models.PetDTO petDTO)
+        public async Task<Models.Pet> AddNewPet(Models.Pet pet)
         {
-            var pet = new Entities.Pet
+            var Addpet = new Models.Pet
             {
-                PetName = petDTO.PetName,
-                PetType = petDTO.PetType,
-                Age = petDTO.Age,
-                Gender = petDTO.Gender,
-                Address = petDTO.Address,
-                MedicalCondition = petDTO.MedicalCondition,
-                ContactPhoneNumber = petDTO.ContactPhoneNumber,
-                ContactEmail = petDTO.ContactEmail
+                PetName = pet.PetName,
+                PetType = pet.PetType,
+                Age = pet.Age,
+                Gender = pet.Gender,
+                Address = pet.Address,
+                MedicalCondition = pet.MedicalCondition,
+                ContactPhoneNumber = pet.ContactPhoneNumber,
+                ContactEmail = pet.ContactEmail
             };
 
-            await _context.Pets.AddAsync(pet);
+            await _context.Pets.AddAsync(Addpet);
             await _context.SaveChangesAsync();
             return pet;
         }

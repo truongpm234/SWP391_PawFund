@@ -4,7 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using MyWebApp1.Models.MyWebApp1.Entities;
+using MyWebApp1.Models.MyWebApp1.Models;
+using MyWebApp1.DTO;
 
 namespace MyWebApp1.Services
 {
@@ -19,7 +20,7 @@ namespace MyWebApp1.Services
             _configuration = configuration;
         }
 
-        public string Register(UserDTO userDTO)
+        public string Register(RegisterUserDTO userDTO)
         {
             try
             {
@@ -55,7 +56,8 @@ namespace MyWebApp1.Services
             }
         }
 
-        public string Login(Login loginDTO)
+
+        public string Login(LoginDTO loginDTO)
         {
             // Tìm người dùng theo Email và mật khẩu
             var user = _dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password); // Băm mật khẩu tại đây
@@ -65,27 +67,50 @@ namespace MyWebApp1.Services
             {
                 throw new Exception("Invalid credentials.");
             }
-
-            var claims = new[]
+            try
             {
-                new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:subject"]),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("UserId", user.UserId.ToString()),
-                new Claim("Email", user.Email.ToString()),
-            };
+                // Kiểm tra xem email và mật khẩu có được cung cấp hay không
+                if (string.IsNullOrEmpty(loginDTO.Email) || string.IsNullOrEmpty(loginDTO.Password))
+                {
+                    return "Email and Password are required.";
+                }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(
-                _configuration["Jwt:issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.UtcNow.AddMinutes(60),
-                signingCredentials: signIn
-            );
+                // Tìm người dùng theo Email và mật khẩu
+                var user = _dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password); // Băm mật khẩu tại đây
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                if (user == null)
+                {
+                    throw new Exception("Invalid credentials.");
+                }
+
+                var claims = new[]
+                {
+            new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:subject"]),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim("UserId", user.UserId.ToString()),
+            new Claim("Email", user.Email.ToString()),
+        };
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(
+                    _configuration["Jwt:issuer"],
+                    _configuration["Jwt:Audience"],
+                    claims,
+                    expires: DateTime.UtcNow.AddMinutes(60),
+                    signingCredentials: signIn
+                );
+
+                return new JwtSecurityTokenHandler().WriteToken(token);
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi (nên sử dụng framework ghi log)
+                Console.WriteLine(ex.Message);
+                return $"An error occurred: {ex.Message}";
+            }
         }
+
 
         public List<User> GetUsers()
         {
@@ -97,29 +122,48 @@ namespace MyWebApp1.Services
             return _dbContext.Users.FirstOrDefault(x => x.UserId == id);
         }
 
-        public string UpdateProfile(int userId, UserDTO userDTO)
+        public string UpdateProfile(int userId, UpdateProfileDTO userDTO)
         {
-            var userToUpdate = _dbContext.Users.FirstOrDefault(x => x.UserId == userId);
-            if (userToUpdate == null)
+            try
             {
-                throw new Exception("User not found.");
+                var userToUpdate = _dbContext.Users.FirstOrDefault(x => x.UserId == userId);
+                if (userToUpdate == null)
+                {
+                    return "User not found.";
+                }
+
+                // Kiểm tra xem Username mới có bị trùng với người khác không (ngoại trừ chính người dùng này)
+                if (!string.IsNullOrEmpty(userDTO.Username) &&
+                    _dbContext.Users.Any(u => u.Username == userDTO.Username && u.UserId != userId))
+                {
+                    return "Username already exists.";
+                }
+
+                // Chỉ cập nhật các trường nếu chúng có giá trị từ DTO (không để trống)
+                userToUpdate.Username = !string.IsNullOrEmpty(userDTO.Username) ? userDTO.Username : userToUpdate.Username;
+                userToUpdate.Fullname = !string.IsNullOrEmpty(userDTO.Fullname) ? userDTO.Fullname : userToUpdate.Fullname;
+                userToUpdate.Email = !string.IsNullOrEmpty(userDTO.Email) ? userDTO.Email : userToUpdate.Email;
+                userToUpdate.PhoneNumber = !string.IsNullOrEmpty(userDTO.PhoneNumber) ? userDTO.PhoneNumber : userToUpdate.PhoneNumber;
+                userToUpdate.Address = !string.IsNullOrEmpty(userDTO.Address) ? userDTO.Address : userToUpdate.Address;
+
+                // Chỉ cập nhật mật khẩu nếu có giá trị
+                if (!string.IsNullOrEmpty(userDTO.Password))
+                {
+                    userToUpdate.Password = userDTO.Password; // Băm mật khẩu nếu cần thiết
+                }
+
+                _dbContext.Users.Update(userToUpdate);
+                _dbContext.SaveChanges();
+
+                return "User profile updated successfully.";
             }
-
-            userToUpdate.Fullname = userDTO.Fullname;  // Cập nhật Fullname
-            userToUpdate.Email = userDTO.Email;
-            userToUpdate.PhoneNumber = userDTO.PhoneNumber;
-            userToUpdate.Address = userDTO.Address;
-
-            // Cập nhật mật khẩu nếu có
-            if (!string.IsNullOrEmpty(userDTO.Password))
+            catch (Exception ex)
             {
-                userToUpdate.Password = userDTO.Password; // Lưu mật khẩu mà không băm
+                // Ghi log lỗi (nên sử dụng framework ghi log)
+                Console.WriteLine(ex.Message);
+                return $"An error occurred: {ex.Message}";
             }
-
-            _dbContext.Users.Update(userToUpdate);
-            _dbContext.SaveChanges();
-
-            return "User profile updated successfully.";
         }
+
     }
 }

@@ -12,8 +12,8 @@ using MyWebApp1.Data;
 namespace MyWebApp1.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20241007164452_UpdatePetForeignKey")]
-    partial class UpdatePetForeignKey
+    [Migration("20241009032234_PawFun")]
+    partial class PawFun
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,61 +24,6 @@ namespace MyWebApp1.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("MyWebApp1.Entities.Pet", b =>
-                {
-                    b.Property<int>("PetId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ContactEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactPhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsAdopted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MedicalCondition")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PetCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PetName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PetType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PetId");
-
-                    b.HasIndex("PetCategoryId");
-
-                    b.ToTable("Pet");
-                });
 
             modelBuilder.Entity("MyWebApp1.Models.Adoption", b =>
                 {
@@ -173,7 +118,7 @@ namespace MyWebApp1.Migrations
                     b.ToTable("DonationImage");
                 });
 
-            modelBuilder.Entity("MyWebApp1.Models.MyWebApp1.Entities.User", b =>
+            modelBuilder.Entity("MyWebApp1.Models.MyWebApp1.Models.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -217,6 +162,61 @@ namespace MyWebApp1.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("MyWebApp1.Models.Pet", b =>
+                {
+                    b.Property<int>("PetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetId"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContactEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAdopted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MedicalCondition")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PetCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PetName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PetType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PetId");
+
+                    b.HasIndex("PetCategoryId");
+
+                    b.ToTable("Pet");
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.PetCategory", b =>
@@ -377,26 +377,15 @@ namespace MyWebApp1.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("MyWebApp1.Entities.Pet", b =>
-                {
-                    b.HasOne("MyWebApp1.Models.PetCategory", "PetCategory")
-                        .WithMany()
-                        .HasForeignKey("PetCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PetCategory");
-                });
-
             modelBuilder.Entity("MyWebApp1.Models.Adoption", b =>
                 {
-                    b.HasOne("MyWebApp1.Entities.Pet", "Pet")
+                    b.HasOne("MyWebApp1.Models.Pet", "Pet")
                         .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyWebApp1.Models.MyWebApp1.Entities.User", "User")
+                    b.HasOne("MyWebApp1.Models.MyWebApp1.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -409,7 +398,7 @@ namespace MyWebApp1.Migrations
 
             modelBuilder.Entity("MyWebApp1.Models.DonationEvent", b =>
                 {
-                    b.HasOne("MyWebApp1.Models.MyWebApp1.Entities.User", "UserCreated")
+                    b.HasOne("MyWebApp1.Models.MyWebApp1.Models.User", "UserCreated")
                         .WithMany()
                         .HasForeignKey("UserCreatedId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -429,9 +418,20 @@ namespace MyWebApp1.Migrations
                     b.Navigation("DonationEvent");
                 });
 
+            modelBuilder.Entity("MyWebApp1.Models.Pet", b =>
+                {
+                    b.HasOne("MyWebApp1.Models.PetCategory", "PetCategory")
+                        .WithMany()
+                        .HasForeignKey("PetCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PetCategory");
+                });
+
             modelBuilder.Entity("MyWebApp1.Models.PetImage", b =>
                 {
-                    b.HasOne("MyWebApp1.Entities.Pet", "Pet")
+                    b.HasOne("MyWebApp1.Models.Pet", "Pet")
                         .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -458,7 +458,7 @@ namespace MyWebApp1.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyWebApp1.Models.MyWebApp1.Entities.User", "User")
+                    b.HasOne("MyWebApp1.Models.MyWebApp1.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -481,7 +481,7 @@ namespace MyWebApp1.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyWebApp1.Models.MyWebApp1.Entities.User", "User")
+                    b.HasOne("MyWebApp1.Models.MyWebApp1.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
