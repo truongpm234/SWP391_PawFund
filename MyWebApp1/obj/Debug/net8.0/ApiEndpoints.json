@@ -1,5 +1,47 @@
 [
   {
+    "ContainingType": "MyWebApp1.Controllers.AdoptionController",
+    "Method": "GetAdoptions",
+    "RelativePath": "api/Adoption",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdoptionController",
+    "Method": "ApproveAdoption",
+    "RelativePath": "api/Adoption/approve/{adoptionId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "adoptionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdoptionController",
+    "Method": "CreateAdoptionRequest",
+    "RelativePath": "api/Adoption/request",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MyWebApp1.Models.AdoptionRequestModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MyWebApp1.Controllers.PetsController",
     "Method": "AddNewPet",
     "RelativePath": "api/Pets/AddNewPet",
