@@ -59,57 +59,41 @@ namespace MyWebApp1.Services
 
         public string Login(LoginDTO loginDTO)
         {
+            // Kiểm tra xem email và mật khẩu có được cung cấp hay không
+            if (string.IsNullOrEmpty(loginDTO.Email) || string.IsNullOrEmpty(loginDTO.Password))
+            {
+                return "Email and Password are required.";
+            }
+
             // Tìm người dùng theo Email và mật khẩu
             var user = _dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password); // Băm mật khẩu tại đây
-            //var role = _dbContext.Roles.FirstOrDefault(x => x.RoleId == user.RoleId);
-            
+
             if (user == null)
             {
                 throw new Exception("Invalid credentials.");
             }
-            try
+
+            var claims = new[]
             {
-                // Kiểm tra xem email và mật khẩu có được cung cấp hay không
-                if (string.IsNullOrEmpty(loginDTO.Email) || string.IsNullOrEmpty(loginDTO.Password))
-                {
-                    return "Email and Password are required.";
-                }
+        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:subject"]),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim("UserId", user.UserId.ToString()),
+        new Claim("Email", user.Email.ToString()),
+    };
 
-                // Tìm người dùng theo Email và mật khẩu
-                var user = _dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password); // Băm mật khẩu tại đây
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                _configuration["Jwt:issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.UtcNow.AddMinutes(60),
+                signingCredentials: signIn
+            );
 
-                if (user == null)
-                {
-                    throw new Exception("Invalid credentials.");
-                }
-
-                var claims = new[]
-                {
-            new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:subject"]),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim("UserId", user.UserId.ToString()),
-            new Claim("Email", user.Email.ToString()),
-        };
-
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                var token = new JwtSecurityToken(
-                    _configuration["Jwt:issuer"],
-                    _configuration["Jwt:Audience"],
-                    claims,
-                    expires: DateTime.UtcNow.AddMinutes(60),
-                    signingCredentials: signIn
-                );
-
-                return new JwtSecurityTokenHandler().WriteToken(token);
-            }
-            catch (Exception ex)
-            {
-                // Ghi log lỗi (nên sử dụng framework ghi log)
-                Console.WriteLine(ex.Message);
-                return $"An error occurred: {ex.Message}";
-            }
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
 
 
         public List<User> GetUsers()
