@@ -21,7 +21,7 @@ namespace MyWebApp1.Controllers
             _petService = petService;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [Route("AddNewPet")]
         public async Task<IActionResult> AddNewPet([FromBody] Pet pet)
