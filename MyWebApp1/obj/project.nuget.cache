@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vdnXw1B8NCg=",
+  "dgSpecHash": "71NSILhnmCU=",
   "success": true,
-  "projectFilePath": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
+  "projectFilePath": "E:\\SE_FALL2024_S5\\SWP391\\swp\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ghoul\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\ghoul\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
