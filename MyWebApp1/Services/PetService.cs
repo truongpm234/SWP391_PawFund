@@ -17,7 +17,6 @@ namespace MyWebApp1.Services
 
         public async Task<Models.Pet> AddNewPet(Models.Pet pet)
         {
-            // Tạo đối tượng Pet mới từ thông tin đầu vào
             var Addpet = new Models.Pet
             {
                 PetName = pet.PetName,
@@ -27,23 +26,37 @@ namespace MyWebApp1.Services
                 Address = pet.Address,
                 MedicalCondition = pet.MedicalCondition,
                 ContactPhoneNumber = pet.ContactPhoneNumber,
-                ContactEmail = pet.ContactEmail,
-                PetCategoryId = pet.PetCategoryId, 
-                IsAdopted = false,
-                IsApproved = false 
+                ContactEmail = pet.ContactEmail
             };
 
-            // Thêm đối tượng mới vào cơ sở dữ liệu
             await _context.Pets.AddAsync(Addpet);
             await _context.SaveChangesAsync();
-
-            // Trả về đối tượng vừa được thêm vào
-            return Addpet;
+            return pet;
         }
 
-        public async Task<List<Pet>> GetAllPets()
+        public async Task<List<PetResponse>> GetAllPets()
         {
-            return await _context.Pets.ToListAsync();
+            var pets = await _context.Pets.ToListAsync();
+            var petList = new List<PetResponse>();
+            foreach (var item in pets)
+            {
+                var petResponse = new PetResponse()
+                {
+                    PetId = item.PetId,
+                    PetName = item.PetName,
+                    Address = item.Address,
+                    MedicalCondition = item.MedicalCondition,
+                    ContactPhoneNumber = item.ContactPhoneNumber,
+                    ContactEmail = item.ContactEmail,
+                    Age = item.Age,
+                    Gender = item.Gender,
+                    PetType = item.PetType,
+                    IsAdopted = item.IsAdopted,
+                    IsApproved = item.IsApproved
+                };
+                petList.Add(petResponse);
+            }
+            return petList;
         }
 
         public async Task<PetResponse> GetPet(int petId)

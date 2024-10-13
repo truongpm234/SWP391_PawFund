@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace MyWebApp1.Models
 {
@@ -8,8 +7,6 @@ namespace MyWebApp1.Models
     public class Pet
     {
         [Key]
-        [JsonIgnore]
-
         public int PetId { get; set; }
 
         public string PetName { get; set; }
@@ -22,13 +19,9 @@ namespace MyWebApp1.Models
         public string ContactEmail { get; set; }
 
         [ForeignKey("PetCategory")]
-
-        public int PetCategoryId { get; set; }  
+        public int PetCategoryId { get; set; }
         public bool IsAdopted { get; set; }
         public bool IsApproved { get; set; }
-        [JsonIgnore]
-
-        public virtual PetCategory? PetCategory { get; set; } //null optional
-
+        public virtual PetCategory PetCategory { get; set; }
     }
 }

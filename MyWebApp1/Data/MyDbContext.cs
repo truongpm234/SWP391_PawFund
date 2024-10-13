@@ -58,29 +58,25 @@ namespace MyWebApp1.Data
             modelBuilder.Entity<MyWebApp1.Models.Transaction>()
                 .Property(t => t.TransactionAmount)
                 .HasColumnType("decimal(18,2)"); // 18 là tổng số chữ số, 2 là số chữ số sau dấu thập phân
-
+            
             modelBuilder.Entity<Pet>()
-                .HasOne(p => p.PetCategory)
-                .WithMany()  // Quan hệ 1-N hoặc N-N
-                .HasForeignKey(p => p.PetCategoryId)
-                .IsRequired(false);  // Đánh dấu không bắt buộc
-
+               .HasOne(p => p.PetCategory)
+               .WithMany()
+               .HasForeignKey(p => p.PetCategoryId);
 
             modelBuilder.Entity<User>().ToTable("User");
         }
 
 
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-        //                optionsBuilder
-        //                    .UseMySql("Server=DESKTOP-RACPEP4\\SQLEXPRESS;Database=PawFund;User Id=sa;Password=123456;",
-        //                    new MySqlServerVersion(new Version(8, 0, 21))) // Ensure you specify your MySQL version
-        //                    .LogTo(Console.WriteLine, LogLevel.Information);
-        //            }
-        //        }
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder
+                    .UseSqlServer("Data Source=DESKTOP-1T8C15J\\SQLEXPRESS; Initial Catalog=PawFund; User ID=sa; Password=123456;TrustServerCertificate=True;")
+                    .LogTo(Console.WriteLine, LogLevel.Information); // Ghi log ra console
+            }
+        }
 
     }
 }
