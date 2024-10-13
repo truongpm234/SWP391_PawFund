@@ -59,6 +59,14 @@ namespace MyWebApp1.Services
 
         public string Login(LoginDTO loginDTO)
         {
+            // Tìm người dùng theo Email và mật khẩu
+            var user = _dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password); // Băm mật khẩu tại đây
+            //var role = _dbContext.Roles.FirstOrDefault(x => x.RoleId == user.RoleId);
+            
+            if (user == null)
+            {
+                throw new Exception("Invalid credentials.");
+            }
             try
             {
                 // Kiểm tra xem email và mật khẩu có được cung cấp hay không
