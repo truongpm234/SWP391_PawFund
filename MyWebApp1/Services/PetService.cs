@@ -17,6 +17,7 @@ namespace MyWebApp1.Services
 
         public async Task<Models.Pet> AddNewPet(Models.Pet pet)
         {
+            // Tạo đối tượng Pet mới từ thông tin đầu vào
             var Addpet = new Models.Pet
             {
                 PetName = pet.PetName,
@@ -26,12 +27,18 @@ namespace MyWebApp1.Services
                 Address = pet.Address,
                 MedicalCondition = pet.MedicalCondition,
                 ContactPhoneNumber = pet.ContactPhoneNumber,
-                ContactEmail = pet.ContactEmail
+                ContactEmail = pet.ContactEmail,
+                PetCategoryId = pet.PetCategoryId, 
+                IsAdopted = false,
+                IsApproved = false 
             };
 
+            // Thêm đối tượng mới vào cơ sở dữ liệu
             await _context.Pets.AddAsync(Addpet);
             await _context.SaveChangesAsync();
-            return pet;
+
+            // Trả về đối tượng vừa được thêm vào
+            return Addpet;
         }
 
         public async Task<List<Pet>> GetAllPets()
