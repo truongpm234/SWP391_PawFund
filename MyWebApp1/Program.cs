@@ -21,6 +21,7 @@ builder.Services.AddDbContext<MyDbContext>(e => e.UseSqlServer(builder.Configura
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+//
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
