@@ -4538,11 +4538,19 @@
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
       "projectName": "MyWebApp1",
       "projectPath": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
       "packagesPath": "C:\\Users\\ghoul\\.nuget\\packages\\",
       "outputPath": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund\\SWP391_PawFund\\MyWebApp1\\obj\\",
+=======
+      "projectUniqueName": "E:\\SE_FALL2024_S5\\SWP391\\swp\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
+      "projectName": "MyWebApp1",
+      "projectPath": "E:\\SE_FALL2024_S5\\SWP391\\swp\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
+      "packagesPath": "C:\\Users\\ghoul\\.nuget\\packages\\",
+      "outputPath": "E:\\SE_FALL2024_S5\\SWP391\\swp\\SWP391_PawFund\\MyWebApp1\\obj\\",
+>>>>>>> d4ec878b0ebe6bcb5cddbf6a716a1ab9ba053c3e
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
