@@ -59,14 +59,6 @@ namespace MyWebApp1.Services
 
         public string Login(LoginDTO loginDTO)
         {
-            // Tìm người dùng theo Email và mật khẩu
-            var user = _dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password); // Băm mật khẩu tại đây
-            //var role = _dbContext.Roles.FirstOrDefault(x => x.RoleId == user.RoleId);
-            
-            if (user == null)
-            {
-                throw new Exception("Invalid credentials.");
-            }
             try
             {
                 // Kiểm tra xem email và mật khẩu có được cung cấp hay không
@@ -76,19 +68,40 @@ namespace MyWebApp1.Services
                 }
 
                 // Tìm người dùng theo Email và mật khẩu
-                var user = _dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password); // Băm mật khẩu tại đây
+                var user = _dbContext.Users
+                    .FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password);
 
                 if (user == null)
                 {
                     throw new Exception("Invalid credentials.");
                 }
 
+                // Tìm UserRole của user sau khi đảm bảo user không phải là null
+                var userRole = _dbContext.UserRoles
+                    .FirstOrDefault(ur => ur.RoleId == user.UserId);
+                
+                if (userRole == null)
+                {
+                    throw new Exception("User role not found.");
+                }
+
+                // Retrieve Role based on RoleId
+              var role = _dbContext.Roles.FirstOrDefault(r =>  r.RoleId == userRole.UserId);
+                
+
+                if (role == null)
+                {
+                    throw new Exception("Role not found for this user.");
+                }
+
+                // Create JWT claims including the user's role
                 var claims = new[]
                 {
             new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:subject"]),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim("UserId", user.UserId.ToString()),
             new Claim("Email", user.Email.ToString()),
+            new Claim("Role", role.RoleName.ToString()) // Add the role name here
         };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -105,11 +118,12 @@ namespace MyWebApp1.Services
             }
             catch (Exception ex)
             {
-                // Ghi log lỗi (nên sử dụng framework ghi log)
+                // Log the error (use a logging framework for production scenarios)
                 Console.WriteLine(ex.Message);
                 return $"An error occurred: {ex.Message}";
             }
         }
+
 
 
         public List<User> GetUsers()

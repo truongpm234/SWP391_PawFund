@@ -8,6 +8,7 @@ using MyWebApp1.Services;
 
 namespace MyWebApp1.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
     public class PetsController : ControllerBase
@@ -47,6 +48,19 @@ namespace MyWebApp1.Controllers
                 Data = pets
             });
         }
+
+        //[HttpGet]
+        //public ActionResult<IEnumerable<Pet>> GetAll()
+        //{
+        //    var pets = _petService.GetAllPets();
+        //    return Ok(new ApiResponse
+        //    {
+        //        StatusCode = 200,
+        //        Message = "Get all pets successful!",
+        //        Data = pets
+        //    });
+        //}
+
 
         [HttpGet("get-by-id")]
         public async Task<IActionResult> GetPetById(int id)
