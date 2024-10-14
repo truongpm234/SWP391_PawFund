@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyWebApp1.Models;
 using MyWebApp1.Services;
 
@@ -14,7 +15,7 @@ namespace MyWebApp1.Controllers
         {
             _adoptionService = adoptionService;
         }
-
+        [Authorize(Policy = "UserOnly")]
         [HttpPost("request")]
         public IActionResult CreateAdoptionRequest([FromBody] AdoptionRequestModel request)
         {
@@ -37,7 +38,7 @@ namespace MyWebApp1.Controllers
         }
 
 
-
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet]
         public IActionResult GetAdoptions()
         {
@@ -45,6 +46,7 @@ namespace MyWebApp1.Controllers
             return Ok(adoptions);
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpPut("approve/{adoptionId}")]
         public IActionResult ApproveAdoption(int adoptionId)
         {

@@ -17,6 +17,7 @@ namespace MyWebApp1.Services
 
         public async Task<Models.Pet> AddNewPet(Models.Pet pet)
         {
+            // Tạo đối tượng Pet mới từ thông tin đầu vào
             var Addpet = new Models.Pet
             {
                 PetName = pet.PetName,
@@ -26,12 +27,18 @@ namespace MyWebApp1.Services
                 Address = pet.Address,
                 MedicalCondition = pet.MedicalCondition,
                 ContactPhoneNumber = pet.ContactPhoneNumber,
-                ContactEmail = pet.ContactEmail
+                ContactEmail = pet.ContactEmail,
+                PetCategoryId = pet.PetCategoryId,
+                IsAdopted = false,
+                IsApproved = false
             };
 
+            // Thêm vào DB
             await _context.Pets.AddAsync(Addpet);
             await _context.SaveChangesAsync();
-            return pet;
+
+            // Trả về đối tượng
+            return Addpet;
         }
 
         public async Task<List<Pet>> GetAllPets()
@@ -68,26 +75,43 @@ namespace MyWebApp1.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdatePet(PetEditRequest request)
+        public async Task<Models.Pet> UpdatePet(Models.Pet pet)
         {
-            var pet = new Pet()
+            // Kiểm tra xem PetId có hợp lệ không
+            if (pet.PetId <= 0)
             {
-                PetId = request.PetId,
-                PetName = request.PetName,
-                Address = request.Address,
-                MedicalCondition = request.MedicalCondition,
-                ContactPhoneNumber = request.ContactPhoneNumber,
-                ContactEmail = request.ContactEmail,
-                Age = request.Age,
-                Gender = request.Gender,
-                PetType = request.PetType,
-                IsAdopted = request.IsAdopted,
-                IsApproved = request.IsApproved
-            };
-            _context.Attach(pet).State = EntityState.Modified;
+                throw new Exception("PetId is required");
+            }
+
+            // Tìm pet hiện tại trong cơ sở dữ liệu
+            var existingPet = await _context.Pets.FindAsync(pet.PetId);
+            if (existingPet == null)
+            {
+                throw new Exception("Pet không tồn tại");
+            }
+
+            // Cập nhật thông tin của pet
+            existingPet.PetName = pet.PetName;
+            existingPet.PetType = pet.PetType;
+            existingPet.Age = pet.Age;
+            existingPet.Gender = pet.Gender;
+            existingPet.Address = pet.Address;
+            existingPet.MedicalCondition = pet.MedicalCondition;
+            existingPet.ContactPhoneNumber = pet.ContactPhoneNumber;
+            existingPet.ContactEmail = pet.ContactEmail;
+            existingPet.PetCategoryId = pet.PetCategoryId; // Giả định rằng PetCategoryId đã được kiểm tra ở nơi khác
+            existingPet.IsAdopted = pet.IsAdopted;
+            existingPet.IsApproved = pet.IsApproved;
+
+            // Cập nhật trạng thái
+            _context.Entry(existingPet).State = EntityState.Modified;
+
+            // Lưu thay đổi vào cơ sở dữ liệu
             await _context.SaveChangesAsync();
+
+            // Trả về đối tượng đã được cập nhật
+            return existingPet;
         }
+
     }
-
-
 }

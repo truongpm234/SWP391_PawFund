@@ -29,6 +29,12 @@ namespace MyWebApp1.Extensions
                 config.AddDebug(); // Thêm ghi log vào debug
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Role", "Admin"));
+                options.AddPolicy("UserOnly", policy => policy.RequireClaim("Role", "User"));
+                options.AddPolicy("ManagerOnly", policy => policy.RequireClaim("Role", "Manager"));
+            });
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,6 +53,8 @@ namespace MyWebApp1.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                 };
             })
+
+
             .AddGoogle(googleOptions =>
             {
                 IConfigurationSection googleAuthNSection = configuration.GetSection("Authentication:Google");
