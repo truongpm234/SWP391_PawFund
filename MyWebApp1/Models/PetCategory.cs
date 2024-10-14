@@ -9,8 +9,8 @@ namespace MyWebApp1.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CategoryId { get; set; }
+        public int PetCategoryId { get; set; }
         public string CategoryName { get; set; }
-        public string Category { get; set; }
+
     }
 }

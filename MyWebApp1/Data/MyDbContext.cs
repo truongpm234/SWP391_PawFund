@@ -51,18 +51,16 @@ namespace MyWebApp1.Data
             modelBuilder.Entity<MyWebApp1.Models.Transaction>().ToTable("Transaction");
 
 
-
-
-
-
             modelBuilder.Entity<MyWebApp1.Models.Transaction>()
                 .Property(t => t.TransactionAmount)
-                .HasColumnType("decimal(18,2)"); // 18 là tổng số chữ số, 2 là số chữ số sau dấu thập phân
-            
+                .HasColumnType("decimal(18,2)"); 
+
             modelBuilder.Entity<Pet>()
-               .HasOne(p => p.PetCategory)
-               .WithMany()
-               .HasForeignKey(p => p.PetCategoryId);
+                .HasOne(p => p.PetCategory)
+                .WithMany()  
+                .HasForeignKey(p => p.PetCategoryId)
+                .IsRequired(false);  
+
 
             modelBuilder.Entity<User>().ToTable("User");
         }
@@ -70,13 +68,13 @@ namespace MyWebApp1.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 {
-    if (!optionsBuilder.IsConfigured)
-    {
-        optionsBuilder
-            .UseMySql("Server=DESKTOP-RACPEP4\\SQLEXPRESS;Database=PawFund;User Id=sa;Password=123456;", 
-            new MySqlServerVersion(new Version(8, 0, 21))) // Ensure you specify your MySQL version
-            .LogTo(Console.WriteLine, LogLevel.Information);
-    }
+    //if (!optionsBuilder.IsConfigured)
+    ////{
+    ////    optionsBuilder
+    ////        .UseMySql("Server=DESKTOP-RACPEP4\\SQLEXPRESS;Database=PawFund;User Id=sa;Password=123456;", 
+    ////        new MySqlServerVersion(new Version(8, 0, 21))) // Ensure you specify your MySQL version
+    ////        .LogTo(Console.WriteLine, LogLevel.Information);
+    ////}
 }
 
 

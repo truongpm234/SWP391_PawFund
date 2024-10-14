@@ -12,8 +12,8 @@ using MyWebApp1.Data;
 namespace MyWebApp1.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20241008151219_Paw1")]
-    partial class Paw1
+    [Migration("20241014063943_PawFund")]
+    partial class PawFund
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,146 @@ namespace MyWebApp1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MyWebApp1.Entities.Pet", b =>
+            modelBuilder.Entity("MyWebApp1.Models.Adoption", b =>
+                {
+                    b.Property<int>("AdoptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdoptionId"));
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AdoptionId");
+
+                    b.HasIndex("PetId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Adoption", (string)null);
+                });
+
+            modelBuilder.Entity("MyWebApp1.Models.DonationEvent", b =>
+                {
+                    b.Property<int>("EventId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"));
+
+                    b.Property<string>("EventContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EventEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EventName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EventStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEnded")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserCreatedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EventId");
+
+                    b.HasIndex("UserCreatedId");
+
+                    b.ToTable("DonationEvent", (string)null);
+                });
+
+            modelBuilder.Entity("MyWebApp1.Models.DonationImage", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"));
+
+                    b.Property<int>("DonationEventId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsThumbnailImage")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("DonationEventId");
+
+                    b.ToTable("DonationImage", (string)null);
+                });
+
+            modelBuilder.Entity("MyWebApp1.Models.MyWebApp1.Models.User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fullname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsApprovedUser")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("MyWebApp1.Models.Pet", b =>
                 {
                     b.Property<int>("PetId")
                         .ValueGeneratedOnAdd()
@@ -77,167 +216,24 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("PetCategoryId");
 
-                    b.ToTable("Pet");
-                });
-
-            modelBuilder.Entity("MyWebApp1.Models.Adoption", b =>
-                {
-                    b.Property<int>("AdoptionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdoptionId"));
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Note")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PetId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AdoptionId");
-
-                    b.HasIndex("PetId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Adoption");
-                });
-
-            modelBuilder.Entity("MyWebApp1.Models.DonationEvent", b =>
-                {
-                    b.Property<int>("EventId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"));
-
-                    b.Property<string>("EventContent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EventEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EventName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EventStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEnded")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("UserCreatedId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EventId");
-
-                    b.HasIndex("UserCreatedId");
-
-                    b.ToTable("DonationEvent");
-                });
-
-            modelBuilder.Entity("MyWebApp1.Models.DonationImage", b =>
-                {
-                    b.Property<int>("ImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"));
-
-                    b.Property<int>("DonationEventId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsThumbnailImage")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("DonationEventId");
-
-                    b.ToTable("DonationImage");
-                });
-
-            modelBuilder.Entity("MyWebApp1.Models.MyWebApp1.Entities.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Fullname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsApprovedUser")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Pet", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.PetCategory", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("PetCategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetCategoryId"));
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("PetCategoryId");
 
-                    b.ToTable("PetCategory");
+                    b.ToTable("PetCategory", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.PetImage", b =>
@@ -266,7 +262,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("PetId");
 
-                    b.ToTable("PetImage");
+                    b.ToTable("PetImage", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.Role", b =>
@@ -283,7 +279,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Role");
+                    b.ToTable("Role", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.Transaction", b =>
@@ -325,7 +321,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transaction");
+                    b.ToTable("Transaction", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.TransactionStatus", b =>
@@ -342,7 +338,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasKey("TransactionStatusId");
 
-                    b.ToTable("TransactionStatus");
+                    b.ToTable("TransactionStatus", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.TransactionType", b =>
@@ -359,7 +355,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasKey("TransactionTypeId");
 
-                    b.ToTable("TransactionType");
+                    b.ToTable("TransactionType", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.UserRole", b =>
@@ -374,29 +370,18 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRole");
-                });
-
-            modelBuilder.Entity("MyWebApp1.Entities.Pet", b =>
-                {
-                    b.HasOne("MyWebApp1.Models.PetCategory", "PetCategory")
-                        .WithMany()
-                        .HasForeignKey("PetCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PetCategory");
+                    b.ToTable("UserRole", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.Adoption", b =>
                 {
-                    b.HasOne("MyWebApp1.Entities.Pet", "Pet")
+                    b.HasOne("MyWebApp1.Models.Pet", "Pet")
                         .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyWebApp1.Models.MyWebApp1.Entities.User", "User")
+                    b.HasOne("MyWebApp1.Models.MyWebApp1.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -409,7 +394,7 @@ namespace MyWebApp1.Migrations
 
             modelBuilder.Entity("MyWebApp1.Models.DonationEvent", b =>
                 {
-                    b.HasOne("MyWebApp1.Models.MyWebApp1.Entities.User", "UserCreated")
+                    b.HasOne("MyWebApp1.Models.MyWebApp1.Models.User", "UserCreated")
                         .WithMany()
                         .HasForeignKey("UserCreatedId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -429,9 +414,18 @@ namespace MyWebApp1.Migrations
                     b.Navigation("DonationEvent");
                 });
 
+            modelBuilder.Entity("MyWebApp1.Models.Pet", b =>
+                {
+                    b.HasOne("MyWebApp1.Models.PetCategory", "PetCategory")
+                        .WithMany()
+                        .HasForeignKey("PetCategoryId");
+
+                    b.Navigation("PetCategory");
+                });
+
             modelBuilder.Entity("MyWebApp1.Models.PetImage", b =>
                 {
-                    b.HasOne("MyWebApp1.Entities.Pet", "Pet")
+                    b.HasOne("MyWebApp1.Models.Pet", "Pet")
                         .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -458,7 +452,7 @@ namespace MyWebApp1.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyWebApp1.Models.MyWebApp1.Entities.User", "User")
+                    b.HasOne("MyWebApp1.Models.MyWebApp1.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -481,7 +475,7 @@ namespace MyWebApp1.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyWebApp1.Models.MyWebApp1.Entities.User", "User")
+                    b.HasOne("MyWebApp1.Models.MyWebApp1.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

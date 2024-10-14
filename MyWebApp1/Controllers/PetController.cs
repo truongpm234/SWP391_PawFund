@@ -21,6 +21,7 @@ namespace MyWebApp1.Controllers
             _petService = petService;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("AddNewPet")]
         public async Task<IActionResult> AddNewPet([FromBody] Pet pet)
@@ -60,6 +61,7 @@ namespace MyWebApp1.Controllers
             });
         }
 
+        [Authorize]
         [HttpDelete("delete-pet")]
         public async Task<IActionResult> DeletePet(int id)
         {
@@ -77,13 +79,14 @@ namespace MyWebApp1.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
+        [Authorize]
         [HttpPut("update-pet")]
-        public async Task<IActionResult> UpdatePet(PetEditRequest request)
+        public async Task<IActionResult> UpdatePet(Pet pet)
         {
             try
             {
-                await _petService.UpdatePet(request);
+                await _petService.UpdatePet(pet);
                 return Ok(new ApiResponse()
                 {
                     StatusCode = 200,
@@ -95,6 +98,7 @@ namespace MyWebApp1.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
     }
 
 }
