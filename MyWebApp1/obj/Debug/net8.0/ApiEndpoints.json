@@ -66,8 +66,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
-        "Type": "MyWebApp1.Payload.Request.PetEditRequest",
+        "Name": "pet",
+        "Type": "MyWebApp1.Models.Pet",
         "IsRequired": true
       }
     ],

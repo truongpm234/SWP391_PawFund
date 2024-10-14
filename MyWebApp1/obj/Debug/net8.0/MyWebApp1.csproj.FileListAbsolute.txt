@@ -878,6 +878,12 @@ C:\Users\Admin\Desktop\SWP Project\New\PawFund\MyWebApp1\obj\Debug\net8.0\refint
 C:\Users\Admin\Desktop\SWP Project\New\PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.pdb
 C:\Users\Admin\Desktop\SWP Project\New\PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.genruntimeconfig.cache
 C:\Users\Admin\Desktop\SWP Project\New\PawFund\MyWebApp1\obj\Debug\net8.0\ref\MyWebApp1.dll
+<<<<<<< HEAD
+=======
+E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.dll
+E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\refint\MyWebApp1.dll
+E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.pdb
+>>>>>>> mtruong
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.csproj.AssemblyReference.cache
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.GeneratedMSBuildEditorConfig.editorconfig
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.AssemblyInfoInputs.cache
@@ -886,9 +892,12 @@ E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.csp
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.MvcApplicationPartsAssemblyInfo.cs
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.MvcApplicationPartsAssemblyInfo.cache
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.sourcelink.json
+<<<<<<< HEAD
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.dll
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\refint\MyWebApp1.dll
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\obj\Debug\net8.0\MyWebApp1.pdb
+=======
+>>>>>>> mtruong
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\bin\Debug\net8.0\appsettings.Development.json
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\bin\Debug\net8.0\appsettings.json
 E:\SE_FALL2024_S5\SWP391\SWP391_PawFund\MyWebApp1\bin\Debug\net8.0\MyWebApp1.exe
