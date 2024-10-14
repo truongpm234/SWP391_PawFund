@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Desktop\\SWP Project\\Dat\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj": {}
+    "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Desktop\\SWP Project\\Dat\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj": {
+    "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\SWP Project\\Dat\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
         "projectName": "MyWebApp1",
-        "projectPath": "C:\\Users\\Admin\\Desktop\\SWP Project\\Dat\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
+        "projectPath": "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Desktop\\SWP Project\\Dat\\SWP391_PawFund\\MyWebApp1\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
