@@ -14,7 +14,7 @@ namespace MyWebApp1.Models
         public string Note { get; set; }
 
         // Navigation properties
-        public User User { get; set; }
-        public Pet Pet { get; set; }
+        public User Username { get; set; }
+        public Pet PetName { get; set; }
     }
 }

@@ -15,8 +15,6 @@ namespace MyWebApp1.Models
         public int UserId { get; set; }
         public int TransactionStatusId { get; set; }
         public int TransactionTypeId { get; set; }
-
-        // Navigation properties
         public DonationEvent DonationEvent { get; set; }
         public User User { get; set; }
         public TransactionStatus TransactionStatus { get; set; }

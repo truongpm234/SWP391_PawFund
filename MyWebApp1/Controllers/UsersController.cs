@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyWebApp1.DTO;
 using MyWebApp1.Models;
 using MyWebApp1.Models.MyWebApp1.Models;
+using MyWebApp1.Payload;
 using MyWebApp1.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -15,21 +16,22 @@ namespace MyWebApp1.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly AdminService _adminService;
 
         public UsersController(UserService userService)
         {
             _userService = userService;
         }
 
+        [Authorize]
         [HttpPost]
-        [Route("Registration")]
-        public IActionResult Registration(RegisterUserDTO userDTO)
+        [Route("AddNewPet")]
+        public async Task<IActionResult> AddNewPet([FromBody] Pet pet)
         {
             try
             {
-                // Gọi hàm Register từ UserService, truyền vào userDTO
-                var result = _userService.Register(userDTO);
-                return Ok(result);
+                var newPet = await _userService.AddNewPet(pet);
+                return Ok(newPet);
             }
             catch (Exception ex)
             {
@@ -37,50 +39,93 @@ namespace MyWebApp1.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("Login")]
-        public IActionResult Login(LoginDTO login)
+        [HttpGet("get-all-approved-pet")]
+        public async Task<IActionResult> GetAllApprovedPets()
         {
-            try
+            var pets = await _userService.GetAllApprovedPets();
+
+            return Ok(new ApiResponse()
             {
-                var token = _userService.Login(login);
-                return Ok(new { Token = token });
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(ex.Message);
-            }
+                StatusCode = 200,
+                Message = "Get all approved pets successful!",
+                Data = pets
+            });
         }
 
-        [Authorize]
-        [HttpGet]
-        [Route("GetUsers")]
-        public IActionResult GetUsers()
+
+        [HttpGet("get-approved-pet-by-id")]
+        public async Task<IActionResult> GetApprovedPetById(int id)
         {
-            return Ok(_userService.GetUsers());
+            var pet = await _userService.GetApprovedPet(id);
+
+            if (pet == null)
+            { 
+                return NotFound(new ApiResponse()
+                {
+                    StatusCode = 404,
+                    Message = "Pet not found or not approved",
+                    Data = null
+                });
+            }
+
+            return Ok(new ApiResponse()
+            {
+                StatusCode = 200,
+                Message = "Get approved pet successful!",
+                Data = pet
+            });
         }
 
-        [Authorize]
-        [HttpGet]
-        [Route("GetUser")]
-        public IActionResult GetUser(int id)
-        {
-            var user = _userService.GetUser(id);
-            if (user != null)
-                return Ok(user);
-            else
-                return NoContent();
-        }
+        //[Authorize]
+        //[HttpGet("get-current-user")]
+        //public IActionResult GetCurrentUserLogin(int id)
+        //{
+        //    var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+
+        //    if (string.IsNullOrEmpty(userId))
+        //    {
+        //        return Unauthorized(new ApiResponse
+        //        {
+        //            StatusCode = 401,
+        //            Message = "User not authenticated",
+        //            Data = null
+        //        });
+        //    }
+
+        //    var user = _adminService.GetUser(id);
+
+        //    if (user == null)
+        //    {
+        //        return NotFound(new ApiResponse
+        //        {
+        //            StatusCode = 404,
+        //            Message = "User not found",
+        //            Data = null
+        //        });
+        //    }
+
+        //    return Ok(new ApiResponse
+        //    {
+        //        StatusCode = 200,
+        //        Message = "User retrieved successfully!",
+        //        Data = user
+        //    });
+        //}
 
         [Authorize]
         [HttpPut]
         [Route("UpdateProfile/{userId}")]
-        public IActionResult UpdateProfile(int userId, UpdateProfileDTO userDTO)
+        public async Task<IActionResult> UpdateProfile(int userId, UpdateProfileDTO userDTO)
         {
             try
             {
-                var result = _userService.UpdateProfile(userId, userDTO);
+                // Gọi phương thức trong UserService để cập nhật thông tin
+                var result = await _userService.UpdateProfile(userId, userDTO, HttpContext.User);
                 return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Forbid(ex.Message);
             }
             catch (Exception ex)
             {
@@ -90,60 +135,30 @@ namespace MyWebApp1.Controllers
 
 
         [Authorize]
-        [HttpGet]
-        [Route("GetCurrentLoginUser")]
-        public IActionResult GetCurrentLoginUser()
+        [HttpPost("request-role-manager")]
+        public async Task<ActionResult<User>> RequestManagerRole([FromBody] RoleRequestDTO roleRequest)
         {
-            // Lấy token từ header Authorization
-            var authHeader = Request.Headers["Authorization"].ToString();
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            {
-                return Unauthorized("Authorization token is missing or invalid.");
-            }
-
             try
             {
-                // Bỏ wa "Bearer " để lấy token
-                var token = authHeader.Substring("Bearer ".Length).Trim();
-
-                //  lấy thông tin token
-                var jwtHandler = new JwtSecurityTokenHandler();
-                var jwtToken = jwtHandler.ReadJwtToken(token);
-
-                // Lấy userId từ claim
-                var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "UserId");
-                if (userIdClaim == null)
+                // Ensure the requested username is not null or empty.
+                if (string.IsNullOrEmpty(roleRequest.RequestedUsername))
                 {
-                    return Unauthorized("UserId not found in token.");
+                    return BadRequest("Requested username cannot be null or empty.");
                 }
 
-                // Lấy userId
-                var userId = int.Parse(userIdClaim.Value);
+                // Retrieve the logged-in username from the RoleRequestDTO
+                var loggedInUsername = roleRequest.LoggedInUsername;
 
-                // Tìm người dùng từ cơ sở dữ liệu dựa trên userId
-                var user = _userService.GetUser(userId);
+                // Call the service method to handle the request, passing the requested username and the logged-in username.
+                var user = await _userService.RequestManagerRole(roleRequest.RequestedUsername, loggedInUsername);
 
-                if (user != null)
-                {
-                    // Trả thông tin người dùng
-                    var userInfo = new
-                    {
-                        Fullname = user.Fullname, 
-                        Email = user.Email,
-                        PhoneNumber = user.PhoneNumber,
-                        Address = user.Address
-                    };
-                    return Ok(userInfo);
-                }
-                else
-                {
-                    return NotFound("User not found.");
-                }
+                return Ok(user);
             }
             catch (Exception ex)
             {
-                return BadRequest("Error processing request: " + ex.Message);
+                return BadRequest(ex.Message);
             }
         }
+
     }
 }

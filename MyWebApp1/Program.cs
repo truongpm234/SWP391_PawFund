@@ -7,29 +7,28 @@ using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Thêm dịch vụ cho Swagger
+// swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCustomServices(builder.Configuration); // Thêm tất cả dịch vụ từ lớp mở rộng
+builder.Services.AddCustomServices(builder.Configuration);
 
-// Cấu hình Google authentication
+// Cấu hình Google
 builder.Services.Configure<GoogleOptions>(builder.Configuration.GetSection("Google"));
 
 // Thêm DbContext
 builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DBCS")));
 
-// Xây dựng ứng dụng
+// build app
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
 //    app.UseDeveloperExceptionPage();
 //    app.UseSwagger();
 //    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pawfund Platform v1"));
-//}zz
+//}
 
 // Cấu hình middleware cho Swagger
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
@@ -39,16 +38,14 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pawfund Platform V1");
-        c.RoutePrefix = "swagger"; // Đặt đường dẫn đến Swagger
+        c.RoutePrefix = "swagger";
     });
 }
 
 // Kích hoạt Routing
-app.UseRouting();
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-// Chạy ứng dụng
 app.Run();

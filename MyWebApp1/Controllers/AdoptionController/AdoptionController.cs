@@ -31,22 +31,21 @@ namespace MyWebApp1.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception (consider using a logging framework)
+                // Log exception
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, "An internal error occurred.");
             }
         }
 
-
-        [Authorize(Policy = "AdminOnly")]
-        [HttpGet]
+        [Authorize(Policy = "ManagerOnly")]
+        [HttpGet("get-all-adoptions")]
         public IActionResult GetAdoptions()
         {
             var adoptions = _adoptionService.GetAdoptions();
             return Ok(adoptions);
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "ManagerOnly")]
         [HttpPut("approve/{adoptionId}")]
         public IActionResult ApproveAdoption(int adoptionId)
         {

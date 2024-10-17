@@ -7,8 +7,8 @@ namespace MyWebApp1.Models
     public class Shelter
     {
        
-        public string shelterLocation { get; set; }
-        public string shelterName { get; set; }
-        public int capacity { get; set; }
+        public string ShelterLocation { get; set; }
+        public string ShelterName { get; set; }
+        public int Capacity { get; set; }
     }
 }

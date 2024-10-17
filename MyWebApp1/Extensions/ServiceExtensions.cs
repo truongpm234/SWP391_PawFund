@@ -14,19 +14,23 @@ namespace MyWebApp1.Extensions
         public static void AddCustomServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllers();
+
             services.AddEndpointsApiExplorer();
+
             services.AddSwaggerGen();
 
-            services.AddScoped<PetService>();
-            services.AddScoped<AdoptionService>();
             // Gọi phương thức AddSwaggerAuthentication từ DependencyInjection
             services.AddSwaggerAuthentication();
+            services.AddScoped<AdoptionService>();
             services.AddScoped<UserService>();
+            services.AddScoped<ManagerService>();
+            services.AddScoped<AdminService>();
+            services.AddScoped<AdoptionService>();
 
             services.AddLogging(config =>
             {
-                config.AddConsole(); // Thêm ghi log vào console
-                config.AddDebug(); // Thêm ghi log vào debug
+                config.AddConsole(); // Thêm log vào console
+                config.AddDebug();
             });
 
             services.AddAuthorization(options =>
@@ -35,6 +39,7 @@ namespace MyWebApp1.Extensions
                 options.AddPolicy("UserOnly", policy => policy.RequireClaim("Role", "User"));
                 options.AddPolicy("ManagerOnly", policy => policy.RequireClaim("Role", "Manager"));
             });
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,7 +58,6 @@ namespace MyWebApp1.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                 };
             })
-
 
             .AddGoogle(googleOptions =>
             {

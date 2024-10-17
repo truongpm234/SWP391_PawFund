@@ -4532,19 +4532,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {}
+    "C:\\Users\\ghoul\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
+      "projectUniqueName": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund1\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
       "projectName": "MyWebApp1",
-      "projectPath": "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\obj\\",
+      "projectPath": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund1\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
+      "packagesPath": "C:\\Users\\ghoul\\.nuget\\packages\\",
+      "outputPath": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund1\\SWP391_PawFund\\MyWebApp1\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ghoul\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4640,7 +4645,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

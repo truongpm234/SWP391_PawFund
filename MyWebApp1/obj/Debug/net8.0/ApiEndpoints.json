@@ -1,12 +1,90 @@
 [
   {
-    "ContainingType": "MyWebApp1.Controllers.AdoptionController",
-    "Method": "GetAdoptions",
-    "RelativePath": "api/Adoption",
+    "ContainingType": "MyWebApp1.Controllers.AdminController",
+    "Method": "ApproveManagerRequest",
+    "RelativePath": "api/Admin/approveManagerRequest/{userId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MyWebApp1.Models.MyWebApp1.Models.User",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdminController",
+    "Method": "GetAllManagerRequests",
+    "RelativePath": "api/Admin/get-all-requests",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[MyWebApp1.Models.MyWebApp1.Models.User, MyWebApp1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdminController",
+    "Method": "GetUsers",
+    "RelativePath": "api/Admin/GetAllUsers",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdminController",
+    "Method": "GetUser",
+    "RelativePath": "api/Admin/GetUserById",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdminController",
+    "Method": "RemoveUserRole",
+    "RelativePath": "api/Admin/remove-user-role/{userId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -27,6 +105,16 @@
   },
   {
     "ContainingType": "MyWebApp1.Controllers.AdoptionController",
+    "Method": "GetAdoptions",
+    "RelativePath": "api/Adoption/get-all-adoptions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdoptionController",
     "Method": "CreateAdoptionRequest",
     "RelativePath": "api/Adoption/request",
     "HttpMethod": "POST",
@@ -42,119 +130,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "MyWebApp1.Controllers.PetsController",
-    "Method": "AddNewPet",
-    "RelativePath": "api/Pets/AddNewPet",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "pet",
-        "Type": "MyWebApp1.Models.Pet",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MyWebApp1.Controllers.PetsController",
-    "Method": "DeletePet",
-    "RelativePath": "api/Pets/delete-pet",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MyWebApp1.Controllers.PetsController",
-    "Method": "GetAllPets",
-    "RelativePath": "api/Pets/get-all",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MyWebApp1.Controllers.PetsController",
-    "Method": "GetPetById",
-    "RelativePath": "api/Pets/get-by-id",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MyWebApp1.Controllers.PetsController",
-    "Method": "UpdatePet",
-    "RelativePath": "api/Pets/update-pet",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "pet",
-        "Type": "MyWebApp1.Models.Pet",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MyWebApp1.Controllers.UsersController",
-    "Method": "GetCurrentLoginUser",
-    "RelativePath": "api/Users/GetCurrentLoginUser",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MyWebApp1.Controllers.UsersController",
-    "Method": "GetUser",
-    "RelativePath": "api/Users/GetUser",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MyWebApp1.Controllers.UsersController",
-    "Method": "GetUsers",
-    "RelativePath": "api/Users/GetUsers",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MyWebApp1.Controllers.UsersController",
+    "ContainingType": "MyWebApp1.Controllers.AuthController",
     "Method": "Login",
-    "RelativePath": "api/Users/Login",
+    "RelativePath": "api/Auth/Login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -168,9 +146,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "MyWebApp1.Controllers.UsersController",
-    "Method": "Registration",
-    "RelativePath": "api/Users/Registration",
+    "ContainingType": "MyWebApp1.Controllers.AuthController",
+    "Method": "Register",
+    "RelativePath": "api/Auth/Register",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -182,6 +160,116 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.ManagerController",
+    "Method": "ApprovePet",
+    "RelativePath": "api/Manager/approve-pet/{petId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "petId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.ManagerController",
+    "Method": "DeletePet",
+    "RelativePath": "api/Manager/delete-pet/{petId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "petId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.ManagerController",
+    "Method": "GetAllPets",
+    "RelativePath": "api/Manager/get-all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.UsersController",
+    "Method": "AddNewPet",
+    "RelativePath": "api/Users/AddNewPet",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pet",
+        "Type": "MyWebApp1.Models.Pet",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.UsersController",
+    "Method": "GetAllApprovedPets",
+    "RelativePath": "api/Users/get-all-approved-pet",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.UsersController",
+    "Method": "GetApprovedPetById",
+    "RelativePath": "api/Users/get-approved-pet-by-id",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.UsersController",
+    "Method": "RequestManagerRole",
+    "RelativePath": "api/Users/request-role-manager",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roleRequest",
+        "Type": "MyWebApp1.DTO.RoleRequestDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MyWebApp1.Models.MyWebApp1.Models.User",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "MyWebApp1.Controllers.UsersController",

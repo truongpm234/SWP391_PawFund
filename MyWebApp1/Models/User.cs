@@ -19,6 +19,8 @@ namespace MyWebApp1.Models
             public bool IsApproved { get; set; }
             public string Password { get; set; }
             public DateTime CreatedAt { get; set; }
+            //public int RoleId { get; set; }
+            //public string RoleName { get; set; }
         }
 
     }

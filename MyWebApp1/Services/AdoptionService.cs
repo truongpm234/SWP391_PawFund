@@ -20,7 +20,7 @@ namespace MyWebApp1.Services
             {
                 UserId = request.UserId,
                 PetId = request.PetId,
-                IsApproved = false,  // Initially, it’s not approved
+                IsApproved = false,
                 Note = request.Note
             };
 
@@ -28,21 +28,52 @@ namespace MyWebApp1.Services
             return _context.SaveChanges() > 0;
         }
 
-        public IEnumerable<Adoption> GetAdoptions()
+        public IEnumerable<object> GetAdoptions()
         {
-            return _context.Adoptions.ToList();
+
+            var adoptions = from a in _context.Adoptions
+                            join u in _context.Users on a.UserId equals u.UserId
+                            join p in _context.Pets on a.PetId equals p.PetId
+                            select new
+                            {
+                                a.AdoptionId,
+                                a.UserId,
+                                a.PetId,
+                                a.IsApproved,
+                                a.Note,
+                                Username = u.Username,
+                                PetName = p.PetName
+                            };
+
+            return adoptions.ToList();
         }
 
         public bool ApproveAdoption(int adoptionId)
         {
+            // Find the adoption request by its ID
             var adoption = _context.Adoptions.FirstOrDefault(a => a.AdoptionId == adoptionId);
             if (adoption == null)
             {
-                return false;
+                return false; // Return false if the adoption request is not found
             }
 
+            // Set the adoption request as approved
             adoption.IsApproved = true;
+
+            // Find the corresponding pet by PetId and update its isAdopted status to true
+            var pet = _context.Pets.FirstOrDefault(p => p.PetId == adoption.PetId);
+            if (pet != null)
+            {
+                pet.IsAdopted = true; // Mark the pet as adopted
+            }
+            else
+            {
+                throw new Exception("Pet not found.");
+            }
+
+            // Save the changes in the database
             return _context.SaveChanges() > 0;
         }
+
     }
 }

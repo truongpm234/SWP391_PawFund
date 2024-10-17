@@ -11,8 +11,6 @@ namespace MyWebApp1.Models
         public string ImageUrl { get; set; }
         public bool IsThumbnailImage { get; set; }
         public int PetId { get; set; }
-
-        // Navigation property
         public Pet Pet { get; set; }
     }
 }
