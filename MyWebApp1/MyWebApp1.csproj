@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\TransactionController .cs" />
     <Compile Remove="Models\AdoptionRequestModel.cs" />
   </ItemGroup>
 

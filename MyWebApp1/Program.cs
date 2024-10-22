@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Thêm dịch vụ cho Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<TransactionService>();
 builder.Services.AddCustomServices(builder.Configuration); // Thêm tất cả dịch vụ từ lớp mở rộng
 
 // Cấu hình Google authentication

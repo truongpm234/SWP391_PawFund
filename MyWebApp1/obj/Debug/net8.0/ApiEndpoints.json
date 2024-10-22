@@ -116,6 +116,58 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "TransactionController",
+    "Method": "VnpayCallback",
+    "RelativePath": "api/Transaction/callback",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vnp_ResponseCode",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "vnp_TxnRef",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "vnp_Amount",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Token",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "TransactionId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TransactionController",
+    "Method": "CreateTransaction",
+    "RelativePath": "api/Transaction/create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MyWebApp1.Models.CreateTransactionRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MyWebApp1.Controllers.UsersController",
     "Method": "GetCurrentLoginUser",
     "RelativePath": "api/Users/GetCurrentLoginUser",
