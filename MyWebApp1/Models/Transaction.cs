@@ -29,6 +29,7 @@ namespace MyWebApp1.Models
         public int TransactionTypeId { get; set; }
 
         // Navigation properties
-        
+       
+
     }
 }

@@ -89,10 +89,11 @@ public class TransactionService
         vnPay.AddRequestData("vnp_OrderType", "billpayment");
         vnPay.AddRequestData("vnp_ReturnUrl", vnp_ReturnUrl);
         vnPay.AddRequestData("vnp_TxnRef", transactionId.ToString());
-        vnPay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+        vnPay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
 
         // Generate the secure URL
         string paymentUrl = vnPay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+        Console.WriteLine("Generated Payment URL: " + paymentUrl);
         return paymentUrl;
     }
 }
