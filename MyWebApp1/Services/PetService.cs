@@ -28,9 +28,15 @@ namespace MyWebApp1.Services
                 MedicalCondition = pet.MedicalCondition,
                 ContactPhoneNumber = pet.ContactPhoneNumber,
                 ContactEmail = pet.ContactEmail,
+<<<<<<< HEAD
                 PetCategoryId = pet.PetCategoryId, 
                 IsAdopted = false,
                 IsApproved = false 
+=======
+                PetCategoryId = pet.PetCategoryId,
+                IsAdopted = false,
+                IsApproved = false
+>>>>>>> Dat
             };
 
             // Thêm vào DB
@@ -41,7 +47,11 @@ namespace MyWebApp1.Services
             return Addpet;
         }
 
+<<<<<<< HEAD
         public async Task<List<PetResponse>> GetAllPets()
+=======
+        public async Task<List<Pet>> GetAllPets()
+>>>>>>> Dat
         {
             var pets = await _context.Pets.ToListAsync();
             var petList = new List<PetResponse>();

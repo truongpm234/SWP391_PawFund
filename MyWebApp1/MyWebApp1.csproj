@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
+=======
+    <Compile Remove="Controllers\TransactionController .cs" />
+    <Compile Remove="Models\AdoptionRequestModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+>>>>>>> Dat
     <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />

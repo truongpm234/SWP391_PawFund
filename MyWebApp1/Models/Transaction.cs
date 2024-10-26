@@ -1,25 +1,35 @@
 ﻿using MyWebApp1.Models.MyWebApp1.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWebApp1.Models
 {
-    [Table(name: "Transaction")]
-
+    [Table("Transaction")]
     public class Transaction
     {
+        [Key]
         public int TransactionId { get; set; }
+
+        [Required]
         public decimal TransactionAmount { get; set; }
+
         public bool IsMoneyDonation { get; set; }
+
         public bool IsResourceDonation { get; set; }
+
         public int? DonationEventId { get; set; }
+
+        [Required]
         public int UserId { get; set; }
+
+        [Required]
         public int TransactionStatusId { get; set; }
+
+        [Required]
         public int TransactionTypeId { get; set; }
 
         // Navigation properties
-        public DonationEvent DonationEvent { get; set; }
-        public User User { get; set; }
-        public TransactionStatus TransactionStatus { get; set; }
-        public TransactionType TransactionType { get; set; }
+       
+
     }
 }

@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using MyWebApp1.Models.MyWebApp1.Models;
 using MyWebApp1.DTO;
+using System.Data;
 
 namespace MyWebApp1.Services
 {
@@ -57,23 +58,38 @@ namespace MyWebApp1.Services
         }
 
 
-        public string Login(LoginDTO loginDTO)
+        public LoginResponseDTO Login(LoginDTO loginDTO)
         {
+<<<<<<< HEAD
 <<<<<<< HEAD
             try
 =======
             // Kiểm tra xem email và mật khẩu có được cung cấp hay không
+=======
+>>>>>>> Dat
             if (string.IsNullOrEmpty(loginDTO.Email) || string.IsNullOrEmpty(loginDTO.Password))
             {
-                return "Email and Password are required.";
+                throw new Exception("Email and Password are required.");
             }
 
-            // Tìm người dùng theo Email và mật khẩu
-            var user = _dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password); // Băm mật khẩu tại đây
+            var user = _dbContext.Users.FirstOrDefault(x => x.Email == loginDTO.Email && x.Password == loginDTO.Password);
 
             if (user == null)
             {
                 throw new Exception("Invalid credentials.");
+            }
+
+            // Get the user's role
+            var userRole = _dbContext.UserRoles.FirstOrDefault(ur => ur.UserId == user.UserId);
+            if (userRole == null)
+            {
+                throw new Exception("User role not found.");
+            }
+
+            var role = _dbContext.Roles.FirstOrDefault(r => r.RoleId == userRole.RoleId);
+            if (role == null)
+            {
+                throw new Exception("Role not found for this user.");
             }
 
             var claims = new[]
@@ -82,20 +98,31 @@ namespace MyWebApp1.Services
         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:subject"]),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         new Claim("UserId", user.UserId.ToString()),
-        new Claim("Email", user.Email.ToString()),
+        new Claim("Email", user.Email),
+        new Claim("Role", role.RoleName) // Add role name to claims
     };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var tokenExpiration = DateTime.UtcNow.AddMinutes(60);
             var token = new JwtSecurityToken(
                 _configuration["Jwt:issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.UtcNow.AddMinutes(60),
+                expires: tokenExpiration,
                 signingCredentials: signIn
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new LoginResponseDTO
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                UserId = user.UserId,
+                Email = user.Email,
+                Fullname = user.Fullname,
+                Username = user.Username,
+                RoleName = role.RoleName, // Include role name in the response
+                TokenExpiration = tokenExpiration
+            };
         }
 
 

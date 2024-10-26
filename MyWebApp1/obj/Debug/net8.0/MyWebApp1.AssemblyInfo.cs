@@ -15,10 +15,14 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 <<<<<<< HEAD
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2612faad63847147ac361d869e06761ae02ae0d6")]
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b007d7e347b30ccf275f197ab4ed6d57eefa05ca")]
 >>>>>>> parent of 1004465 (fix Pet PetCategory PetService)
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0e1f30fe8389874d48734806d4564ff2b13b766")]
+>>>>>>> Dat
 [assembly: System.Reflection.AssemblyProductAttribute("MyWebApp1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MyWebApp1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
