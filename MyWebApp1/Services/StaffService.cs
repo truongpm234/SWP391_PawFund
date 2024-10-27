@@ -15,13 +15,13 @@ namespace MyWebApp1.Services
     {
         private readonly MyDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
+        private readonly IEmailService _emailService;
 
-        public StaffService(MyDbContext context, IHttpContextAccessor httpContextAccessor)
+        public StaffService(MyDbContext context, IHttpContextAccessor httpContextAccessor, IEmailService emailService)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
-           
+            _emailService = emailService;
 
         }
 
@@ -224,7 +224,14 @@ namespace MyWebApp1.Services
             }
 
             // gửi email thông báo
-            
+            Mailrequest mailrequest = new Mailrequest
+            {
+                ToEmail = userEmail,
+                Subject = "Pet Adoption Notification from PawFund",
+                Body = "Your adoption staus pet has been changed. Please, go to PawFund for detail!"
+            };
+
+            await _emailService.SendEmailAdoptionAsync(mailrequest);
 
             return true;
         }

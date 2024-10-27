@@ -4,16 +4,19 @@ using Microsoft.EntityFrameworkCore;
 using MyWebApp1.Data;
 using MyWebApp1.Models.MyWebApp1.Models;
 using MyWebApp1.Models;
+using MyWebApp1.DTO;
 
 namespace MyWebApp1.Services
 {
     public class AdminService
     {
         private readonly MyDbContext _dbContext;
+        private readonly IEmailService _emailService;
 
-        public AdminService(MyDbContext dbContext)
+        public AdminService(MyDbContext dbContext, IEmailService emailService)
         {
             _dbContext = dbContext;
+            _emailService = emailService;
         }
 
         public List<User> GetUsers()
@@ -67,7 +70,6 @@ namespace MyWebApp1.Services
             return user; // Trả về user
         }
 
-
         public async Task<List<User>> GetAllManagerRequests()
         {
             // Lấy danh sách tất cả user đã yêu cầu quyền manager nhưng chưa được phê duyệt
@@ -112,6 +114,23 @@ namespace MyWebApp1.Services
             user.IsApproved = true;
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
+
+            //email thong bao
+            var userEmail = user.Email;
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                throw new Exception("Email not found.");
+            }
+
+            // gửi email thông báo
+            Mailrequest mailrequest = new Mailrequest
+            {
+                ToEmail = userEmail,
+                Subject = "Request Manager role Notification from PawFund",
+                Body = "Your request manager role status has been changed."
+            };
+
+            await _emailService.SendEmaiRequestRoleAsync(mailrequest);
 
             return user;
         }

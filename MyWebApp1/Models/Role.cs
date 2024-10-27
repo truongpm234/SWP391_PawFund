@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using MyWebApp1.Models.MyWebApp1.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWebApp1.Models
 {

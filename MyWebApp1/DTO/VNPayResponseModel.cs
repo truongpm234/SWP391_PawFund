@@ -1,5 +1,6 @@
 ﻿// Models/VNPayResponseModel.cs
-namespace MyWebApp1.Models
+namespace MyWebApp1.DTO
+
 {
     public class VNPayResponseModel
     {

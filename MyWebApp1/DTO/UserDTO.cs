@@ -1,4 +1,4 @@
-﻿namespace MyWebApp1.DTO
+namespace MyWebApp1.DTO
 {
     public class UserDTO
     {

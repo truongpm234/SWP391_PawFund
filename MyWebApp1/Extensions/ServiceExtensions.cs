@@ -6,6 +6,9 @@ using System.Text;
 using MyWebApp1.Services;
 using MyWebApp1.Configuration;
 using MyWebApp1.Data;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using MyWebApp1.Controllers;
 
 namespace MyWebApp1.Extensions
 {
@@ -14,22 +17,43 @@ namespace MyWebApp1.Extensions
         public static void AddCustomServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllers();
-
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+            services.AddHttpContextAccessor();
+        
             services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen();
 
             // Gọi phương thức AddSwaggerAuthentication từ DependencyInjection
             services.AddSwaggerAuthentication();
+
             services.AddScoped<AdoptionService>();
+
             services.AddScoped<UserService>();
+
             services.AddScoped<ManagerService>();
+
             services.AddScoped<AdminService>();
-            services.AddScoped<AdoptionService>();
+
+            services.AddScoped<StaffService>();
+
+            services.AddScoped<DonationEventService>();
+
+            services.AddScoped<IEmailService, EmailService>();
+
+            services.AddScoped<IShelterService, ShelterService>();
+
+            //services.AddControllers().AddJsonOptions(options =>
+            //{
+            //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            //});
 
             services.AddLogging(config =>
             {
-                config.AddConsole(); // Thêm log vào console
+                config.AddConsole();
                 config.AddDebug();
             });
 
@@ -37,7 +61,12 @@ namespace MyWebApp1.Extensions
             {
                 options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Role", "Admin"));
                 options.AddPolicy("UserOnly", policy => policy.RequireClaim("Role", "User"));
+                options.AddPolicy("ManagerOnly", policy => policy.RequireClaim("Role", "Manager"));
                 options.AddPolicy("StaffOnly", policy => policy.RequireClaim("Role", "Staff"));
+                options.AddPolicy("UserOrStaff", policy => policy.RequireClaim("Role", "User", "Staff"));
+                options.AddPolicy("ManagerOrStaff", policy => policy.RequireClaim("Role", "Manager", "Staff"));
+                options.AddPolicy("ManagerOrAdmin", policy => policy.RequireClaim("Role", "Manager", "Admin"));
+
             });
 
             services.AddAuthentication(options =>
@@ -51,7 +80,7 @@ namespace MyWebApp1.Extensions
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = true,
+                    ValidateLifetime = false,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = configuration["Jwt:Issuer"],
                     ValidAudience = configuration["Jwt:Audience"],
@@ -67,6 +96,7 @@ namespace MyWebApp1.Extensions
             });
 
             services.AddDbContext<MyDbContext>(e => e.UseSqlServer(configuration.GetConnectionString("DBCS")));
+            services.AddControllers();
         }
     }
 }

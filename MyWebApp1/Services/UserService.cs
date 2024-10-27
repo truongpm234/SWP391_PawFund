@@ -9,6 +9,10 @@ using MyWebApp1.DTO;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 using MyWebApp1.Payload.Response;
+using SendGrid.Helpers.Mail;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyWebApp1.Services
 {
@@ -16,13 +20,17 @@ namespace MyWebApp1.Services
     {
         private readonly MyDbContext _dbContext;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IEmailService _emailService;
 
-        public UserService(MyDbContext dbContext, IConfiguration configuration)
+
+        public UserService(MyDbContext dbContext, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IEmailService emailService)
         {
             _dbContext = dbContext;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+            _emailService = emailService;
         }
-
         public string Register(RegisterUserDTO userDTO)
         {
             try
@@ -48,7 +56,7 @@ namespace MyWebApp1.Services
                 _dbContext.Users.Add(newUser);
                 _dbContext.SaveChanges();
 
-                // Gán role mặc định là "user"
+                // gán role mặc định user
                 var userRole = new UserRole
                 {
                     UserId = newUser.UserId,
@@ -61,7 +69,6 @@ namespace MyWebApp1.Services
             }
             catch (Exception ex)
             {
-                // Ghi log lỗi
                 Console.WriteLine(ex.Message);
                 return $"An error occurred: {ex.Message}";
             }
@@ -81,7 +88,7 @@ namespace MyWebApp1.Services
                 throw new Exception("Invalid credentials.");
             }
 
-            // Get the user role
+            // lay role user
             var userRole = _dbContext.UserRoles.FirstOrDefault(ur => ur.UserId == user.UserId);
             if (userRole == null)
             {
@@ -125,87 +132,61 @@ namespace MyWebApp1.Services
                 TokenExpiration = tokenExpiration
             };
         }
-
-        //public async Task<CurrentUserDTO> GetCurrentUserLogin(ClaimsPrincipal currentUser)
-        //{
-        //    try
-        //    {
-        //        // Lấy UserId từ token
-        //        var currentUserId = int.Parse(currentUser.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value);
-
-        //        // Tìm người dùng dựa trên UserId
-        //        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == currentUserId);
-        //        if (user == null)
-        //        {
-        //            throw new Exception("User not found.");
-        //        }
-
-        //        // Tạo DTO để trả về thông tin người dùng
-        //        return new CurrentUserDTO
-        //        {
-        //            UserId = user.UserId,
-        //            Fullname = user.Fullname,
-        //            Username = user.Username,
-        //            Email = user.Email,
-        //            PhoneNumber = user.PhoneNumber,
-        //            Address = user.Address
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception($"An error occurred: {ex.Message}");
-        //    }
-        //}
-
-        public async Task<LoginResponseDTO> UpdateProfile(int userId, UpdateProfileDTO userDTO, ClaimsPrincipal currentUser)
+        public async Task<LoginResponseDTO> UpdateProfile(ClaimsPrincipal currentUser, UpdateProfileDTO userDTO)
         {
             try
             {
-                // Lấy UserId từ token
+                // lay UserId từ token
                 var currentUserId = int.Parse(currentUser.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value);
 
-                // Chỉ cho phép chỉnh sửa chính thông tin của người dùng
-                if (currentUserId != userId)
-                {
-                    throw new UnauthorizedAccessException("You are not authorized to update this profile.");
-                }
-
-                // Tìm người dùng cần cập nhật
-                var userToUpdate = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+                var userToUpdate = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserId == currentUserId);
                 if (userToUpdate == null)
                 {
                     throw new Exception("User not found.");
                 }
 
-                // Kiểm tra xem Username mới có bị trùng với người khác không
+                // check xem username mới có bị trùng với user khac khong
                 if (!string.IsNullOrEmpty(userDTO.Username) &&
-                    _dbContext.Users.Any(u => u.Username == userDTO.Username && u.UserId != userId))
+                    _dbContext.Users.Any(u => u.Username == userDTO.Username && u.UserId != currentUserId))
                 {
                     throw new Exception("Username already exists.");
                 }
 
-                // Cập nhật các trường chỉ khi có giá trị
-                userToUpdate.Username = !string.IsNullOrEmpty(userDTO.Username) ? userDTO.Username : userToUpdate.Username;
-                userToUpdate.Fullname = !string.IsNullOrEmpty(userDTO.Fullname) ? userDTO.Fullname : userToUpdate.Fullname;
-                userToUpdate.Email = !string.IsNullOrEmpty(userDTO.Email) ? userDTO.Email : userToUpdate.Email;
-                userToUpdate.PhoneNumber = !string.IsNullOrEmpty(userDTO.PhoneNumber) ? userDTO.PhoneNumber : userToUpdate.PhoneNumber;
-                userToUpdate.Address = !string.IsNullOrEmpty(userDTO.Address) ? userDTO.Address : userToUpdate.Address;
-
-                // Cập nhật mật khẩu nếu có giá trị mới
+                // Cập nhật các fied chỉ khi có giá trị
+                if (!string.IsNullOrEmpty(userDTO.Username))
+                {
+                    userToUpdate.Username = userDTO.Username;
+                }
+                if (!string.IsNullOrEmpty(userDTO.Fullname))
+                {
+                    userToUpdate.Fullname = userDTO.Fullname;
+                }
+                if (!string.IsNullOrEmpty(userDTO.Email))
+                {
+                    userToUpdate.Email = userDTO.Email;
+                }
+                if (!string.IsNullOrEmpty(userDTO.PhoneNumber))
+                {
+                    userToUpdate.PhoneNumber = userDTO.PhoneNumber;
+                }
+                if (!string.IsNullOrEmpty(userDTO.Address))
+                {
+                    userToUpdate.Address = userDTO.Address;
+                }
                 if (!string.IsNullOrEmpty(userDTO.Password))
                 {
                     userToUpdate.Password = userDTO.Password;
                 }
 
-                // Lưu thay đổi vào database
+                // save db
                 _dbContext.Users.Update(userToUpdate);
                 await _dbContext.SaveChangesAsync();
 
-                // Lấy vai trò người dùng
+                // role user
                 var userRole = await _dbContext.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userToUpdate.UserId);
                 var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.RoleId == userRole.RoleId);
 
-                // Tạo token JWT mới
+                // tao token mới
                 var tokenExpiration = DateTime.UtcNow.AddMinutes(60);
                 var claims = new[]
                 {
@@ -224,7 +205,7 @@ namespace MyWebApp1.Services
                     signingCredentials: signIn
                 );
 
-                // Trả về LoginResponseDTO chứa thông tin người dùng sau khi cập nhật
+                // Trả về LoginResponseDTO
                 return new LoginResponseDTO
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -242,28 +223,46 @@ namespace MyWebApp1.Services
             }
         }
 
-
-        public async Task<User> RequestManagerRole(string requestedUsername, string loggedInUsername)
+        public async Task<User> RequestManagerRole()
         {
-            // Check if the username in the request matches the logged-in user's username.
-            if (requestedUsername != loggedInUsername)
+            // Lấy token từ header Authorization
+            var authHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
             {
-                throw new Exception("You can only request a role for your own account.");
+                throw new Exception("Authorization token is missing or invalid.");
             }
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == requestedUsername);
+            // Loại bỏ tiền tố "Bearer " để lấy token
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            // Giải mã token để lấy thông tin
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwtToken = jwtHandler.ReadJwtToken(token);
+
+            // Lấy userId từ claim trong token
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "UserId");
+            if (userIdClaim == null)
+            {
+                throw new Exception("UserId not found in token.");
+            }
+
+            // Lấy userId
+            var userId = int.Parse(userIdClaim.Value);
+
+            // Tìm người dùng từ cơ sở dữ liệu dựa trên userId
+            var user = await _dbContext.Users.FindAsync(userId);
             if (user == null)
             {
                 throw new Exception("User not found.");
             }
 
-            // Check if the user has already requested the manager role.
+            // Kiểm tra xem người dùng đã yêu cầu vai trò manager chưa
             if (user.IsApprovedUser)
             {
                 throw new Exception("User has already requested the manager role.");
             }
 
-            // Mark the user as having requested the "manager" role.
+            // Đánh dấu người dùng đã yêu cầu vai trò manager
             user.IsApprovedUser = true;
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
@@ -271,39 +270,80 @@ namespace MyWebApp1.Services
             return user;
         }
 
-        public async Task<Models.Pet> AddNewPet(Models.Pet pet)
+        public async Task<Models.Pet> AddNewPet(Models.Pet pet, int userId)
         {
-            // Tạo pet mới
-            var Addpet = new Models.Pet
-            {
-                PetName = pet.PetName,
-                PetType = pet.PetType,
-                Age = pet.Age,
-                Gender = pet.Gender,
-                Address = pet.Address,
-                MedicalCondition = pet.MedicalCondition,
-                ContactPhoneNumber = pet.ContactPhoneNumber,
-                ContactEmail = pet.ContactEmail,
-                PetCategoryId = pet.PetCategoryId,
-                IsAdopted = false,
-                IsApproved = false
-            };
+            // Gán UserId cho pet
+            pet.UserId = userId;
 
-            // Thêm vào db
-            await _dbContext.Pets.AddAsync(Addpet);
+            // Thêm pet vào db
+            await _dbContext.Pets.AddAsync(pet);
+
+            // Nếu có ảnh, thêm chúng vào bảng PetImage
+            if (pet.PetImages != null && pet.PetImages.Any())
+            {
+                foreach (var image in pet.PetImages)
+                {
+                    image.PetId = pet.PetId;
+                    await _dbContext.PetImages.AddAsync(image);
+                }
+            }
+
             await _dbContext.SaveChangesAsync();
 
-            return Addpet;
+            var userEmail = await _dbContext.Users
+                .Where(u => u.UserId == userId)
+                .Select(u => u.Email)
+                .FirstOrDefaultAsync();
+
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                throw new Exception("User email not found.");
+            }
+
+            // Gửi email thông báo
+            Mailrequest mailrequest = new Mailrequest
+            {
+                ToEmail = userEmail,
+                Subject = "Pet Request Notification from PawFund",
+                Body = "Your request to add a pet on PawFund is awaiting approval. Please wait! Thank you for your contribution."
+            };
+
+            await _emailService.SendEmaiAddPetRequest(mailrequest);  // Gọi phương thức gửi email
+
+            return pet;
         }
 
-        public async Task<List<Pet>> GetAllApprovedPets()
+        public async Task<List<PetListDTO>> GetAllApprovedPets()
         {
             // Lọc các pet có isApproved = true và isAdopted = false
             return await _dbContext.Pets
-                .Where(pet => pet.IsApproved == true && pet.IsAdopted == false)
+                .Where(pet => pet.IsApproved && !pet.IsAdopted)
+                .Select(pet => new PetListDTO
+                {
+                    PetId = pet.PetId,
+                    PetName = pet.PetName,
+                    PetType = pet.PetType,
+                    Age = pet.Age,
+                    Gender = pet.Gender,
+                    Address = pet.Address,
+                    MedicalCondition = pet.MedicalCondition,
+                    Description = pet.Description,
+                    Color = pet.Color,
+                    Size = pet.Size,
+                    ContactPhoneNumber = pet.ContactPhoneNumber,
+                    ContactEmail = pet.ContactEmail,
+                    PetCategoryId = pet.PetCategoryId,
+                    IsAdopted = pet.IsAdopted,
+                    IsApproved = pet.IsApproved,
+                    ApprovedByUserId = pet.ApprovedByUserId,
+                    ShelterId = pet.ShelterId,
+                    ShelterName = _dbContext.Shelters
+                        .Where(shelter => shelter.ShelterId == pet.ShelterId)
+                        .Select(shelter => shelter.ShelterName)
+                        .FirstOrDefault()
+                })
                 .ToListAsync();
         }
-
 
         public async Task<PetResponse> GetApprovedPet(int petId)
         {
@@ -323,6 +363,9 @@ namespace MyWebApp1.Services
                 PetName = pet.PetName,
                 Address = pet.Address,
                 MedicalCondition = pet.MedicalCondition,
+                Description = pet.Description,
+                Size = pet.Size,
+                Color = pet.Color,
                 ContactPhoneNumber = pet.ContactPhoneNumber,
                 ContactEmail = pet.ContactEmail,
                 Age = pet.Age,
@@ -332,5 +375,36 @@ namespace MyWebApp1.Services
                 IsApproved = pet.IsApproved
             };
         }
+
+        public async Task<List<Pet>> GetPetsByUserId(int userId)
+        {
+            var pets = await _dbContext.Pets
+                .Where(p => p.UserId == userId)
+                .Include(p => p.PetImages)
+                .ToListAsync();
+
+            if (!pets.Any())
+            {
+                // Ghi log nếu không tìm thấy pet nào
+                Console.WriteLine($"No pets found for user with ID {userId}.");
+            }
+            else
+            {
+                Console.WriteLine($"Found {pets.Count} pets for user with ID {userId}.");
+            }
+
+            return pets;
+        }
+
+
+        public async Task<List<Pet>> GetPetsByShelter(int shelterId)
+        {
+            // Lấy danh sách thú cưng đã được duyệt (Approved = true) thuộc shelter
+            var pets = await _dbContext.Pets
+                                     .Where(p => p.ShelterId == shelterId && p.IsApproved == true)
+                                     .ToListAsync();
+            return pets;
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MyWebApp1.Models
+﻿namespace MyWebApp1.DTO
 {
     public class Login
     {

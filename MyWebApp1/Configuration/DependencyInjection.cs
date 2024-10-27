@@ -22,6 +22,8 @@ namespace MyWebApp1.Configuration
 
         public static IServiceCollection AddSwaggerAuthentication(this IServiceCollection services)
         {
+            services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo() { Title = "Pawfund Platform", Version = "v1" });

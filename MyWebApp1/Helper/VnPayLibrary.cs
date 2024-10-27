@@ -1,8 +1,4 @@
-﻿using Azure.Core;
-using Cursus_Api.Helper;
-using Microsoft.AspNetCore.Mvc;
-using MyWebApp1.Models;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
