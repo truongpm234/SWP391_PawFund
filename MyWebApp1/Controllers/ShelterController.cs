@@ -36,7 +36,8 @@ namespace MyWebApp1.Controllers
                 Contact = shelter.Contact,
                 Email = shelter.Email,
                 OpeningClosing = shelter.OpeningClosing,
-                ShelterImage = shelter.ShelterImage
+                ShelterImage = shelter.ShelterImage,
+                Description = shelter.Description
             };
 
             return Ok(shelterInfo);
