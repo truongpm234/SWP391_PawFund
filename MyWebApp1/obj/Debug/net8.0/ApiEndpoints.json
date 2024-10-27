@@ -204,6 +204,68 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MyWebApp1.Controllers.StaffController",
+    "Method": "ApproveAdoptionByStaff",
+    "RelativePath": "api/staff/approve-adoption/{adoptionId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "adoptionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "MyWebApp1.DTO.ApproveAdoptionRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.StaffController",
+    "Method": "GetAdoptions",
+    "RelativePath": "api/staff/get-all-adoptions-by-staff",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.StaffController",
+    "Method": "GetPetsByShelterForStaff",
+    "RelativePath": "api/staff/get-pet-in-shelter-by-staff",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.StaffController",
+    "Method": "UpdatePet",
+    "RelativePath": "api/staff/update-pet-by-staff/{petId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "petId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updatedPet",
+        "Type": "MyWebApp1.DTO.PetUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MyWebApp1.Controllers.UsersController",
     "Method": "AddNewPet",
     "RelativePath": "api/Users/AddNewPet",
