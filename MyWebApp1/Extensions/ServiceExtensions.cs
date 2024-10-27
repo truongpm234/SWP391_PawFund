@@ -37,7 +37,7 @@ namespace MyWebApp1.Extensions
             {
                 options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Role", "Admin"));
                 options.AddPolicy("UserOnly", policy => policy.RequireClaim("Role", "User"));
-                options.AddPolicy("ManagerOnly", policy => policy.RequireClaim("Role", "Manager"));
+                options.AddPolicy("StaffOnly", policy => policy.RequireClaim("Role", "Staff"));
             });
 
             services.AddAuthentication(options =>
