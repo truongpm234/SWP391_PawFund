@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyWebApp1.Models;
+using MyWebApp1.DTO;
 using MyWebApp1.Services;
 
 namespace MyWebApp1.Controllers

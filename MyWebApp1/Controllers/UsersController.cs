@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyWebApp1.Data;
 using MyWebApp1.DTO;
 using MyWebApp1.Models;
 using MyWebApp1.Models.MyWebApp1.Models;
+using MyWebApp1.Payload;
 using MyWebApp1.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 
 namespace MyWebApp1.Controllers
 {
@@ -15,21 +18,63 @@ namespace MyWebApp1.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly AdminService _adminService;
+        private readonly MyDbContext _dbContext;
 
-        public UsersController(UserService userService)
+        public UsersController(UserService userService, AdminService adminService, MyDbContext myDbContext)
         {
             _userService = userService;
+            _adminService = adminService;
+            _dbContext = myDbContext;
         }
 
+        [Authorize(Policy = "UserOrStaff")]
         [HttpPost]
-        [Route("Registration")]
-        public IActionResult Registration(RegisterUserDTO userDTO)
+        [Route("AddNewPet")]
+        public async Task<IActionResult> AddNewPet([FromBody] AddNewPetDTO newPetDTO)
         {
             try
             {
-                // Gọi hàm Register từ UserService, truyền vào userDTO
-                var result = _userService.Register(userDTO);
-                return Ok(result);
+                // Lấy userId từ thông tin xác thực
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    return Unauthorized("User ID not found in token.");
+                }
+
+                var pet = new Models.Pet
+                {
+                    PetName = newPetDTO.PetName,
+                    PetType = newPetDTO.PetType,
+                    Age = newPetDTO.Age,
+                    Gender = newPetDTO.Gender,
+                    Address = newPetDTO.Address,
+                    MedicalCondition = newPetDTO.MedicalCondition,
+                    Description = newPetDTO.Description,
+                    Color = newPetDTO.Color,
+                    Size = newPetDTO.Size,
+                    ContactPhoneNumber = newPetDTO.ContactPhoneNumber,
+                    ContactEmail = newPetDTO.ContactEmail,
+                    PetCategoryId = newPetDTO.PetCategoryId,
+                    IsAdopted = false,
+                    IsApproved = false
+                };
+
+                // Nếu có ảnh thì chuyển đổi danh sách PetImageDTO thành PetImage
+                if (newPetDTO.PetImages != null && newPetDTO.PetImages.Any())
+                {
+                    pet.PetImages = newPetDTO.PetImages.Select(imageDto => new PetImage
+                    {
+                        ImageDescription = imageDto.ImageDescription,
+                        ImageUrl = imageDto.ImageUrl,
+                        IsThumbnailImage = imageDto.IsThumbnailImage
+                    }).ToList();
+                }
+
+                // Gọi service để thêm Pet và gán UserId
+                var addedPet = await _userService.AddNewPet(pet, userId);
+
+                return Ok(addedPet);
             }
             catch (Exception ex)
             {
@@ -37,50 +82,69 @@ namespace MyWebApp1.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("Login")]
-        public IActionResult Login(LoginDTO login)
+
+        [HttpGet("get-all-pet")]
+        public async Task<IActionResult> GetAllApprovedPets()
         {
             try
             {
-                var token = _userService.Login(login);
-                return Ok(new { Token = token });
+                var pets = await _userService.GetAllApprovedPets();
+
+                return Ok(new ApiResponse()
+                {
+                    StatusCode = 200,
+                    Message = "Get all approved pets successful!",
+                    Data = pets
+                });
             }
             catch (Exception ex)
             {
-                return Unauthorized(ex.Message);
+                return BadRequest(new ApiResponse()
+                {
+                    StatusCode = 400,
+                    Message = "Error occurred while fetching approved pets.",
+                    Data = null
+                });
             }
         }
 
-        [Authorize]
-        [HttpGet]
-        [Route("GetUsers")]
-        public IActionResult GetUsers()
-        {
-            return Ok(_userService.GetUsers());
-        }
 
-        [Authorize]
-        [HttpGet]
-        [Route("GetUser")]
-        public IActionResult GetUser(int id)
+        [HttpGet("get-approved-pet-by-id")]
+        public async Task<IActionResult> GetApprovedPetById(int id)
         {
-            var user = _userService.GetUser(id);
-            if (user != null)
-                return Ok(user);
-            else
-                return NoContent();
+            var pet = await _userService.GetApprovedPet(id);
+
+            if (pet == null)
+            {
+                return NotFound(new ApiResponse()
+                {
+                    StatusCode = 404,
+                    Message = "Pet not found or not approved",
+                    Data = null
+                });
+            }
+
+            return Ok(new ApiResponse()
+            {
+                StatusCode = 200,
+                Message = "Get approved pet successful!",
+                Data = pet
+            });
         }
 
         [Authorize]
         [HttpPut]
-        [Route("UpdateProfile/{userId}")]
-        public IActionResult UpdateProfile(int userId, UpdateProfileDTO userDTO)
+        [Route("UpdateProfile-by-user")]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileDTO userDTO)
         {
             try
             {
-                var result = _userService.UpdateProfile(userId, userDTO);
+                var result = await _userService.UpdateProfile(HttpContext.User, userDTO);
                 return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Forbid(ex.Message);
             }
             catch (Exception ex)
             {
@@ -88,62 +152,65 @@ namespace MyWebApp1.Controllers
             }
         }
 
-
         [Authorize]
-        [HttpGet]
-        [Route("GetCurrentLoginUser")]
-        public IActionResult GetCurrentLoginUser()
+        [HttpPost("request-role-manager")]
+        public async Task<ActionResult<User>> RequestManagerRole()
         {
-            // Lấy token từ header Authorization
-            var authHeader = Request.Headers["Authorization"].ToString();
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            {
-                return Unauthorized("Authorization token is missing or invalid.");
-            }
-
             try
             {
-                // Bỏ wa "Bearer " để lấy token
-                var token = authHeader.Substring("Bearer ".Length).Trim();
-
-                //  lấy thông tin token
-                var jwtHandler = new JwtSecurityTokenHandler();
-                var jwtToken = jwtHandler.ReadJwtToken(token);
-
-                // Lấy userId từ claim
-                var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "UserId");
-                if (userIdClaim == null)
-                {
-                    return Unauthorized("UserId not found in token.");
-                }
-
-                // Lấy userId
-                var userId = int.Parse(userIdClaim.Value);
-
-                // Tìm người dùng từ cơ sở dữ liệu dựa trên userId
-                var user = _userService.GetUser(userId);
-
-                if (user != null)
-                {
-                    // Trả thông tin người dùng
-                    var userInfo = new
-                    {
-                        Fullname = user.Fullname, 
-                        Email = user.Email,
-                        PhoneNumber = user.PhoneNumber,
-                        Address = user.Address
-                    };
-                    return Ok(userInfo);
-                }
-                else
-                {
-                    return NotFound("User not found.");
-                }
+                var user = await _userService.RequestManagerRole();
+                return Ok(user);
             }
             catch (Exception ex)
             {
-                return BadRequest("Error processing request: " + ex.Message);
+                return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("GetPet-of-User")]
+        public async Task<IActionResult> GetUserPets()
+        {
+            try
+            {
+                // Lấy userId từ thông tin xác thực (token của user hiện tại)
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    return Unauthorized("User ID not found in token.");
+                }
+
+                Console.WriteLine($"User ID from token: {userId}");
+
+                // Gọi service để lấy danh sách pet của user dựa vào userId
+                var userPets = await _userService.GetPetsByUserId(userId);
+
+                if (userPets == null || !userPets.Any())
+                {
+                    return NotFound("No pets found for this user.");
+                }
+
+                return Ok(userPets);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("get-pets-in-shelter/{shelterId}")]
+        public async Task<IActionResult> GetPetsByShelter(int shelterId)
+        {
+            try
+            {
+                var pets = await _userService.GetPetsByShelter(shelterId);
+                return Ok(pets);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
