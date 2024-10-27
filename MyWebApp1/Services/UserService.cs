@@ -60,13 +60,8 @@ namespace MyWebApp1.Services
 
         public LoginResponseDTO Login(LoginDTO loginDTO)
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
-            try
-=======
             // Kiểm tra xem email và mật khẩu có được cung cấp hay không
-=======
->>>>>>> Dat
+
             if (string.IsNullOrEmpty(loginDTO.Email) || string.IsNullOrEmpty(loginDTO.Password))
             {
                 throw new Exception("Email and Password are required.");
@@ -93,7 +88,7 @@ namespace MyWebApp1.Services
             }
 
             var claims = new[]
->>>>>>> mtruong
+
             {
         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:subject"]),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

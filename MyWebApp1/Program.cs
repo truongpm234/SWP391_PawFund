@@ -24,7 +24,6 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-<<<<<<< HEAD
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -32,7 +31,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pawfund Platform v1"));
 }
 
-=======
 //if (app.Environment.IsDevelopment())
 //{
 //    app.UseDeveloperExceptionPage();
@@ -54,7 +52,6 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 
 // Kích hoạt Routing
 app.UseRouting();
->>>>>>> d4ec878b0ebe6bcb5cddbf6a716a1ab9ba053c3e
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

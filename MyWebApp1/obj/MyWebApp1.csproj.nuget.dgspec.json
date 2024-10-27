@@ -1,24 +1,7 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj": {}
-  },
-  "projects": {
-    "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
-        "projectName": "MyWebApp1",
-        "projectPath": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
-        "packagesPath": "C:\\Users\\ghoul\\.nuget\\packages\\",
-        "outputPath": "E:\\SE_FALL2024_S5\\SWP391\\SWP391_PawFund\\SWP391_PawFund\\MyWebApp1\\obj\\",
-=======
-    "E:\\SE_FALL2024_S5\\SWP391\\swp\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj": {}
-=======
     "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj": {}
->>>>>>> Dat
   },
   "projects": {
     "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj": {
@@ -26,16 +9,9 @@
       "restore": {
         "projectUniqueName": "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
         "projectName": "MyWebApp1",
-<<<<<<< HEAD
-        "projectPath": "E:\\SE_FALL2024_S5\\SWP391\\swp\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
-        "packagesPath": "C:\\Users\\ghoul\\.nuget\\packages\\",
-        "outputPath": "E:\\SE_FALL2024_S5\\SWP391\\swp\\SWP391_PawFund\\MyWebApp1\\obj\\",
->>>>>>> d4ec878b0ebe6bcb5cddbf6a716a1ab9ba053c3e
-=======
         "projectPath": "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Admin\\OneDrive\\Documents\\GitHub\\SWP391_PawFund\\MyWebApp1\\obj\\",
->>>>>>> Dat
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",

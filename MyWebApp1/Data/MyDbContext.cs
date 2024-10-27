@@ -67,7 +67,7 @@ namespace MyWebApp1.Data
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-<<<<<<< HEAD
+
         {
             if (!optionsBuilder.IsConfigured)
             {
@@ -76,8 +76,8 @@ namespace MyWebApp1.Data
                     .LogTo(Console.WriteLine, LogLevel.Information); // Ghi log ra console
             }
         }
-=======
-{
+
+
     //if (!optionsBuilder.IsConfigured)
     ////{
     ////    optionsBuilder
@@ -85,9 +85,9 @@ namespace MyWebApp1.Data
     ////        new MySqlServerVersion(new Version(8, 0, 21))) // Ensure you specify your MySQL version
     ////        .LogTo(Console.WriteLine, LogLevel.Information);
     ////}
-}
 
->>>>>>> mtruong
+
+
 
     }
 }
