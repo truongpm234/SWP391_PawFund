@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<TransactionService>();
 builder.Services.AddCustomServices(builder.Configuration);
 
 // Cấu hình Google
