@@ -21,6 +21,7 @@ namespace MyWebApp1.Models
         public string? Size { get; set; }
         public string? ContactPhoneNumber { get; set; }
         public string? ContactEmail { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [ForeignKey("PetCategory")]
         public int? PetCategoryId { get; set; }

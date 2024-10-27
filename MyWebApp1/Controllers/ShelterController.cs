@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentEmail.Core;
+using Microsoft.AspNetCore.Mvc;
 using MyWebApp1.Models;
 using MyWebApp1.Services;
 
@@ -31,7 +32,11 @@ namespace MyWebApp1.Controllers
                 ShelterId = shelter.ShelterId,
                 ShelterName = shelter.ShelterName,
                 ShelterLocation = shelter.ShelterLocation,
-                Capacity = shelter.Capacity
+                Capacity = shelter.Capacity,
+                Contact = shelter.Contact,
+                Email = shelter.Email,
+                OpeningClosing = shelter.OpeningClosing,
+                ShelterImage = shelter.ShelterImage
             };
 
             return Ok(shelterInfo);

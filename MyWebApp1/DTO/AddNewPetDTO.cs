@@ -18,6 +18,7 @@ namespace MyWebApp1.DTO
         public string Size { get; set; }
         public string ContactPhoneNumber { get; set; }
         public string ContactEmail { get; set; }
+        public DateTime Created { get; set; }
         [ForeignKey("PetCategory")]
         public int? PetCategoryId { get; set; }
         public bool IsAdopted { get; set; } = false;

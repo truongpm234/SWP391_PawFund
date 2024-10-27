@@ -56,6 +56,7 @@ namespace MyWebApp1.Controllers
                     ContactPhoneNumber = newPetDTO.ContactPhoneNumber,
                     ContactEmail = newPetDTO.ContactEmail,
                     PetCategoryId = newPetDTO.PetCategoryId,
+                    CreatedAt = DateTime.Now,
                     IsAdopted = false,
                     IsApproved = false
                 };
