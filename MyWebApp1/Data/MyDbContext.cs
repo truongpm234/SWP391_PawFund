@@ -21,6 +21,7 @@ namespace MyWebApp1.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Pet> Pets { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Shelter> Shelters { get; set; }
         public DbSet<PetCategory> PetCategories { get; set; }
         public DbSet<Adoption> Adoptions { get; set; }
         public DbSet<PetImage> PetImages { get; set; }
@@ -34,19 +35,27 @@ namespace MyWebApp1.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<UserRole>()
-                .HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite key
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
+            modelBuilder.Entity<User>()
+        .HasOne(u => u.Shelter)        // Mỗi User có thể liên kết với một Shelter
+        .WithOne(s => s.User)          // Mỗi Shelter liên kết với một User
+        .HasForeignKey<User>(u => u.ShelterId);  // Thiết lập khoá ngoại trong User
+
+            // Các thiết lập khác...
+            modelBuilder.Entity<UserRole>()
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
 
             modelBuilder.Entity<PetCategory>().ToTable("PetCategory");
             modelBuilder.Entity<MyWebApp1.Models.TransactionStatus>().ToTable("TransactionStatus");
             modelBuilder.Entity<Role>().ToTable("Role");
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<Pet>().ToTable("Pet");
+            modelBuilder.Entity<Shelter>().ToTable("Shelter");
             modelBuilder.Entity<UserRole>().ToTable("UserRole");
             modelBuilder.Entity<Adoption>().ToTable("Adoption");
             modelBuilder.Entity<PetImage>().ToTable("PetImage");
             modelBuilder.Entity<DonationEvent>().ToTable("DonationEvent");
             modelBuilder.Entity<DonationImage>().ToTable("DonationImage");
-            modelBuilder.Entity<DonationEvent>().ToTable("DonationEvent");
             modelBuilder.Entity<TransactionType>().ToTable("TransactionType");
             modelBuilder.Entity<MyWebApp1.Models.Transaction>().ToTable("Transaction");
 

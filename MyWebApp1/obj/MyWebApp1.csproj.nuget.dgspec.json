@@ -58,6 +58,26 @@
               "target": "Package",
               "version": "[4.0.3, )"
             },
+            "FluentEmail.MailKit": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            },
+            "FluentEmail.Mailgun": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            },
+            "FluentEmail.Mailtrap": {
+              "target": "Package",
+              "version": "[2.7.0, )"
+            },
+            "FluentEmail.SendGrid": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.8.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.Google": {
               "target": "Package",
               "version": "[8.0.8, )"
@@ -66,9 +86,17 @@
               "target": "Package",
               "version": "[8.0.8, )"
             },
+            "Microsoft.AspNetCore.HttpsPolicy": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.8, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[8.0.10, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -90,9 +118,17 @@
               "target": "Package",
               "version": "[8.0.8, )"
             },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[4.8.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.1.2, )"
             }
           },
           "imports": [

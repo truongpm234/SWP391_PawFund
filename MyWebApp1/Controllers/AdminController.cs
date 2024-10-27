@@ -27,7 +27,7 @@ namespace MyWebApp1.Controllers
             return Ok(_adminService.GetUsers());
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "ManagerOrAdmin")]
         [HttpGet]
         [Route("GetUserById")]
         public IActionResult GetUser(int id)
@@ -39,7 +39,65 @@ namespace MyWebApp1.Controllers
                 return NoContent();
         }
 
-        // Xóa quyền manager của user
+        [HttpGet]
+        [Route("GetCurrentLoginUser")]
+        public IActionResult GetCurrentLoginUser()
+        {
+            // Lấy token từ header Authorization
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            {
+                return Unauthorized("Authorization token is missing or invalid.");
+            }
+
+            try
+            {
+                // Loại bỏ tiền tố "Bearer " để lấy token
+                var token = authHeader.Substring("Bearer ".Length).Trim();
+
+                // Giải mã token để lấy thông tin
+                var jwtHandler = new JwtSecurityTokenHandler();
+                var jwtToken = jwtHandler.ReadJwtToken(token);
+
+                // Lấy userId từ claim trong token
+                var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "UserId");
+                if (userIdClaim == null)
+                {
+                    return Unauthorized("UserId not found in token.");
+                }
+
+                // Lấy userId
+                var userId = int.Parse(userIdClaim.Value);
+
+                // Tìm người dùng từ cơ sở dữ liệu dựa trên userId
+                var user = _adminService.GetUser(userId);
+
+                if (user != null)
+                {
+                    // Trả về thông tin người dùng
+                    var userInfo = new
+                    {
+                        Fullname = user.Fullname,
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber,
+                        Address = user.Address,
+                        Username = user.Username,
+                        RoleId = user.RoleId,
+                        //RoleName = user.RoleName
+                    };
+                    return Ok(userInfo);
+                }
+                else
+                {
+                    return NotFound("User not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error processing request: " + ex.Message);
+            }
+        }
+
         [Authorize(Policy = "AdminOnly")]
         [HttpDelete("remove-user-role/{userId}")]
         public async Task<IActionResult> RemoveUserRole(int userId)
