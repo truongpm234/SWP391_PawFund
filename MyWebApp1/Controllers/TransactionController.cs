@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MyWebApp1.Services;
 using MyWebApp1.Models;
 using Microsoft.Extensions.Configuration;

@@ -5,7 +5,7 @@ namespace MyWebApp1.Models
 {
     namespace MyWebApp1.Models
     {
-        [Table(name:"User")]
+        [Table(name: "User")]
         public class User
         {
             [Key]

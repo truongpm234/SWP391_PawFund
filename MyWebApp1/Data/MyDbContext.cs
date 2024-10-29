@@ -60,7 +60,7 @@ namespace MyWebApp1.Data
             modelBuilder.Entity<MyWebApp1.Models.Transaction>().ToTable("Transaction");
 
             modelBuilder.Entity<MyWebApp1.Models.Transaction>()
-                .Property(t => t.TransactionAmount)
+.Property(t => t.TransactionAmount)
                 .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<Pet>()

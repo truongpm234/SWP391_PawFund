@@ -27,7 +27,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<TransactionService>();
 builder.Services.AddCustomServices(builder.Configuration);
 
 // Cấu hình Google
