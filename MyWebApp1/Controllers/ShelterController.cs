@@ -36,7 +36,7 @@ namespace MyWebApp1.Controllers
                 OpeningClosing = shelter.OpeningClosing,
                 ShelterImage = shelter.ShelterImage,
                 Description = shelter.Description
-                OpeningClosing = shelter.OpeningClosing
+
             };
 
             return Ok(shelterInfo);
