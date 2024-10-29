@@ -60,7 +60,6 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
     });
 }
 
-// Kích hoạt Routing
 app.UseCors("CorsPolicy");
 
 //app.UseHttpsRedirection();

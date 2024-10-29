@@ -12,11 +12,6 @@ namespace MyWebApp1.Models
 
         [Required]
         public decimal TransactionAmount { get; set; }
-
-        public bool IsMoneyDonation { get; set; }
-
-        public bool IsResourceDonation { get; set; }
-
         public int? DonationEventId { get; set; }
 
         [Required]
@@ -27,9 +22,6 @@ namespace MyWebApp1.Models
 
         [Required]
         public int TransactionTypeId { get; set; }
-
-        // Navigation properties
-
 
     }
 }

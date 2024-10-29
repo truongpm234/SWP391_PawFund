@@ -37,9 +37,9 @@ namespace MyWebApp1.Data
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId });
             modelBuilder.Entity<User>()
-        .HasOne(u => u.Shelter)        // Mỗi User có thể liên kết với một Shelter
-        .WithOne(s => s.User)          // Mỗi Shelter liên kết với một User
-        .HasForeignKey<User>(u => u.ShelterId);  // Thiết lập khoá ngoại trong User
+                .HasOne(u => u.Shelter) // 1 user - 1 shelter
+                .WithOne(s => s.User)         
+                .HasForeignKey<User>(u => u.ShelterId);
 
             // Các thiết lập khác...
             modelBuilder.Entity<UserRole>()
@@ -68,7 +68,11 @@ namespace MyWebApp1.Data
                 .WithMany()
                 .HasForeignKey(p => p.PetCategoryId)
                 .IsRequired(false);
-
+            modelBuilder.Entity<Pet>()
+                .HasMany(p => p.PetImages) 
+                .WithOne(pi => pi.Pet)  
+                .HasForeignKey(pi => pi.PetId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>().ToTable("User");
         }

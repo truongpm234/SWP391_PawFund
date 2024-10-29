@@ -27,7 +27,6 @@ namespace MyWebApp1.Controllers
             return Ok(_adminService.GetUsers());
         }
 
-        [Authorize(Policy = "ManagerOrAdmin")]
         [HttpGet]
         [Route("GetUserById")]
         public IActionResult GetUser(int id)
@@ -52,10 +51,10 @@ namespace MyWebApp1.Controllers
 
             try
             {
-                // Loại bỏ tiền tố "Bearer " để lấy token
+                //bỏ "Bearer " để lấy token
                 var token = authHeader.Substring("Bearer ".Length).Trim();
 
-                // Giải mã token để lấy thông tin
+                // xu li token lay thong tin
                 var jwtHandler = new JwtSecurityTokenHandler();
                 var jwtToken = jwtHandler.ReadJwtToken(token);
 
@@ -66,7 +65,6 @@ namespace MyWebApp1.Controllers
                     return Unauthorized("UserId not found in token.");
                 }
 
-                // Lấy userId
                 var userId = int.Parse(userIdClaim.Value);
 
                 // Tìm người dùng từ cơ sở dữ liệu dựa trên userId
@@ -74,9 +72,9 @@ namespace MyWebApp1.Controllers
 
                 if (user != null)
                 {
-                    // Trả về thông tin người dùng
                     var userInfo = new
                     {
+                        userId = user.UserId,
                         Fullname = user.Fullname,
                         Email = user.Email,
                         PhoneNumber = user.PhoneNumber,
@@ -112,7 +110,6 @@ namespace MyWebApp1.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
 
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("get-all-requests")]

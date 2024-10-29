@@ -252,6 +252,22 @@
   },
   {
     "ContainingType": "MyWebApp1.Controllers.EmailController",
+    "Method": "SendEmailDeletePetResponse",
+    "RelativePath": "api/Email/SendEmail-delete-Pet-by-Manager",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "petId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.EmailController",
     "Method": "SendEmaiRequestRoleAsync",
     "RelativePath": "api/Email/SendEmail-ManagerRoleRequest-by-Admin",
     "HttpMethod": "POST",
@@ -338,7 +354,7 @@
   {
     "ContainingType": "MyWebApp1.Controllers.ManagerController",
     "Method": "GetAllPets",
-    "RelativePath": "api/Manager/get-all",
+    "RelativePath": "api/Manager/get-all-pet-by-manager",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

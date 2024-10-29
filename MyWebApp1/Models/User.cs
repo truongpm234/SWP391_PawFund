@@ -27,7 +27,7 @@ namespace MyWebApp1.Models
             
             [ForeignKey("Role")]
             public int? RoleId { get; set; }
-            public Role? Role { get; set; }  // Điều hướng tới Role
+            public Role? Role { get; set; }
             //public int? RoleId { get; set; }
             //public string? RoleName { get; set; }
             //public string RoleName { get; set; }

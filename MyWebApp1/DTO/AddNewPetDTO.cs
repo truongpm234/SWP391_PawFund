@@ -9,7 +9,7 @@ namespace MyWebApp1.DTO
         public string? PetName { get; set; }
 
         public string? PetType { get; set; }
-        public int Age { get; set; }
+        public string Age { get; set; }
         public string? Gender { get; set; }
         public string Address { get; set; }
         public string MedicalCondition { get; set; }

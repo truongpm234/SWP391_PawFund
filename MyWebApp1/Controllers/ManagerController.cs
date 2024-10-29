@@ -26,37 +26,6 @@ namespace MyWebApp1.Controllers
             this.adminService = adminService;
         }
 
-        //[Authorize(Policy = "ManagerOnly")]
-        //[HttpPost("approve-pet/{petId}/{shelterId}")]
-        //public async Task<IActionResult> ApprovePet(int petId, int shelterId)
-        //{
-        //    try
-        //    {
-        //        var staffIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
-        //        if (staffIdClaim == null)
-        //        {
-        //            return Unauthorized("Staff ID claim not found in token.");
-        //        }
-
-        //        // Parse staffId từ claim
-        //        var staffId = int.Parse(staffIdClaim.Value);
-
-        //        // Gọi service để duyệt thú cưng
-        //        var approvedPet = await _managerService.ApprovePet(petId, staffId, shelterId);
-
-
-        //        return Ok(approvedPet);
-        //    }
-        //    catch (UnauthorizedAccessException ex)
-        //    {
-        //        return Forbid(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "An internal error occurred.");
-        //    }
-        //}
-
         [Authorize(Policy = "ManagerOnly")]
         [HttpPost("approve-pet/{petId}/{shelterId}")]
         public async Task<IActionResult> ApprovePet(int petId, int shelterId)
@@ -69,10 +38,8 @@ namespace MyWebApp1.Controllers
                     return Unauthorized("Staff ID claim not found in token.");
                 }
 
-                // Parse staffId từ claim
                 var staffId = int.Parse(staffIdClaim.Value);
 
-                // Gọi service để duyệt thú cưng và gửi email
                 var approvedPet = await _managerService.ApprovePet(petId, staffId, shelterId);
 
                 return Ok(approvedPet);
@@ -103,7 +70,7 @@ namespace MyWebApp1.Controllers
         }
 
         [Authorize(Policy = "ManagerOnly")]
-        [HttpGet("get-all")]
+        [HttpGet("get-all-pet-by-manager")]
         public async Task<IActionResult> GetAllPets()
         {
             var pets = await _managerService.GetAllPets();

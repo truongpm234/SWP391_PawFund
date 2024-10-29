@@ -1,5 +1,4 @@
-﻿// Models/CreateTransactionRequest.cs
-namespace MyWebApp1.DTO
+﻿namespace MyWebApp1.DTO
 {
     public class CreateTransactionRequest
     {

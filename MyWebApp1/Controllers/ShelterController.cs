@@ -16,7 +16,6 @@ namespace MyWebApp1.Controllers
             _shelterService = shelterService;
         }
 
-        // Kết hợp cả HttpGet và Route thành một
         [HttpGet("GetInformationShelter/{id}")]
         public IActionResult GetInformationShelter(int id)
         {
@@ -26,7 +25,6 @@ namespace MyWebApp1.Controllers
                 return NotFound("Shelter not found.");
             }
 
-            // Trả về thông tin shelter
             var shelterInfo = new
             {
                 ShelterId = shelter.ShelterId,
