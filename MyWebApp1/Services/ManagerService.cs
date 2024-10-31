@@ -15,72 +15,37 @@ namespace MyWebApp1.Services
         {
             _context = context;
             _emailService = emailService;
+           
         }
-
-        //public async Task<Models.Pet> ApprovePet(int petId, int approvedByUserId, int shelterId)
-        //{
-        //    // Tìm thú cưng trong cơ sở dữ liệu
-        //    var existingPet = await _context.Pets.FindAsync(petId);
-        //    if (existingPet == null)
-        //    {
-        //        throw new Exception("Pet not found");
-        //    }
-
-        //    // Tìm thông tin shelter dựa trên shelterId
-        //    var shelter = await _context.Shelters.FindAsync(shelterId);
-        //    if (shelter == null)
-        //    {
-        //        throw new Exception("Shelter not found");
-        //    }
-
-        //    existingPet.IsApproved = true;
-        //    existingPet.ShelterId = shelterId;
-        //    existingPet.ApprovedByUserId = approvedByUserId;
-
-        //    // Cập nhật trạng thái của thú cưng
-        //    _context.Entry(existingPet).State = EntityState.Modified;
-
-        //    // Lưu thay đổi vào cơ sở dữ liệu
-        //    await _context.SaveChangesAsync();
-
-        //    return existingPet;
-        //}
 
         public async Task<Models.Pet> ApprovePet(int petId, int approvedByUserId, int shelterId)
         {
-            // Tìm thú cưng trong cơ sở dữ liệu
             var existingPet = await _context.Pets.FindAsync(petId);
             if (existingPet == null)
             {
                 throw new Exception("Pet not found");
             }
 
-            // Tìm thông tin shelter dựa trên shelterId
             var shelter = await _context.Shelters.FindAsync(shelterId);
             if (shelter == null)
             {
                 throw new Exception("Shelter not found");
             }
 
-            // Duyệt thú cưng
             existingPet.IsApproved = true;
             existingPet.ShelterId = shelterId;
             existingPet.ApprovedByUserId = approvedByUserId;
 
-            // Cập nhật trạng thái của thú cưng
             _context.Entry(existingPet).State = EntityState.Modified;
 
-            // Lưu thay đổi vào cơ sở dữ liệu
             await _context.SaveChangesAsync();
 
-            // gửi thông báo
             var userEmail = existingPet.ContactEmail;
             if (string.IsNullOrEmpty(userEmail))
             {
                 throw new Exception("User email not found.");
             }
 
-            // gửi email thông báo
             Mailrequest mailrequest = new Mailrequest
             {
                 ToEmail = userEmail,
@@ -88,25 +53,51 @@ namespace MyWebApp1.Services
                 Body = $"Your pet {existingPet.PetName} has been approved!"
             };
 
-            await _emailService.SendEmailAddNewPetAsync(mailrequest);
+            await _emailService.SendEmail(mailrequest);
 
             return existingPet;
         }
+
         public async Task DeletePet(int petId)
         {
-            var pet = await _context.Pets.FindAsync(petId);
+            var pet = await _context.Pets
+                .Include(p => p.PetImages)
+                .Include(p => p.User) 
+                .FirstOrDefaultAsync(p => p.PetId == petId);
+
             if (pet == null)
             {
                 throw new Exception("Pet not found");
             }
 
+            _context.PetImages.RemoveRange(pet.PetImages);
+
+            // Sau đó xóa Pet
             _context.Pets.Remove(pet);
             await _context.SaveChangesAsync();
+
+            var userEmail = pet.User?.Email;
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                throw new Exception("User email not found.");
+            }
+
+            Mailrequest mailrequest = new Mailrequest
+            {
+                ToEmail = userEmail,
+                Subject = "Notification about your pet on PawFund!",
+                Body = "Your Pet on PawFund has been deleted by a manager due to invalid information. For more details, contact us at PawFundPet@gmail.com."
+            };
+
+            await _emailService.SendEmail(mailrequest);
         }
 
         public async Task<List<Pet>> GetAllPets()
         {
-            return await _context.Pets.ToListAsync();
+            return await _context.Pets
+                .Include(p => p.PetImages) 
+                .ToListAsync();
         }
+
     }
 }

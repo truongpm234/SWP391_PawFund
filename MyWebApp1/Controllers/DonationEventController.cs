@@ -33,7 +33,7 @@ namespace MyWebApp1.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Lấy thông tin user từ JWT token trong HttpContext
+            // Lấy thông tin user từ JWT token
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
 
             if (userIdClaim == null)
@@ -41,19 +41,18 @@ namespace MyWebApp1.Controllers
                 return Unauthorized("User ID claim not found in token.");
             }
 
-            // Parse userId từ claim
             int userId = int.Parse(userIdClaim.Value);
 
-            // Tạo đối tượng DonationEvent mới với UserCreatedId được gán từ userId
+            // Tạo DonationEvent mới với UserCreatedId được lấy từ userId
             var newEvent = new DonationEvent
             {
                 EventName = eventDto.EventName,
                 EventContent = eventDto.EventContent,
                 EventStartDate = eventDto.EventStartDate,
                 EventEndDate = eventDto.EventEndDate,
-                UserCreatedId = userId, // Gán UserCreatedId từ userId đã lấy
-                IsApproved = false,  // Sự kiện mặc định chưa được duyệt
-                IsEnded = false      // Sự kiện mặc định chưa kết thúc
+                UserCreatedId = userId,
+                IsApproved = false,
+                IsEnded = false
             };
 
             var result = await _donationEventService.CreateDonationEventAsync(newEvent);

@@ -28,7 +28,7 @@ namespace MyWebApp1.Controllers
         {
             try
             {
-                // Lấy thông tin user từ JWT token trong HttpContext
+                // Lấy thông tin user từ JWT
                 var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
 
                 if (userIdClaim == null)
@@ -36,20 +36,16 @@ namespace MyWebApp1.Controllers
                     return Unauthorized("User ID claim not found in token.");
                 }
 
-                // Parse userId từ claim
+                // lay userId từ claim
                 var userId = int.Parse(userIdClaim.Value);
 
-                // Gán PetId từ URL vào request
-                // request.PetId = petId; // Bỏ dòng này vì đã loại bỏ PetId trong AdoptionRequestModel
-
                 // Xử lý yêu cầu với userId
-                bool success = _adoptionService.CreateAdoptionRequest(request, userId, petId); // Cập nhật phương thức gọi dịch vụ để truyền petId
+                bool success = _adoptionService.CreateAdoptionRequest(request, userId, petId);
 
                 return success ? Ok("Adoption request created successfully.") : StatusCode(500, "Failed to create adoption request.");
             }
             catch (Exception ex)
             {
-                // Ghi lại lỗi để kiểm tra
                 Console.WriteLine(ex.ToString());
                 return StatusCode(500, "An internal error occurred.");
             }
@@ -69,17 +65,15 @@ namespace MyWebApp1.Controllers
                     return Unauthorized("User ID claim not found in token.");
                 }
 
-                // Parse userId từ claim
                 var userId = int.Parse(userIdClaim.Value);
 
-                // Lấy danh sách yêu cầu nhận nuôi của người dùng từ service
+                // lay adoption list
                 var userAdoptions = _adoptionService.GetAdoptionsByUser(userId);
 
                 return Ok(userAdoptions);
             }
             catch (Exception ex)
             {
-                // Ghi lại lỗi để kiểm tra
                 Console.WriteLine(ex.ToString());
                 return StatusCode(500, "An internal error occurred.");
             }
@@ -87,21 +81,5 @@ namespace MyWebApp1.Controllers
 
     }
 }
-
-//[Authorize(Policy = "ManagerOnly")]
-//[HttpGet("get-all-adoptions")]
-//public IActionResult GetAdoptions()
-//{
-//    var adoptions = _adoptionService.GetAdoptions();
-//    return Ok(adoptions);
-//}
-
-//[Authorize(Policy = "ManagerOnly")]
-//[HttpPut("approve/{adoptionId}")]
-//public IActionResult ApproveAdoption(int adoptionId)
-//{
-//    bool success = _adoptionService.ApproveAdoption(adoptionId);
-//    return success ? Ok("Adoption approved.") : NotFound("Adoption not found.");
-//}
 
 

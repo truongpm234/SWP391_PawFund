@@ -1,25 +1,24 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyWebApp1.Services;
 using MyWebApp1.Models;
-using Microsoft.Extensions.Configuration; // Add this to access IConfiguration
+using Microsoft.Extensions.Configuration;
 using Cursus_Api.Helper;
 using MyWebApp1.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
 public class TransactionController : ControllerBase
 {
     private readonly TransactionService _transactionService;
-    private readonly IConfiguration _configuration; // Add this
+    private readonly IConfiguration _configuration;
 
-    // Constructor Dependency Injection
     public TransactionController(TransactionService transactionService, IConfiguration configuration)
     {
         _transactionService = transactionService;
-        _configuration = configuration; // Initialize _configuration
+        _configuration = configuration;
     }
 
-    // API tạo giao dịch
     [HttpPost("create")]
     public IActionResult CreateTransaction([FromBody] CreateTransactionRequest request)
     {
@@ -30,8 +29,6 @@ public class TransactionController : ControllerBase
 
         int transactionId = _transactionService.CreateTransaction(
             request.TransactionAmount,
-            request.IsMoneyDonation,
-            request.IsResourceDonation,
             request.UserId,
             request.TransactionTypeId);
 
@@ -39,7 +36,6 @@ public class TransactionController : ControllerBase
         return Ok(new { vnpayUrl });
     }
 
-    // API xử lý phản hồi từ VNPAY
     [HttpGet("callback")]
     public IActionResult VnpayCallback([FromQuery] VNPayResponseModel model)
     {
@@ -49,7 +45,7 @@ public class TransactionController : ControllerBase
             vnpay.AddResponseData(key, Request.Query[key]);
         }
 
-        string vnp_HashSecret = _configuration["VnPAY:HashSecret"]; // Now you can use _configuration
+        string vnp_HashSecret = _configuration["VnPAY:HashSecret"];
         string secureHash = Request.Query["vnp_SecureHash"];
 
         // Validate signature
@@ -59,13 +55,12 @@ public class TransactionController : ControllerBase
             return BadRequest("Invalid signature");
         }
 
-        // Handle the VNPAY response based on response code
         string responseCode = vnpay.GetResponseData("vnp_ResponseCode");
         int transactionId = int.Parse(vnpay.GetResponseData("vnp_TxnRef"));
 
-        if (responseCode == "00") // Successful transaction
+        if (responseCode == "00")
         {
-            _transactionService.UpdateTransactionStatus(transactionId, 2); // Success
+            _transactionService.UpdateTransactionStatus(transactionId, 2);
             return Ok("Transaction updated successfully");
         }
         else
