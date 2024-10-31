@@ -19,7 +19,6 @@ namespace MyWebApp1.Services
 
         public async Task<bool> CreateDonationEventAsync(DonationEvent newEvent)
         {
-            // Thêm sự kiện mới vào DB
             _dbContext.DonationEvents.Add(newEvent);
             await _dbContext.SaveChangesAsync();
             return true;
@@ -54,14 +53,12 @@ namespace MyWebApp1.Services
             eventItem.IsApproved = true;
             await _dbContext.SaveChangesAsync();
 
-            // lấy thông tin từ UserCreatedId
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == eventItem.UserCreatedId);
             if (user == null || string.IsNullOrEmpty(user.Email))
             {
                 throw new Exception("Email not found.");
             }
 
-            // gửi email thông báo
             Mailrequest mailrequest = new Mailrequest
             {
                 ToEmail = user.Email,
@@ -69,7 +66,7 @@ namespace MyWebApp1.Services
                 Body = "Your Event has been approved by admin!"
             };
 
-            await _emailService.SendEmaiAcceptEvent(mailrequest);
+            await _emailService.SendEmail(mailrequest);
             return true;
         }
 

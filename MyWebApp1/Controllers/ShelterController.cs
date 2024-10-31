@@ -16,7 +16,6 @@ namespace MyWebApp1.Controllers
             _shelterService = shelterService;
         }
 
-        // Kết hợp cả HttpGet và Route thành một
         [HttpGet("GetInformationShelter/{id}")]
         public IActionResult GetInformationShelter(int id)
         {
@@ -26,7 +25,6 @@ namespace MyWebApp1.Controllers
                 return NotFound("Shelter not found.");
             }
 
-            // Trả về thông tin shelter
             var shelterInfo = new
             {
                 ShelterId = shelter.ShelterId,
@@ -35,17 +33,20 @@ namespace MyWebApp1.Controllers
                 Capacity = shelter.Capacity,
                 Contact = shelter.Contact,
                 Email = shelter.Email,
-                OpeningClosing = shelter.OpeningClosing
+                OpeningClosing = shelter.OpeningClosing,
+                ShelterImage = shelter.ShelterImage,
+                Description = shelter.Description
             };
 
             return Ok(shelterInfo);
         }
 
         [HttpGet("GetAllShelters")]
-        public IActionResult GetAllShelters()
+        public async Task<IActionResult> GetAllShelters()
         {
-            IEnumerable<Shelter> shelters = _shelterService.GetAllShelters();
-            return Ok(shelters);
+            var sheltersWithPets = await _shelterService.GetAllSheltersAsync();
+            return Ok(sheltersWithPets);
         }
+
     }
 }

@@ -56,7 +56,6 @@ namespace MyWebApp1.Services
                 _dbContext.Users.Add(newUser);
                 _dbContext.SaveChanges();
 
-                // gán role mặc định user
                 var userRole = new UserRole
                 {
                     UserId = newUser.UserId,
@@ -152,7 +151,6 @@ namespace MyWebApp1.Services
                     throw new Exception("Username already exists.");
                 }
 
-                // Cập nhật các fied chỉ khi có giá trị
                 if (!string.IsNullOrEmpty(userDTO.Username))
                 {
                     userToUpdate.Username = userDTO.Username;
@@ -178,7 +176,6 @@ namespace MyWebApp1.Services
                     userToUpdate.Password = userDTO.Password;
                 }
 
-                // save db
                 _dbContext.Users.Update(userToUpdate);
                 await _dbContext.SaveChangesAsync();
 
@@ -186,7 +183,6 @@ namespace MyWebApp1.Services
                 var userRole = await _dbContext.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userToUpdate.UserId);
                 var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.RoleId == userRole.RoleId);
 
-                // tao token mới
                 var tokenExpiration = DateTime.UtcNow.AddMinutes(60);
                 var claims = new[]
                 {
@@ -205,7 +201,6 @@ namespace MyWebApp1.Services
                     signingCredentials: signIn
                 );
 
-                // Trả về LoginResponseDTO
                 return new LoginResponseDTO
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -225,44 +220,37 @@ namespace MyWebApp1.Services
 
         public async Task<User> RequestManagerRole()
         {
-            // Lấy token từ header Authorization
             var authHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
             {
                 throw new Exception("Authorization token is missing or invalid.");
             }
 
-            // Loại bỏ tiền tố "Bearer " để lấy token
             var token = authHeader.Substring("Bearer ".Length).Trim();
 
-            // Giải mã token để lấy thông tin
+            // lấy thông tin tu token
             var jwtHandler = new JwtSecurityTokenHandler();
             var jwtToken = jwtHandler.ReadJwtToken(token);
 
-            // Lấy userId từ claim trong token
             var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "UserId");
             if (userIdClaim == null)
             {
                 throw new Exception("UserId not found in token.");
             }
 
-            // Lấy userId
             var userId = int.Parse(userIdClaim.Value);
 
-            // Tìm người dùng từ cơ sở dữ liệu dựa trên userId
             var user = await _dbContext.Users.FindAsync(userId);
             if (user == null)
             {
                 throw new Exception("User not found.");
             }
 
-            // Kiểm tra xem người dùng đã yêu cầu vai trò manager chưa
             if (user.IsApprovedUser)
             {
                 throw new Exception("User has already requested the manager role.");
             }
 
-            // Đánh dấu người dùng đã yêu cầu vai trò manager
             user.IsApprovedUser = true;
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
@@ -272,13 +260,10 @@ namespace MyWebApp1.Services
 
         public async Task<Models.Pet> AddNewPet(Models.Pet pet, int userId)
         {
-            // Gán UserId cho pet
             pet.UserId = userId;
 
-            // Thêm pet vào db
             await _dbContext.Pets.AddAsync(pet);
 
-            // Nếu có ảnh, thêm chúng vào bảng PetImage
             if (pet.PetImages != null && pet.PetImages.Any())
             {
                 foreach (var image in pet.PetImages)
@@ -308,14 +293,14 @@ namespace MyWebApp1.Services
                 Body = "Your request to add a pet on PawFund is awaiting approval. Please wait! Thank you for your contribution."
             };
 
-            await _emailService.SendEmaiAddPetRequest(mailrequest);  // Gọi phương thức gửi email
+            await _emailService.SendEmail(mailrequest);
 
             return pet;
         }
 
         public async Task<List<PetListDTO>> GetAllApprovedPets()
         {
-            // Lọc các pet có isApproved = true và isAdopted = false
+            //list các pet có isApproved = true và isAdopted = false
             return await _dbContext.Pets
                 .Where(pet => pet.IsApproved && !pet.IsAdopted)
                 .Select(pet => new PetListDTO

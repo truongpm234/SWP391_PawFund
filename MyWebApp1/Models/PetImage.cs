@@ -10,7 +10,8 @@ namespace MyWebApp1.Models
         public string ImageDescription { get; set; }
         public string ImageUrl { get; set; }
         public bool IsThumbnailImage { get; set; }
+        [ForeignKey("Pet")]
         public int PetId { get; set; }
-        public Pet Pet { get; set; }
+        public virtual Pet Pet { get; set; }
     }
 }

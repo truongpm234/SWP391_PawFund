@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using MyWebApp1.Models.MyWebApp1.Models;
 
 namespace MyWebApp1.Models
 {
@@ -12,7 +13,7 @@ namespace MyWebApp1.Models
         public int PetId { get; set; }
         public string? PetName { get; set; }
         public string? PetType { get; set; }
-        public int? Age { get; set; }
+        public string? Age { get; set; }
         public string? Gender { get; set; }
         public string? Address { get; set; }
         public string? MedicalCondition { get; set; }
@@ -21,6 +22,7 @@ namespace MyWebApp1.Models
         public string? Size { get; set; }
         public string? ContactPhoneNumber { get; set; }
         public string? ContactEmail { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [ForeignKey("PetCategory")]
         public int? PetCategoryId { get; set; }
@@ -28,7 +30,8 @@ namespace MyWebApp1.Models
         public bool IsAdopted { get; set; }
         public bool IsApproved { get; set; }
         [ForeignKey("User")]
-        public int? UserId { get; set; } 
+        public int? UserId { get; set; }
+        public virtual User? User { get; set; }
         [JsonIgnore]
         //public virtual PetCategory? PetCategory { get; set; }
         public PetCategory? PetCategory { get; set; }

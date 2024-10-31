@@ -61,27 +61,12 @@ namespace MyWebApp1.Controllers
             }
         }
 
-        //[Authorize(Policy = "StaffOnly")]
-        //[HttpPut("approve-adoption-by-staff/{userId}/{adoptionId}")]
-        //public async Task<IActionResult> ApproveAdoptionByStaff(int userId, int adoptionId)
-        //{
-        //    try
-        //    {
-        //        var result = await _staffService.ApproveAdoptionByStaff(userId, adoptionId);
-        //        return result ? Ok("Adoption approved.") : BadRequest("Failed to approve adoption.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
         [Authorize(Policy = "StaffOnly")]
         [HttpPut("approve-adoption/{adoptionId}")]
         public async Task<IActionResult> ApproveAdoptionByStaff(int adoptionId, [FromBody] ApproveAdoptionRequestDto request)
         {
             try
             {
-                // Lấy userId từ JWT token
                 var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
 
                 if (userIdClaim == null)
@@ -107,13 +92,11 @@ namespace MyWebApp1.Controllers
         {
             try
             {
-                // Gọi service để lấy danh sách adoption (loại bỏ userId)
                 var adoptions = _staffService.GetAdoptions();
                 return Ok(adoptions);
             }
             catch (Exception ex)
             {
-                // Trả về lỗi nếu có
                 return BadRequest(new { message = ex.Message });
             }
         }

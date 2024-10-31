@@ -35,7 +35,6 @@ namespace MyWebApp1.Controllers
         {
             try
             {
-                // Lấy userId từ thông tin xác thực
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
                 if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
                 {
@@ -56,11 +55,11 @@ namespace MyWebApp1.Controllers
                     ContactPhoneNumber = newPetDTO.ContactPhoneNumber,
                     ContactEmail = newPetDTO.ContactEmail,
                     PetCategoryId = newPetDTO.PetCategoryId,
+                    CreatedAt = DateTime.Now,
                     IsAdopted = false,
                     IsApproved = false
                 };
 
-                // Nếu có ảnh thì chuyển đổi danh sách PetImageDTO thành PetImage
                 if (newPetDTO.PetImages != null && newPetDTO.PetImages.Any())
                 {
                     pet.PetImages = newPetDTO.PetImages.Select(imageDto => new PetImage
@@ -71,7 +70,6 @@ namespace MyWebApp1.Controllers
                     }).ToList();
                 }
 
-                // Gọi service để thêm Pet và gán UserId
                 var addedPet = await _userService.AddNewPet(pet, userId);
 
                 return Ok(addedPet);
@@ -173,7 +171,6 @@ namespace MyWebApp1.Controllers
         {
             try
             {
-                // Lấy userId từ thông tin xác thực (token của user hiện tại)
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
                 if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
                 {
@@ -182,7 +179,6 @@ namespace MyWebApp1.Controllers
 
                 Console.WriteLine($"User ID from token: {userId}");
 
-                // Gọi service để lấy danh sách pet của user dựa vào userId
                 var userPets = await _userService.GetPetsByUserId(userId);
 
                 if (userPets == null || !userPets.Any())

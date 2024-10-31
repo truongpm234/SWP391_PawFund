@@ -1,4 +1,5 @@
 ﻿using MyWebApp1.Data;
+using MyWebApp1.DTO;
 using MyWebApp1.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace MyWebApp1.Services
     {
         Shelter GetShelterById(int id);
         IEnumerable<Shelter> GetAllShelters();
+        Task<IEnumerable<ShelterWithPetsDTO>> GetAllSheltersAsync();
     }
 
 

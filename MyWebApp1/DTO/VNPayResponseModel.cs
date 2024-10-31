@@ -1,5 +1,4 @@
-﻿// Models/VNPayResponseModel.cs
-namespace MyWebApp1.DTO
+﻿namespace MyWebApp1.DTO
 
 {
     public class VNPayResponseModel
@@ -11,9 +10,6 @@ namespace MyWebApp1.DTO
         public string Token { get; set; }
 
         public string TransactionId { get; set; }
-
-
-        // Các thuộc tính khác nếu cần thiết
     }
 
     public class VnPaymentRequestModel
