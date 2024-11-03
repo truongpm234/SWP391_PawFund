@@ -124,6 +124,28 @@ namespace MyWebApp1.Services
             return user;
         }
 
+        public async Task<bool> DeleteUser(int userId)
+        {
+            // Fetch the user along with related UserRoles
+            var user = await _dbContext.Users
+                .Include(u => u.UserRoles)
+                .FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            // remove all related UserRoles
+            _dbContext.UserRoles.RemoveRange(user.UserRoles);
+
+            // remove user
+            _dbContext.Users.Remove(user);
+
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
 
     }
 
