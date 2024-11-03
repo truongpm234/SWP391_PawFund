@@ -130,45 +130,6 @@ namespace MyWebApp1.Services
             return pets;
         }
 
-        //public async Task<bool> ApproveAdoptionByStaff(int userId, int adoptionId)
-        //{
-        //    // Truy vấn user từ bảng Users
-        //    var user = await _context.Users
-        //                             .FirstOrDefaultAsync(u => u.UserId == userId);
-
-        //    if (user == null)
-        //    {
-        //        throw new Exception("User not found.");
-        //    }
-
-        //    // Truy vấn RoleId từ bảng UserRoles (nếu bạn có bảng này)
-        //    var roleId = await _context.UserRoles
-        //                               .Where(ur => ur.UserId == user.UserId)
-        //                               .Select(ur => ur.RoleId)
-        //                               .FirstOrDefaultAsync();
-
-        //    // Kiểm tra RoleId
-        //    if (roleId != 4)
-        //    {
-        //        throw new Exception("User is not a staff.");
-        //    }
-
-        //    // Tìm adoption và pet tương ứng
-        //    var adoption = await _context.Adoptions.FindAsync(adoptionId);
-        //    var pet = await _context.Pets.FindAsync(adoption.PetId);
-
-        //    // Kiểm tra xem thú cưng có thuộc Shelter mà Staff quản lý không
-        //    if (pet.ShelterId != user.ShelterId)
-        //    {
-        //        throw new Exception("You can only approve adoptions for pets in your shelter.");
-        //    }
-
-        //    // Nếu hợp lệ, duyệt yêu cầu adoption
-        //    adoption.IsApproved = true;
-        //    await _context.SaveChangesAsync();
-
-        //    return true;
-        //}
         public async Task<bool> ApproveAdoptionByStaff(int userId, int adoptionId, ApproveAdoptionRequestDto request)
         {
             // Truy vấn userId từ bảng User

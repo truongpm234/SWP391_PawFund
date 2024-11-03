@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyWebApp1.Services;
 using MyWebApp1.Models;
 using Microsoft.Extensions.Configuration;
@@ -20,12 +20,44 @@ public class TransactionController : ControllerBase
     }
 
     [HttpPost("create")]
+    [Authorize] // Đảm bảo phương thức yêu cầu xác thực
     public IActionResult CreateTransaction([FromBody] CreateTransactionRequest request)
     {
-        if (!ModelState.IsValid)
+        try
         {
-            return BadRequest(ModelState);
+            // Lấy thông tin user ID từ JWT
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID claim not found in token.");
+            }
+
+            // Kiểm tra và parse userId từ claim
+            if (!int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized("Invalid User ID.");
+            }
+
+            // Tạo giao dịch
+            int transactionId = _transactionService.CreateTransaction(
+                request.TransactionAmount,
+                userId, // Sử dụng userId lấy từ JWT
+                request.TransactionTypeId,
+                request.ShelterId, // Thêm giá trị ShelterId
+                request.Note // Thêm giá trị Note
+            );
+
+            // Tạo URL thanh toán
+            var vnpayUrl = _transactionService.GenerateVnpayUrl(transactionId, request.TransactionAmount);
+            return Ok(new { vnpayUrl });
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            return StatusCode(500, "An internal error occurred.");
+        }
+<<<<<<< HEAD
 
         int transactionId = _transactionService.CreateTransaction(
             request.TransactionAmount,
@@ -34,6 +66,8 @@ public class TransactionController : ControllerBase
 
         var vnpayUrl = _transactionService.GenerateVnpayUrl(transactionId, request.TransactionAmount);
         return Ok(new { vnpayUrl });
+=======
+>>>>>>> origin/Dat1
     }
 
     [HttpGet("callback")]

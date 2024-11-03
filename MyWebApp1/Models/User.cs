@@ -22,12 +22,16 @@ namespace MyWebApp1.Models
             //public int RoleId { get; set; }
             [ForeignKey("Shelter")]
             public int? ShelterId { get; set; }
-            
+
             public Shelter? Shelter { get; set; }
-            
+
             [ForeignKey("Role")]
             public int? RoleId { get; set; }
             public Role? Role { get; set; }
+<<<<<<< HEAD
+=======
+            public ICollection<UserRole> UserRoles { get; set; }
+>>>>>>> origin/Dat1
             //public int? RoleId { get; set; }
             //public string? RoleName { get; set; }
             //public string RoleName { get; set; }
