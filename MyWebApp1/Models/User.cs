@@ -5,7 +5,7 @@ namespace MyWebApp1.Models
 {
     namespace MyWebApp1.Models
     {
-        [Table(name:"User")]
+        [Table(name: "User")]
         public class User
         {
             [Key]
@@ -22,12 +22,13 @@ namespace MyWebApp1.Models
             //public int RoleId { get; set; }
             [ForeignKey("Shelter")]
             public int? ShelterId { get; set; }
-            
+
             public Shelter? Shelter { get; set; }
-            
+
             [ForeignKey("Role")]
             public int? RoleId { get; set; }
             public Role? Role { get; set; }
+            public ICollection<UserRole> UserRoles { get; set; }
             //public int? RoleId { get; set; }
             //public string? RoleName { get; set; }
             //public string RoleName { get; set; }
