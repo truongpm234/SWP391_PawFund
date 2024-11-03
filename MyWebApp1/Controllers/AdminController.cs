@@ -133,6 +133,29 @@ namespace MyWebApp1.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpDelete("delete-user/{userId}")]
+        public async Task<IActionResult> DeleteUser(int userId)
+        {
+            try
+            {
+                var result = await _adminService.DeleteUser(userId);
+                if (result)
+                {
+                    return Ok($"User with ID {userId} has been successfully deleted.");
+                }
+                else
+                {
+                    return NotFound("User not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 
 }
