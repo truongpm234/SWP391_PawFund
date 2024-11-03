@@ -18,27 +18,16 @@ public class TransactionService
         _configuration = configuration;
     }
 
-<<<<<<< HEAD
-    public int CreateTransaction(decimal amount, int userId, int transactionTypeId)
-=======
     public int CreateTransaction(decimal amount, int userId, int transactionTypeId, int shelterId, string note)
->>>>>>> origin/Dat1
     {
         var transaction = new Transaction
         {
             TransactionAmount = amount,
-<<<<<<< HEAD
-
-            UserId = userId,
-            TransactionStatusId = 1,
-            TransactionTypeId = transactionTypeId
-=======
             UserId = userId,
             TransactionStatusId = 1,
             TransactionTypeId = transactionTypeId,
             ShelterId = shelterId, // Sử dụng giá trị ShelterId
             Note = note // Sử dụng giá trị Note
->>>>>>> origin/Dat1
         };
         _context.Transactions.Add(transaction);
         _context.SaveChanges();
@@ -60,9 +49,9 @@ public class TransactionService
 
     public bool HandleVnpayCallback(string responseCode, int transactionId)
     {
-        if (responseCode == "00") 
+        if (responseCode == "00")
         {
-            return UpdateTransactionStatus(transactionId, 2); 
+            return UpdateTransactionStatus(transactionId, 2);
         }
         return false;
     }

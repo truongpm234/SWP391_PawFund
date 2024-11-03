@@ -27,6 +27,22 @@
   },
   {
     "ContainingType": "MyWebApp1.Controllers.AdminController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/Admin/delete-user/{userId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdminController",
     "Method": "GetAllManagerRequests",
     "RelativePath": "api/Admin/get-all-requests",
     "HttpMethod": "GET",
@@ -363,6 +379,38 @@
   },
   {
     "ContainingType": "MyWebApp1.Controllers.ShelterController",
+    "Method": "CreateShelter",
+    "RelativePath": "api/Shelter/CreateShelter-by-Admin",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "shelterDto",
+        "Type": "MyWebApp1.DTO.ShelterCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.ShelterController",
+    "Method": "DeleteShelter",
+    "RelativePath": "api/Shelter/DeleteShelter-by-Admin/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.ShelterController",
     "Method": "GetAllShelters",
     "RelativePath": "api/Shelter/GetAllShelters",
     "HttpMethod": "GET",
@@ -382,6 +430,27 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.ShelterController",
+    "Method": "UpdateShelter",
+    "RelativePath": "api/Shelter/UpdateShelter-by-staff/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "shelterDto",
+        "Type": "MyWebApp1.DTO.ShelterCreateDTO",
         "IsRequired": true
       }
     ],
@@ -495,7 +564,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "MyWebApp1.DTO.CreateTransactionRequest",
+        "Type": "CreateTransactionRequest",
         "IsRequired": true
       }
     ],

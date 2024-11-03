@@ -18,13 +18,8 @@ namespace MyWebApp1.Controllers
             _shelterService = shelterService;
         }
 
-<<<<<<< HEAD
-        [HttpGet("GetInformationShelter/{id}")]
-        public IActionResult GetInformationShelter(int id)
-=======
         [HttpGet("GetAllShelters")]
         public async Task<IActionResult> GetAllShelters()
->>>>>>> origin/Dat1
         {
             var sheltersWithPets = await _shelterService.GetAllSheltersWithPetsAsync();
             return Ok(sheltersWithPets);
@@ -39,25 +34,7 @@ namespace MyWebApp1.Controllers
                 return NotFound("Shelter not found.");
             }
 
-<<<<<<< HEAD
-            var shelterInfo = new
-            {
-                ShelterId = shelter.ShelterId,
-                ShelterName = shelter.ShelterName,
-                ShelterLocation = shelter.ShelterLocation,
-                Capacity = shelter.Capacity,
-                Contact = shelter.Contact,
-                Email = shelter.Email,
-                OpeningClosing = shelter.OpeningClosing,
-                ShelterImage = shelter.ShelterImage,
-                Description = shelter.Description
-
-            };
-
-            return Ok(shelterInfo);
-=======
             return Ok(shelterWithPets);
->>>>>>> origin/Dat1
         }
 
         [Authorize(Policy = "AdminOnly")]

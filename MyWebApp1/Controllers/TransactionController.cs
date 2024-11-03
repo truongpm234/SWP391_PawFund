@@ -20,7 +20,7 @@ public class TransactionController : ControllerBase
     }
 
     [HttpPost("create")]
-    [Authorize] // Đảm bảo phương thức yêu cầu xác thực
+    [Authorize]
     public IActionResult CreateTransaction([FromBody] CreateTransactionRequest request)
     {
         try
@@ -57,17 +57,6 @@ public class TransactionController : ControllerBase
             Console.WriteLine(ex.ToString());
             return StatusCode(500, "An internal error occurred.");
         }
-<<<<<<< HEAD
-
-        int transactionId = _transactionService.CreateTransaction(
-            request.TransactionAmount,
-            request.UserId,
-            request.TransactionTypeId);
-
-        var vnpayUrl = _transactionService.GenerateVnpayUrl(transactionId, request.TransactionAmount);
-        return Ok(new { vnpayUrl });
-=======
->>>>>>> origin/Dat1
     }
 
     [HttpGet("callback")]

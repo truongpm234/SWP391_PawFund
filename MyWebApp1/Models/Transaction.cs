@@ -22,8 +22,6 @@ namespace MyWebApp1.Models
         [Required]
         public int TransactionTypeId { get; set; }
 
-<<<<<<< HEAD
-=======
         [Required]
         public int ShelterId { get; set; } // Thêm trường ShelterId
 
@@ -32,6 +30,5 @@ namespace MyWebApp1.Models
 
         [ForeignKey("ShelterId")]
         public Shelter Shelter { get; set; }
->>>>>>> origin/Dat1
     }
 }
