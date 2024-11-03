@@ -1,7 +1,6 @@
-﻿using FluentEmail.Core;
-using Microsoft.AspNetCore.Mvc;
-using MyWebApp1.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyWebApp1.Services;
+using System.Threading.Tasks;
 
 namespace MyWebApp1.Controllers
 {
@@ -16,37 +15,23 @@ namespace MyWebApp1.Controllers
             _shelterService = shelterService;
         }
 
-        [HttpGet("GetInformationShelter/{id}")]
-        public IActionResult GetInformationShelter(int id)
+        [HttpGet("GetAllShelters")]
+        public async Task<IActionResult> GetAllShelters()
         {
-            var shelter = _shelterService.GetShelterById(id);
-            if (shelter == null)
+            var sheltersWithPets = await _shelterService.GetAllSheltersWithPetsAsync();
+            return Ok(sheltersWithPets);
+        }
+
+        [HttpGet("GetInformationShelter/{id}")]
+        public async Task<IActionResult> GetInformationShelter(int id)
+        {
+            var shelterWithPets = await _shelterService.GetShelterWithPetsByIdAsync(id);
+            if (shelterWithPets == null)
             {
                 return NotFound("Shelter not found.");
             }
 
-            var shelterInfo = new
-            {
-                ShelterId = shelter.ShelterId,
-                ShelterName = shelter.ShelterName,
-                ShelterLocation = shelter.ShelterLocation,
-                Capacity = shelter.Capacity,
-                Contact = shelter.Contact,
-                Email = shelter.Email,
-                OpeningClosing = shelter.OpeningClosing,
-                ShelterImage = shelter.ShelterImage,
-                Description = shelter.Description
-            };
-
-            return Ok(shelterInfo);
+            return Ok(shelterWithPets);
         }
-
-        [HttpGet("GetAllShelters")]
-        public async Task<IActionResult> GetAllShelters()
-        {
-            var sheltersWithPets = await _shelterService.GetAllSheltersAsync();
-            return Ok(sheltersWithPets);
-        }
-
     }
 }

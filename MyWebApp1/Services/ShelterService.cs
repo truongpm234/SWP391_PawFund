@@ -1,9 +1,8 @@
-﻿using FluentEmail.Core;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp1.Data;
 using MyWebApp1.DTO;
-using MyWebApp1.Models;
-using MyWebApp1.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MyWebApp1.Services
 {
@@ -18,15 +17,9 @@ namespace MyWebApp1.Services
             _userService = userService;
         }
 
-        public Shelter GetShelterById(int id)
-        {
-            return _context.Shelters.Find(id);
-        }
-
-        public async Task<IEnumerable<ShelterWithPetsDTO>> GetAllSheltersAsync()
+        public async Task<IEnumerable<ShelterWithPetsDTO>> GetAllSheltersWithPetsAsync()
         {
             var shelters = await _context.Shelters.ToListAsync();
-
             var shelterWithPetsList = new List<ShelterWithPetsDTO>();
 
             foreach (var shelter in shelters)
@@ -51,9 +44,26 @@ namespace MyWebApp1.Services
             return shelterWithPetsList;
         }
 
-        public IEnumerable<Shelter> GetAllShelters()
+        public async Task<ShelterWithPetsDTO> GetShelterWithPetsByIdAsync(int shelterId)
         {
-            throw new NotImplementedException();
+            var shelter = await _context.Shelters.FindAsync(shelterId);
+            if (shelter == null) return null;
+
+            var approvedPets = await _userService.GetPetsByShelter(shelterId);
+
+            return new ShelterWithPetsDTO
+            {
+                ShelterId = shelter.ShelterId,
+                ShelterName = shelter.ShelterName,
+                ShelterLocation = shelter.ShelterLocation,
+                ApprovedPets = approvedPets,
+                Capacity = shelter.Capacity,
+                Contact = shelter.Contact,
+                Email = shelter.Email,
+                OpeningClosing = shelter.OpeningClosing,
+                ShelterImage = shelter.ShelterImage,
+                Description = shelter.Description
+            };
         }
     }
 }
