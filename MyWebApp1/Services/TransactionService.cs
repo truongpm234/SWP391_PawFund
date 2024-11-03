@@ -18,15 +18,16 @@ public class TransactionService
         _configuration = configuration;
     }
 
-    public int CreateTransaction(decimal amount, int userId, int transactionTypeId)
+    public int CreateTransaction(decimal amount, int userId, int transactionTypeId, int shelterId, string note)
     {
         var transaction = new Transaction
         {
             TransactionAmount = amount,
-
             UserId = userId,
             TransactionStatusId = 1,
-            TransactionTypeId = transactionTypeId
+            TransactionTypeId = transactionTypeId,
+            ShelterId = shelterId, // Sử dụng giá trị ShelterId
+            Note = note // Sử dụng giá trị Note
         };
         _context.Transactions.Add(transaction);
         _context.SaveChanges();
