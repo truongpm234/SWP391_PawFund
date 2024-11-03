@@ -20,7 +20,7 @@ public class TransactionController : ControllerBase
     }
 
     [HttpPost("create")]
-    [Authorize] // Đảm bảo phương thức yêu cầu xác thực
+    [Authorize]
     public IActionResult CreateTransaction([FromBody] CreateTransactionRequest request)
     {
         try

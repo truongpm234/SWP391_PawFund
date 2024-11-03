@@ -49,9 +49,9 @@ public class TransactionService
 
     public bool HandleVnpayCallback(string responseCode, int transactionId)
     {
-        if (responseCode == "00") 
+        if (responseCode == "00")
         {
-            return UpdateTransactionStatus(transactionId, 2); 
+            return UpdateTransactionStatus(transactionId, 2);
         }
         return false;
     }
