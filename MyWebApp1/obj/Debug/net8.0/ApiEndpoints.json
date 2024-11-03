@@ -380,7 +380,7 @@
   {
     "ContainingType": "MyWebApp1.Controllers.ShelterController",
     "Method": "CreateShelter",
-    "RelativePath": "api/Shelter/CreateShelter-by-Admin",
+    "RelativePath": "api/Shelter/CreateShelter-by-Manager",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -396,7 +396,7 @@
   {
     "ContainingType": "MyWebApp1.Controllers.ShelterController",
     "Method": "DeleteShelter",
-    "RelativePath": "api/Shelter/DeleteShelter-by-Admin/{id}",
+    "RelativePath": "api/Shelter/DeleteShelter-by-Manager/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -438,7 +438,7 @@
   {
     "ContainingType": "MyWebApp1.Controllers.ShelterController",
     "Method": "UpdateShelter",
-    "RelativePath": "api/Shelter/UpdateShelter-by-staff/{id}",
+    "RelativePath": "api/Shelter/UpdateShelter-by-Manager/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
