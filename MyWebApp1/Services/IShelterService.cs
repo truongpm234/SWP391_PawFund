@@ -1,17 +1,12 @@
-﻿using MyWebApp1.Data;
-using MyWebApp1.DTO;
-using MyWebApp1.Models;
+﻿using MyWebApp1.DTO;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyWebApp1.Services
 {
     public interface IShelterService
     {
-        Shelter GetShelterById(int id);
-        IEnumerable<Shelter> GetAllShelters();
-        Task<IEnumerable<ShelterWithPetsDTO>> GetAllSheltersAsync();
+        Task<IEnumerable<ShelterWithPetsDTO>> GetAllSheltersWithPetsAsync();
+        Task<ShelterWithPetsDTO> GetShelterWithPetsByIdAsync(int shelterId);
     }
-
-
 }
