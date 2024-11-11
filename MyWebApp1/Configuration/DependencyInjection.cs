@@ -3,7 +3,6 @@ using MyWebApp1.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.Google;
 
@@ -11,8 +10,6 @@ namespace MyWebApp1.Configuration
 {
     public static class DependencyInjection
     {
-       
-
         public static IServiceCollection AddRepository(this IServiceCollection services)
         {
             return services;
@@ -25,12 +22,14 @@ namespace MyWebApp1.Configuration
 
         public static IServiceCollection AddSwaggerAuthentication(this IServiceCollection services)
         {
+            services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo() { Title = "Pawfund Platform", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = @"JWT Authorization header using the Bearer scheme. Enter 'Bearer' [token] and then your token in the text input below",
+                    Description = @"JWT Authorization using the Bearer scheme. Enter 'Bearer' [token] and then your token in the text input below",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
@@ -57,7 +56,6 @@ namespace MyWebApp1.Configuration
             });
             return services;
         }
-
 
     }
 }

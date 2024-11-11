@@ -21,6 +21,7 @@ namespace MyWebApp1.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Pet> Pets { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Shelter> Shelters { get; set; }
         public DbSet<PetCategory> PetCategories { get; set; }
         public DbSet<Adoption> Adoptions { get; set; }
         public DbSet<PetImage> PetImages { get; set; }
@@ -34,60 +35,46 @@ namespace MyWebApp1.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<UserRole>()
-                .HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite key
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Shelter) // 1 user - 1 shelter
+                .WithOne(s => s.User)         
+                .HasForeignKey<User>(u => u.ShelterId);
+
+            // Các thiết lập khác...
+            modelBuilder.Entity<UserRole>()
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
 
             modelBuilder.Entity<PetCategory>().ToTable("PetCategory");
             modelBuilder.Entity<MyWebApp1.Models.TransactionStatus>().ToTable("TransactionStatus");
             modelBuilder.Entity<Role>().ToTable("Role");
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<Pet>().ToTable("Pet");
+            modelBuilder.Entity<Shelter>().ToTable("Shelter");
             modelBuilder.Entity<UserRole>().ToTable("UserRole");
             modelBuilder.Entity<Adoption>().ToTable("Adoption");
             modelBuilder.Entity<PetImage>().ToTable("PetImage");
             modelBuilder.Entity<DonationEvent>().ToTable("DonationEvent");
             modelBuilder.Entity<DonationImage>().ToTable("DonationImage");
-            modelBuilder.Entity<DonationEvent>().ToTable("DonationEvent");
             modelBuilder.Entity<TransactionType>().ToTable("TransactionType");
             modelBuilder.Entity<MyWebApp1.Models.Transaction>().ToTable("Transaction");
 
-
             modelBuilder.Entity<MyWebApp1.Models.Transaction>()
                 .Property(t => t.TransactionAmount)
-                .HasColumnType("decimal(18,2)"); 
+                .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<Pet>()
                 .HasOne(p => p.PetCategory)
-                .WithMany()  
+                .WithMany()
                 .HasForeignKey(p => p.PetCategoryId)
-                .IsRequired(false);  
-
+                .IsRequired(false);
+            modelBuilder.Entity<Pet>()
+                .HasMany(p => p.PetImages) 
+                .WithOne(pi => pi.Pet)  
+                .HasForeignKey(pi => pi.PetId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>().ToTable("User");
         }
-
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder
-                    .UseSqlServer("Data Source=DESKTOP-1T8C15J\\SQLEXPRESS; Initial Catalog=PawFund; User ID=sa; Password=123456;TrustServerCertificate=True;")
-                    .LogTo(Console.WriteLine, LogLevel.Information); // Ghi log ra console
-            }
-        }
-
-
-    //if (!optionsBuilder.IsConfigured)
-    ////{
-    ////    optionsBuilder
-    ////        .UseMySql("Server=DESKTOP-RACPEP4\\SQLEXPRESS;Database=PawFund;User Id=sa;Password=123456;", 
-    ////        new MySqlServerVersion(new Version(8, 0, 21))) // Ensure you specify your MySQL version
-    ////        .LogTo(Console.WriteLine, LogLevel.Information);
-    ////}
-
-
-
-
     }
 }

@@ -5,7 +5,11 @@
         public int PetId { get; set; }
         public string? PetName { get; set; }
         public string? PetType { get; set; }
+<<<<<<< HEAD
         public int? Age { get; set; }
+=======
+        public string? Age { get; set; }
+>>>>>>> Dev-for-test
         public string? Gender { get; set; }
         public string? Address { get; set; }
         public string? MedicalCondition { get; set; }
@@ -21,4 +25,8 @@
         public int? ShelterId { get; set; }
         public string? ShelterName { get; set; }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> Dev-for-test

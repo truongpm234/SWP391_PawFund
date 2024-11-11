@@ -4,6 +4,7 @@ namespace MyWebApp1.Services
 {
     public interface IEmailService
     {
+<<<<<<< HEAD
         Task SendEmailAddNewPetAsync(Mailrequest mailrequest);
         Task SendEmailAdoptionAsync(Mailrequest mailrequest);
         Task SendEmaiRequestRoleAsync(Mailrequest mailrequest);
@@ -12,3 +13,9 @@ namespace MyWebApp1.Services
 
     }
 }
+=======
+        Task SendEmail(Mailrequest mailrequest);
+
+    }
+}
+>>>>>>> Dev-for-test

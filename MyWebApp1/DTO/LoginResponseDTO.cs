@@ -7,7 +7,7 @@
         public string Email { get; set; }
         public string Fullname { get; set; }
         public string Username { get; set; }
-        public string RoleName { get; set; }  // Ensure RoleName is defined here
+        public string RoleName { get; set; }
         public DateTime TokenExpiration { get; set; }
     }
 }

@@ -5,6 +5,7 @@ namespace MyWebApp1.DTO
     public class AdoptionRequestModel
     {
         //[Required]
+<<<<<<< HEAD
         //public int PetId { get; set; }  // Pet cần nhận nuôi
 
         [Required]
@@ -31,3 +32,30 @@ namespace MyWebApp1.DTO
         public string Note { get; set; }  // Ghi chú thêm (nếu có)
     }
 }
+=======
+        //public int PetId { get; set; }  
+        [Required]
+        public string FullName { get; set; }  
+
+        [Required]
+        public string Address { get; set; }  
+
+        [Required]
+        public string PhoneNumber { get; set; } 
+
+        [Required]
+        public string Email { get; set; }  
+
+        [Required]
+        public string SelfDescription { get; set; }  
+
+        [Required]
+        public bool HasPetExperience { get; set; }  
+
+        [Required]
+        public string ReasonForAdopting { get; set; } 
+
+        public string Note { get; set; }  
+    }
+}
+>>>>>>> Dev-for-test

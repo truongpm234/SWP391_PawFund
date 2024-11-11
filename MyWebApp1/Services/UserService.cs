@@ -9,6 +9,13 @@ using MyWebApp1.DTO;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 using MyWebApp1.Payload.Response;
+<<<<<<< HEAD
+=======
+using SendGrid.Helpers.Mail;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+>>>>>>> Dev-for-test
 
 namespace MyWebApp1.Services
 {
@@ -52,7 +59,10 @@ namespace MyWebApp1.Services
                 _dbContext.Users.Add(newUser);
                 _dbContext.SaveChanges();
 
+<<<<<<< HEAD
                 // gán role mặc định user
+=======
+>>>>>>> Dev-for-test
                 var userRole = new UserRole
                 {
                     UserId = newUser.UserId,
@@ -145,6 +155,7 @@ namespace MyWebApp1.Services
                     _dbContext.Users.Any(u => u.Username == userDTO.Username && u.UserId != currentUserId))
                 {
                     throw new Exception("Username already exists.");
+<<<<<<< HEAD
                 }
                 // Cập nhật các fied chỉ khi có giá trị
                 if (!string.IsNullOrEmpty(userDTO.Username))
@@ -167,6 +178,30 @@ namespace MyWebApp1.Services
                 {
                     userToUpdate.Address = userDTO.Address;
                 }
+=======
+                }
+
+                if (!string.IsNullOrEmpty(userDTO.Username))
+                {
+                    userToUpdate.Username = userDTO.Username;
+                }
+                if (!string.IsNullOrEmpty(userDTO.Fullname))
+                {
+                    userToUpdate.Fullname = userDTO.Fullname;
+                }
+                if (!string.IsNullOrEmpty(userDTO.Email))
+                {
+                    userToUpdate.Email = userDTO.Email;
+                }
+                if (!string.IsNullOrEmpty(userDTO.PhoneNumber))
+                {
+                    userToUpdate.PhoneNumber = userDTO.PhoneNumber;
+                }
+                if (!string.IsNullOrEmpty(userDTO.Address))
+                {
+                    userToUpdate.Address = userDTO.Address;
+                }
+>>>>>>> Dev-for-test
                 if (!string.IsNullOrEmpty(userDTO.Password))
                 {
                     userToUpdate.Password = userDTO.Password;
@@ -180,7 +215,10 @@ namespace MyWebApp1.Services
                 var userRole = await _dbContext.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userToUpdate.UserId);
                 var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.RoleId == userRole.RoleId);
 
+<<<<<<< HEAD
                 // tao token mới
+=======
+>>>>>>> Dev-for-test
                 var tokenExpiration = DateTime.UtcNow.AddMinutes(60);
                 var claims = new[]
                 {
@@ -199,7 +237,10 @@ namespace MyWebApp1.Services
                     signingCredentials: signIn
                 );
 
+<<<<<<< HEAD
                 // Trả về LoginResponseDTO
+=======
+>>>>>>> Dev-for-test
                 return new LoginResponseDTO
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -219,13 +260,17 @@ namespace MyWebApp1.Services
 
         public async Task<User> RequestManagerRole()
         {
+<<<<<<< HEAD
             // Lấy token từ header Authorization
+=======
+>>>>>>> Dev-for-test
             var authHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
             {
                 throw new Exception("Authorization token is missing or invalid.");
             }
 
+<<<<<<< HEAD
             // Loại bỏ tiền tố "Bearer " để lấy token
             var token = authHeader.Substring("Bearer ".Length).Trim();
 
@@ -234,29 +279,48 @@ namespace MyWebApp1.Services
             var jwtToken = jwtHandler.ReadJwtToken(token);
 
             // Lấy userId từ claim trong token
+=======
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            // lấy thông tin tu token
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwtToken = jwtHandler.ReadJwtToken(token);
+
+>>>>>>> Dev-for-test
             var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "UserId");
             if (userIdClaim == null)
             {
                 throw new Exception("UserId not found in token.");
             }
 
+<<<<<<< HEAD
             // Lấy userId
             var userId = int.Parse(userIdClaim.Value);
 
             // Tìm người dùng từ cơ sở dữ liệu dựa trên userId
+=======
+            var userId = int.Parse(userIdClaim.Value);
+
+>>>>>>> Dev-for-test
             var user = await _dbContext.Users.FindAsync(userId);
             if (user == null)
             {
                 throw new Exception("User not found.");
             }
 
+<<<<<<< HEAD
             // Kiểm tra xem người dùng đã yêu cầu vai trò manager chưa
+=======
+>>>>>>> Dev-for-test
             if (user.IsApprovedUser)
             {
                 throw new Exception("User has already requested the manager role.");
             }
 
+<<<<<<< HEAD
             // Đánh dấu người dùng đã yêu cầu vai trò manager
+=======
+>>>>>>> Dev-for-test
             user.IsApprovedUser = true;
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
@@ -266,6 +330,7 @@ namespace MyWebApp1.Services
 
         public async Task<Models.Pet> AddNewPet(Models.Pet pet, int userId)
         {
+<<<<<<< HEAD
             // Gán UserId cho pet
             pet.UserId = userId;
 
@@ -273,6 +338,12 @@ namespace MyWebApp1.Services
             await _dbContext.Pets.AddAsync(pet);
 
             // Nếu có ảnh, thêm chúng vào bảng PetImage
+=======
+            pet.UserId = userId;
+
+            await _dbContext.Pets.AddAsync(pet);
+
+>>>>>>> Dev-for-test
             if (pet.PetImages != null && pet.PetImages.Any())
             {
                 foreach (var image in pet.PetImages)
@@ -302,14 +373,22 @@ namespace MyWebApp1.Services
                 Body = "Your request to add a pet on PawFund is awaiting approval. Please wait! Thank you for your contribution."
             };
 
+<<<<<<< HEAD
             await _emailService.SendEmaiAddPetRequest(mailrequest);  // Gọi phương thức gửi email
+=======
+            await _emailService.SendEmail(mailrequest);
+>>>>>>> Dev-for-test
 
             return pet;
         }
 
         public async Task<List<PetListDTO>> GetAllApprovedPets()
         {
+<<<<<<< HEAD
             // Lọc các pet có isApproved = true và isAdopted = false
+=======
+            //list các pet có isApproved = true và isAdopted = false
+>>>>>>> Dev-for-test
             return await _dbContext.Pets
                 .Where(pet => pet.IsApproved && !pet.IsAdopted)
                 .Select(pet => new PetListDTO
@@ -373,9 +452,15 @@ namespace MyWebApp1.Services
         public async Task<List<Pet>> GetPetsByUserId(int userId)
         {
             var pets = await _dbContext.Pets
+<<<<<<< HEAD
                             .Where(p => p.UserId == userId)
                             .Include(p => p.PetImages)
                             .ToListAsync();
+=======
+                .Where(p => p.UserId == userId)
+                .Include(p => p.PetImages)
+                .ToListAsync();
+>>>>>>> Dev-for-test
 
             if (!pets.Any())
             {

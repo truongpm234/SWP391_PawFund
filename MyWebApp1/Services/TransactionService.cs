@@ -6,8 +6,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using MyWebApp1.Data;
 using MyWebApp1.Models;
-using Cursus_Api.Helper; // Add reference to VnPayLibrary
-
+using Cursus_Api.Helper;
 public class TransactionService
 {
     private readonly MyDbContext _context;
@@ -19,8 +18,7 @@ public class TransactionService
         _configuration = configuration;
     }
 
-    // Tạo giao dịch mới
-    public int CreateTransaction(decimal amount, bool isMoneyDonation, bool isResourceDonation, int userId, int transactionTypeId)
+    public int CreateTransaction(decimal amount, int userId, int transactionTypeId, int shelterId, string note)
     {
         var transaction = new Transaction
         {
@@ -28,8 +26,10 @@ public class TransactionService
             IsMoneyDonation = isMoneyDonation,
             IsResourceDonation = isResourceDonation,
             UserId = userId,
-            TransactionStatusId = 1, // 'Pending' status ID
-            TransactionTypeId = transactionTypeId
+            TransactionStatusId = 1,
+            TransactionTypeId = transactionTypeId,
+            ShelterId = shelterId, // Sử dụng giá trị ShelterId
+            Note = note // Sử dụng giá trị Note
         };
 
         _context.Transactions.Add(transaction);
@@ -54,9 +54,9 @@ public class TransactionService
     // Xử lý phản hồi từ VNPAY
     public bool HandleVnpayCallback(string responseCode, int transactionId)
     {
-        if (responseCode == "00") // Giao dịch thành công
+        if (responseCode == "00")
         {
-            return UpdateTransactionStatus(transactionId, 2); // 2 là trạng thái 'Thành công'
+            return UpdateTransactionStatus(transactionId, 2);
         }
         return false;
     }
