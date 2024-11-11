@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyWebApp1.Data;
 using MyWebApp1.Configuration;
 using MyWebApp1.Services;
@@ -27,8 +27,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSwaggerGen();
+<<<<<<< HEAD
+builder.Services.AddScoped<TransactionService>();
+builder.Services.AddCustomServices(builder.Configuration); // Thêm tất cả dịch vụ từ lớp mở rộng
+=======
 
 builder.Services.AddCustomServices(builder.Configuration);
+>>>>>>> Dev-for-test
 
 // Cấu hình Google
 builder.Services.Configure<GoogleOptions>(builder.Configuration.GetSection("Google"));
@@ -49,6 +54,25 @@ builder.Services.AddScoped<IShelterService, ShelterService>();
 // build app
 var app = builder.Build();
 
+<<<<<<< HEAD
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pawfund Platform v1"));
+}
+
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseDeveloperExceptionPage();
+//    app.UseSwagger();
+//    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pawfund Platform v1"));
+//}zz
+
+// Cấu hình middleware cho Swagger
+=======
+>>>>>>> Dev-for-test
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseDeveloperExceptionPage();

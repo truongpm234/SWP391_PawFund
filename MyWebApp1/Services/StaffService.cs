@@ -37,85 +37,6 @@ namespace MyWebApp1.Services
             };
         }
 
-        public async Task<Models.Pet> AddNewPetForStaff(AddNewPetDTO newPetDTO, int userId)
-        {
-            var shelterId = await _context.Users
-                .Where(s => s.UserId == userId)
-                .Select(s => s.ShelterId)
-                .FirstOrDefaultAsync();
-
-            if (shelterId == null)
-            {
-                throw new Exception("Staff does not manage any shelter.");
-            }
-
-            var pet = new Models.Pet
-            {
-                PetName = newPetDTO.PetName,
-                PetType = newPetDTO.PetType,
-                Age = newPetDTO.Age,
-                Gender = newPetDTO.Gender,
-                Address = newPetDTO.Address,
-                MedicalCondition = newPetDTO.MedicalCondition,
-                Description = newPetDTO.Description,
-                Color = newPetDTO.Color,
-                Size = newPetDTO.Size,
-                ContactPhoneNumber = newPetDTO.ContactPhoneNumber,
-                ContactEmail = newPetDTO.ContactEmail,
-                PetCategoryId = newPetDTO.PetCategoryId,
-                CreatedAt = DateTime.Now,
-                IsAdopted = false,
-                IsApproved = true,
-                ShelterId = shelterId.Value,
-                UserId = userId,
-                ApprovedByUserId = userId
-            };
-
-            if (newPetDTO.PetImages != null && newPetDTO.PetImages.Any())
-            {
-                pet.PetImages = newPetDTO.PetImages.Select(imageDto => new PetImage
-                {
-                    ImageDescription = imageDto.ImageDescription,
-                    ImageUrl = imageDto.ImageUrl,
-                    IsThumbnailImage = imageDto.IsThumbnailImage
-                }).ToList();
-            }
-
-            await _context.Pets.AddAsync(pet);
-            if (pet.PetImages != null && pet.PetImages.Any())
-            {
-                foreach (var image in pet.PetImages)
-                {
-                    image.PetId = pet.PetId;
-                    await _context.PetImages.AddAsync(image);
-                }
-            }
-
-            await _context.SaveChangesAsync();
-
-            var userEmail = await _context.Users
-                .Where(u => u.UserId == userId)
-                .Select(u => u.Email)
-                .FirstOrDefaultAsync();
-
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                throw new Exception("User email not found.");
-            }
-
-            // Gửi email thông báo
-            var mailrequest = new Mailrequest
-            {
-                ToEmail = userEmail,
-                Subject = "Pet Request Notification from PawFund",
-                Body = "Your pet has been added to the shelter you manage successfully. Thank you for your contribution!"
-            };
-
-            await _emailService.SendEmail(mailrequest);
-
-            return pet;
-        }
-
         public async Task<bool> UpdatePet(int petId, PetUpdateDTO updatedPet)
         {
             var pet = await _context.Pets.FirstOrDefaultAsync(p => p.PetId == petId);
@@ -211,6 +132,7 @@ namespace MyWebApp1.Services
 
         public async Task<bool> ApproveAdoptionByStaff(int userId, int adoptionId, ApproveAdoptionRequestDto request)
         {
+            // Truy vấn userId từ bảng User
             var user = await _context.Users
                                      .FirstOrDefaultAsync(u => u.UserId == userId);
 
@@ -219,35 +141,34 @@ namespace MyWebApp1.Services
                 throw new Exception("User not found.");
             }
 
+            // Truy vấn RoleId từ bảng UserRole
             var roleId = await _context.UserRoles
                                        .Where(ur => ur.UserId == user.UserId)
                                        .Select(ur => ur.RoleId)
                                        .FirstOrDefaultAsync();
 
-            if (roleId != 4 && roleId != 3)
+            // Kiểm tra RoleId
+            if (roleId != 4)
             {
-                throw new Exception("You do not have permission.");
+                throw new Exception("User is not a staff.");
             }
 
+            // Tìm adoption và pet tương ứng
             var adoption = await _context.Adoptions.FindAsync(adoptionId);
             var pet = await _context.Pets.FindAsync(adoption.PetId);
 
+            // ktra pet co phai trong shelter staff qli khong
             if (pet.ShelterId != user.ShelterId)
             {
                 throw new Exception("You can only approve adoptions for pets in your shelter.");
             }
-            // Cập nhật trạng thái phê duyệt cho yêu cầu nhận nuôi
+
             adoption.IsApproved = request.IsApproved;
 
-            //từ chối
+            // tu choi --> reason
             if (!request.IsApproved)
             {
-                adoption.Reason = request.Reason;
-            }
-            else
-            {
-                //phê duyệt
-                pet.IsAdopted = true;
+                adoption.Reason = request.Reason; 
             }
 
             await _context.SaveChangesAsync();
@@ -258,12 +179,11 @@ namespace MyWebApp1.Services
                 throw new Exception("Email not found.");
             }
 
-            // Gửi email thông báo
             Mailrequest mailrequest = new Mailrequest
             {
                 ToEmail = userEmail,
                 Subject = "Pet Adoption Notification from PawFund",
-                Body = "Your adoption status has been changed. Please, go to PawFund for details!"
+                Body = "Your adoption staus pet has been changed. Please, go to PawFund for detail!"
             };
 
             await _emailService.SendEmail(mailrequest);

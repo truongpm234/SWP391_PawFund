@@ -37,8 +37,8 @@ namespace MyWebApp1.Controllers
             return Ok(shelterWithPets);
         }
 
-        [Authorize(Policy = "ManagerOnly")]
-        [HttpPost("CreateShelter-by-Manager")]
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost("CreateShelter-by-Admin")]
         public async Task<IActionResult> CreateShelter([FromBody] ShelterCreateDTO shelterDto)
         {
             if (!ModelState.IsValid)
@@ -48,8 +48,8 @@ namespace MyWebApp1.Controllers
             return CreatedAtAction(nameof(GetInformationShelter), new { id = shelter.ShelterId }, shelter);
         }
 
-        [Authorize(Policy = "ManagerOnly")]
-        [HttpPut("UpdateShelter-by-Manager/{id}")]
+        [Authorize(Policy = "StaffOnly")]
+        [HttpPut("UpdateShelter-by-staff/{id}")]
         public async Task<IActionResult> UpdateShelter(int id, [FromBody] ShelterCreateDTO shelterDto)
         {
             if (!ModelState.IsValid)
@@ -66,8 +66,8 @@ namespace MyWebApp1.Controllers
             return Ok(shelterDto);
         }
 
-        [Authorize(Policy = "ManagerOnly")]
-        [HttpDelete("DeleteShelter-by-Manager/{id}")]
+        [Authorize(Policy = "AdminOnly")]
+        [HttpDelete("DeleteShelter-by-Admin/{id}")]
         public async Task<IActionResult> DeleteShelter(int id)
         {
             var result = await _shelterService.DeleteShelterAsync(id);

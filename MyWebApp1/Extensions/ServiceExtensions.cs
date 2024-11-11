@@ -27,6 +27,12 @@ namespace MyWebApp1.Extensions
 
             services.AddSwaggerGen();
 
+<<<<<<< HEAD
+            services.AddScoped<PetService>();
+
+            // Gọi phương thức AddSwaggerAuthentication từ DependencyInjection
+=======
+>>>>>>> Dev-for-test
             services.AddSwaggerAuthentication();
 
             services.AddScoped<AdoptionService>();

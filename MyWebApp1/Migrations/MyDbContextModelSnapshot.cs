@@ -49,7 +49,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Adoption");
+                    b.ToTable("Adoption", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.DonationEvent", b =>
@@ -87,7 +87,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("UserCreatedId");
 
-                    b.ToTable("DonationEvent");
+                    b.ToTable("DonationEvent", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.DonationImage", b =>
@@ -112,7 +112,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("DonationEventId");
 
-                    b.ToTable("DonationImage");
+                    b.ToTable("DonationImage", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.MyWebApp1.Models.User", b =>
@@ -213,28 +213,24 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("PetCategoryId");
 
-                    b.ToTable("Pet");
+                    b.ToTable("Pet", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.PetCategory", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("PetCategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetCategoryId"));
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("PetCategoryId");
 
-                    b.ToTable("PetCategory");
+                    b.ToTable("PetCategory", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.PetImage", b =>
@@ -263,7 +259,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("PetId");
 
-                    b.ToTable("PetImage");
+                    b.ToTable("PetImage", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.Role", b =>
@@ -280,7 +276,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Role");
+                    b.ToTable("Role", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.Transaction", b =>
@@ -322,7 +318,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transaction");
+                    b.ToTable("Transaction", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.TransactionStatus", b =>
@@ -339,7 +335,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasKey("TransactionStatusId");
 
-                    b.ToTable("TransactionStatus");
+                    b.ToTable("TransactionStatus", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.TransactionType", b =>
@@ -356,7 +352,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasKey("TransactionTypeId");
 
-                    b.ToTable("TransactionType");
+                    b.ToTable("TransactionType", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.UserRole", b =>
@@ -371,7 +367,7 @@ namespace MyWebApp1.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRole");
+                    b.ToTable("UserRole", (string)null);
                 });
 
             modelBuilder.Entity("MyWebApp1.Models.Adoption", b =>
@@ -419,9 +415,7 @@ namespace MyWebApp1.Migrations
                 {
                     b.HasOne("MyWebApp1.Models.PetCategory", "PetCategory")
                         .WithMany()
-                        .HasForeignKey("PetCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PetCategoryId");
 
                     b.Navigation("PetCategory");
                 });
