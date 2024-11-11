@@ -90,10 +90,6 @@ namespace Cursus_Api.Helper
                                 WebUtility.UrlEncode(kv.Value) + "&");
                 }
             }
-<<<<<<< HEAD
-
-=======
->>>>>>> Dev-for-test
             if (data.Length > 0)
             {
                 data.Remove(data.Length - 1, 1);
@@ -136,8 +132,4 @@ namespace Cursus_Api.Helper
             return vnpCompare.Compare(x, y, CompareOptions.Ordinal);
         }
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> Dev-for-test

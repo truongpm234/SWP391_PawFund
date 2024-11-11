@@ -28,58 +28,6 @@ namespace MyWebApp1.Controllers
             _dbContext = myDbContext;
         }
 
-        [Authorize(Policy = "UserOrStaff")]
-        [HttpPost]
-        [Route("AddNewPet")]
-        public async Task<IActionResult> AddNewPet([FromBody] AddNewPetDTO newPetDTO)
-        {
-            try
-            {
-                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
-                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
-                {
-                    return Unauthorized("User ID not found in token.");
-                }
-
-                var pet = new Models.Pet
-                {
-                    PetName = newPetDTO.PetName,
-                    PetType = newPetDTO.PetType,
-                    Age = newPetDTO.Age,
-                    Gender = newPetDTO.Gender,
-                    Address = newPetDTO.Address,
-                    MedicalCondition = newPetDTO.MedicalCondition,
-                    Description = newPetDTO.Description,
-                    Color = newPetDTO.Color,
-                    Size = newPetDTO.Size,
-                    ContactPhoneNumber = newPetDTO.ContactPhoneNumber,
-                    ContactEmail = newPetDTO.ContactEmail,
-                    PetCategoryId = newPetDTO.PetCategoryId,
-                    CreatedAt = DateTime.Now,
-                    IsAdopted = false,
-                    IsApproved = false
-                };
-
-                if (newPetDTO.PetImages != null && newPetDTO.PetImages.Any())
-                {
-                    pet.PetImages = newPetDTO.PetImages.Select(imageDto => new PetImage
-                    {
-                        ImageDescription = imageDto.ImageDescription,
-                        ImageUrl = imageDto.ImageUrl,
-                        IsThumbnailImage = imageDto.IsThumbnailImage
-                    }).ToList();
-                }
-
-                var addedPet = await _userService.AddNewPet(pet, userId);
-
-                return Ok(addedPet);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
 
         [HttpGet("get-all-pet")]
         public async Task<IActionResult> GetAllApprovedPets()
@@ -105,7 +53,6 @@ namespace MyWebApp1.Controllers
                 });
             }
         }
-
 
         [HttpGet("get-approved-pet-by-id")]
         public async Task<IActionResult> GetApprovedPetById(int id)
@@ -151,18 +98,22 @@ namespace MyWebApp1.Controllers
         }
 
         [Authorize]
-        [HttpPost("request-role-manager")]
-        public async Task<ActionResult<User>> RequestManagerRole()
+        [HttpPost("create-request-approve-info-user")]
+        public async Task<IActionResult> RequestApproval([FromBody] UserApproveRequest request)
         {
-            try
+            var userIdClaim = User.FindFirst("UserId");
+            if (userIdClaim == null)
             {
-                var user = await _userService.RequestManagerRole();
-                return Ok(user);
+                return Unauthorized(new { Message = "User ID not found in token" });
             }
-            catch (Exception ex)
+            int userId = int.Parse(userIdClaim.Value);
+
+            var approveId = await _userService.CreateUserApproveRequest(request, userId);
+            if (approveId > 0)
             {
-                return BadRequest(ex.Message);
+                return Ok(new { Message = "Request submitted successfully", ApproveId = approveId });
             }
+            return BadRequest("Failed to submit request");
         }
 
         [HttpGet]
@@ -207,6 +158,5 @@ namespace MyWebApp1.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }

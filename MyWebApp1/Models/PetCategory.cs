@@ -11,6 +11,5 @@ namespace MyWebApp1.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PetCategoryId { get; set; }
         public string CategoryName { get; set; }
-
     }
 }

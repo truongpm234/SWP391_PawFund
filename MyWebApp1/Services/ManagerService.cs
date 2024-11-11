@@ -18,45 +18,61 @@ namespace MyWebApp1.Services
            
         }
 
-        public async Task<Models.Pet> ApprovePet(int petId, int approvedByUserId, int shelterId)
+        public async Task<List<UserApprove>> GetApprovedRequestsAsync()
         {
-            var existingPet = await _context.Pets.FindAsync(petId);
-            if (existingPet == null)
-            {
-                throw new Exception("Pet not found");
-            }
-
-            var shelter = await _context.Shelters.FindAsync(shelterId);
-            if (shelter == null)
-            {
-                throw new Exception("Shelter not found");
-            }
-
-            existingPet.IsApproved = true;
-            existingPet.ShelterId = shelterId;
-            existingPet.ApprovedByUserId = approvedByUserId;
-
-            _context.Entry(existingPet).State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
-
-            var userEmail = existingPet.ContactEmail;
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                throw new Exception("User email not found.");
-            }
-
-            Mailrequest mailrequest = new Mailrequest
-            {
-                ToEmail = userEmail,
-                Subject = "Pet Approval Notification from PawFund",
-                Body = $"Your pet {existingPet.PetName} has been approved!"
-            };
-
-            await _emailService.SendEmail(mailrequest);
-
-            return existingPet;
+            return await _context.UserApproves
+                .Where(x => x.IsApprovedUser == true)
+                .ToListAsync();
         }
+
+        public async Task<List<UserApprove>> GetPendingRequestsAsync()
+        {
+            return await _context.UserApproves
+                .Where(x => x.IsApprovedUser == false)
+                .ToListAsync();
+        }
+
+        
+
+        //public async Task<Models.Pet> ApprovePet(int petId, int approvedByUserId, int shelterId)
+        //{
+        //    var existingPet = await _context.Pets.FindAsync(petId);
+        //    if (existingPet == null)
+        //    {
+        //        throw new Exception("Pet not found");
+        //    }
+
+        //    var shelter = await _context.Shelters.FindAsync(shelterId);
+        //    if (shelter == null)
+        //    {
+        //        throw new Exception("Shelter not found");
+        //    }
+
+        //    existingPet.IsApproved = true;
+        //    existingPet.ShelterId = shelterId;
+        //    existingPet.ApprovedByUserId = approvedByUserId;
+
+        //    _context.Entry(existingPet).State = EntityState.Modified;
+
+        //    await _context.SaveChangesAsync();
+
+        //    var userEmail = existingPet.ContactEmail;
+        //    if (string.IsNullOrEmpty(userEmail))
+        //    {
+        //        throw new Exception("User email not found.");
+        //    }
+
+        //    Mailrequest mailrequest = new Mailrequest
+        //    {
+        //        ToEmail = userEmail,
+        //        Subject = "Pet Approval Notification from PawFund",
+        //        Body = $"Your pet {existingPet.PetName} has been approved!"
+        //    };
+
+        //    await _emailService.SendEmail(mailrequest);
+
+        //    return existingPet;
+        //}
 
         public async Task DeletePet(int petId)
         {

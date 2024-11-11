@@ -13,11 +13,55 @@ namespace MyWebApp1.Controllers
     public class AdminController : ControllerBase
     {
         private readonly AdminService _adminService;
+        private readonly UserService _userService;
 
-        public AdminController(AdminService adminService)
+        public AdminController(AdminService adminService, UserService userService)
         {
             _adminService = adminService;
+            _userService = userService;
         }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("get-pending-approve-requests-list")]
+        public IActionResult GetPendingApproveRequests()
+        {
+            // Gọi service để lấy danh sách các yêu cầu chưa được duyệt
+            var pendingRequests = _adminService.GetPendingApproveRequests();
+
+            if (pendingRequests != null && pendingRequests.Any())
+            {
+                return Ok(new { Message = "Pending approve requests list", Data = pendingRequests });
+            }
+            else
+            {
+                return NotFound(new { Message = "No pending approve requests found" });
+            }
+        }
+
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost("approve-info-user")]
+        public async Task<IActionResult> ApproveUser(int approveId, bool isApproved)
+        {
+            try
+            {
+                var result = await _adminService.ApproveUser(approveId, isApproved);
+
+                if (result)
+                {
+                    return Ok(new { Message = "User approval status updated successfully." });
+                }
+                else
+                {
+                    return NotFound(new { Message = "Approval record not found." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred while updating approval status.", Details = ex.Message });
+            }
+        }
+
 
         [Authorize(Policy = "AdminOnly")]
         [HttpGet]
@@ -51,14 +95,11 @@ namespace MyWebApp1.Controllers
 
             try
             {
-                //bỏ "Bearer " để lấy token
                 var token = authHeader.Substring("Bearer ".Length).Trim();
 
-                // xu li token lay thong tin
                 var jwtHandler = new JwtSecurityTokenHandler();
                 var jwtToken = jwtHandler.ReadJwtToken(token);
 
-                // Lấy userId từ claim trong token
                 var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "UserId");
                 if (userIdClaim == null)
                 {
@@ -67,7 +108,7 @@ namespace MyWebApp1.Controllers
 
                 var userId = int.Parse(userIdClaim.Value);
 
-                // Tìm người dùng từ cơ sở dữ liệu dựa trên userId
+                // Tìm user
                 var user = _adminService.GetUser(userId);
 
                 if (user != null)
@@ -112,7 +153,7 @@ namespace MyWebApp1.Controllers
         }
 
         [Authorize(Policy = "AdminOnly")]
-        [HttpGet("get-all-requests")]
+        [HttpGet("get-all-manager-requests")]
         public async Task<ActionResult<List<User>>> GetAllManagerRequests()
         {
             var requests = await _adminService.GetAllManagerRequests();
@@ -120,7 +161,7 @@ namespace MyWebApp1.Controllers
         }
 
         [Authorize(Policy = "AdminOnly")]
-        [HttpPost("approveManagerRequest/{userId}")]
+        [HttpPost("approve-Manager-Request/{userId}")]
         public async Task<ActionResult<User>> ApproveManagerRequest(int userId)
         {
             try
