@@ -2,7 +2,7 @@
 {
     public class UpdateProfileDTO
     {
-        public string? Username { get; set; }     //null: nếu không nhập, giữ nguyên giá trị
+        public string? Username { get; set; }   
         public string? Fullname { get; set; }     
         public string? Email { get; set; }     
         public string? PhoneNumber { get; set; }  

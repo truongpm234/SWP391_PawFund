@@ -6,8 +6,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using MyWebApp1.Data;
 using MyWebApp1.Models;
-using Cursus_Api.Helper; // Add reference to VnPayLibrary
-
+using Cursus_Api.Helper;
 public class TransactionService
 {
     private readonly MyDbContext _context;
@@ -19,26 +18,23 @@ public class TransactionService
         _configuration = configuration;
     }
 
-    // Tạo giao dịch mới
-    public int CreateTransaction(decimal amount, bool isMoneyDonation, bool isResourceDonation, int userId, int transactionTypeId)
+    public int CreateTransaction(decimal amount, int userId, int transactionTypeId, int shelterId, string note)
     {
         var transaction = new Transaction
         {
             TransactionAmount = amount,
-            IsMoneyDonation = isMoneyDonation,
-            IsResourceDonation = isResourceDonation,
             UserId = userId,
-            TransactionStatusId = 1, // 'Pending' status ID
-            TransactionTypeId = transactionTypeId
+            TransactionStatusId = 1,
+            TransactionTypeId = transactionTypeId,
+            ShelterId = shelterId, // Sử dụng giá trị ShelterId
+            Note = note // Sử dụng giá trị Note
         };
-
         _context.Transactions.Add(transaction);
         _context.SaveChanges();
 
         return transaction.TransactionId;
     }
 
-    // Cập nhật trạng thái giao dịch
     public bool UpdateTransactionStatus(int transactionId, int statusId)
     {
         var transaction = _context.Transactions.Find(transactionId);
@@ -51,20 +47,17 @@ public class TransactionService
         return false;
     }
 
-    // Xử lý phản hồi từ VNPAY
     public bool HandleVnpayCallback(string responseCode, int transactionId)
     {
-        if (responseCode == "00") // Giao dịch thành công
+        if (responseCode == "00")
         {
-            return UpdateTransactionStatus(transactionId, 2); // 2 là trạng thái 'Thành công'
+            return UpdateTransactionStatus(transactionId, 2);
         }
         return false;
     }
 
-    // Tạo URL cho VNPAY với mã hóa bảo mật
     public string GenerateVnpayUrl(int transactionId, decimal amount)
     {
-        // Lấy thông tin từ appsettings.json
         var vnp_TmnCode = _configuration["VnPAY:TmnCode"];
         var vnp_HashSecret = _configuration["VnPAY:HashSecret"];
         var vnp_ReturnUrl = _configuration["VnPAY:ReturnUrl"];
@@ -75,7 +68,6 @@ public class TransactionService
             throw new ArgumentNullException("One or more configuration values are null or empty.");
         }
 
-        // Instantiate VnPayLibrary
         VnPayLibrary vnPay = new VnPayLibrary();
         vnPay.AddRequestData("vnp_Version", "2.1.0");
         vnPay.AddRequestData("vnp_Command", "pay");
@@ -91,7 +83,6 @@ public class TransactionService
         vnPay.AddRequestData("vnp_TxnRef", transactionId.ToString());
         vnPay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
 
-        // Generate the secure URL
         string paymentUrl = vnPay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
         Console.WriteLine("Generated Payment URL: " + paymentUrl);
         return paymentUrl;
