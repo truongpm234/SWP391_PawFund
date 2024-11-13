@@ -1,9 +1,7 @@
-﻿using MyWebApp1.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MyWebApp1.Data;
 using MyWebApp1.DTO;
-<<<<<<< HEAD
-=======
 using MyWebApp1.Models;
->>>>>>> Dev-for-test
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +10,7 @@ namespace MyWebApp1.Services
     public class AdoptionService
     {
         private readonly MyDbContext _context;
-
+        private readonly IEmailService _emailService;
         public AdoptionService(MyDbContext context)
         {
             _context = context;
@@ -20,6 +18,20 @@ namespace MyWebApp1.Services
 
         public bool CreateAdoptionRequest(AdoptionRequestModel request, int userId, int petId)
         {
+            // Kiểm tra trạng thái của người dùng
+            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            if (!user.IsApprovedUser)
+            {
+                throw new Exception("User is not approved for adoption requests. Please complete the verification process.");
+            }
+
+            // Kiểm tra thông tin thú cưng
             var pet = _context.Pets.FirstOrDefault(p => p.PetId == petId);
 
             if (pet == null)
@@ -37,10 +49,11 @@ namespace MyWebApp1.Services
                 throw new Exception("This pet is not approved for adoption.");
             }
 
+            // Tạo yêu cầu nhận nuôi
             var adoption = new Adoption
             {
                 UserId = userId,
-                PetId = petId, // Sử dụng petId từ tham số
+                PetId = petId,
                 FullName = request.FullName,
                 Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
@@ -48,7 +61,7 @@ namespace MyWebApp1.Services
                 SelfDescription = request.SelfDescription,
                 HasPetExperience = request.HasPetExperience,
                 ReasonForAdopting = request.ReasonForAdopting,
-                IsApproved = false,  
+                IsApproved = false,
                 Note = request.Note,
             };
 
@@ -124,5 +137,43 @@ namespace MyWebApp1.Services
             return userAdoptions.ToList();
         }
 
+        public async Task CheckAndSendReminderAsync()
+        {
+            var adoptionConfirmations = await _context.AdoptionConfirmations
+                .Where(ac => ac.ConfirmationDate.HasValue && !ac.ReminderSent)
+                .ToListAsync();
+
+            foreach (var confirmation in adoptionConfirmations)
+            {
+                if (confirmation.ConfirmationDate.Value.AddDays(30) <= DateTime.UtcNow)
+                {
+                    // Lấy thông tin nhận nuôi từ Adoption
+                    var adoption = await _context.Adoptions.FindAsync(confirmation.AdoptionId);
+                    var userEmail = adoption?.Email;
+
+                    if (!string.IsNullOrEmpty(userEmail))
+                    {
+                        var mailRequest = new Mailrequest
+                        {
+                            ToEmail = userEmail,
+                            Subject = "Reminder: Adoption Confirmation",
+                            Body = "It's been 30 days since your adoption approval. Please confirm if you still have the pet."
+                        };
+
+                        try
+                        {
+                            await _emailService.SendEmail(mailRequest);
+
+                            confirmation.ReminderSent = true;
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Email sending failed: {ex.Message}");
+                        }
+                    }
+                }
+            }
+        }
     }
 }

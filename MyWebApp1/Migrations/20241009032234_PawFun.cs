@@ -6,23 +6,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MyWebApp1.Migrations
 {
     /// <inheritdoc />
-    public partial class PawFund : Migration
+    public partial class PawFun : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //migrationBuilder.CreateTable(
-            //    name: "PetCategory",
-            //    columns: table => new
-            //    {
-            //        PetCategoryId = table.Column<int>(type: "int", nullable: false)
-            //            .Annotation("SqlServer:Identity", "1, 1"),
-            //        CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_PetCategory", x => x.PetCategoryId);
-            //    });
+    //        migrationBuilder.CreateTable(
+    //name: "PetCategory",
+    //columns: table => new
+    //{
+    //    CategoryId = table.Column<int>(type: "int", nullable: false)
+    //        .Annotation("SqlServer:Identity", "1, 1"),
+    //    CategoryName = table.Column<string>(type: "VARCHAR(255)", nullable: false),
+    //    Category = table.Column<string>(type: "VARCHAR(255)", nullable: true)
+    //},
+    //constraints: table =>
+    //{
+    //    table.PrimaryKey("PK_PetCategory", x => x.CategoryId);
+    //});
+
 
             //migrationBuilder.CreateTable(
             //    name: "Role",
@@ -109,7 +111,8 @@ namespace MyWebApp1.Migrations
             //            name: "FK_Pet_PetCategory_PetCategoryId",
             //            column: x => x.PetCategoryId,
             //            principalTable: "PetCategory",
-            //            principalColumn: "PetCategoryId");
+            //            principalColumn: "CategoryId",
+            //            onDelete: ReferentialAction.Cascade);
             //    });
 
             //migrationBuilder.CreateTable(
@@ -274,60 +277,60 @@ namespace MyWebApp1.Migrations
             //            onDelete: ReferentialAction.Cascade);
             //    });
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Adoption_PetId",
-            //    table: "Adoption",
-            //    column: "PetId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Adoption_PetId",
+                table: "Adoption",
+                column: "PetId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Adoption_UserId",
-            //    table: "Adoption",
-            //    column: "UserId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Adoption_UserId",
+                table: "Adoption",
+                column: "UserId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_DonationEvent_UserCreatedId",
-            //    table: "DonationEvent",
-            //    column: "UserCreatedId");
+            migrationBuilder.CreateIndex(
+                name: "IX_DonationEvent_UserCreatedId",
+                table: "DonationEvent",
+                column: "UserCreatedId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_DonationImage_DonationEventId",
-            //    table: "DonationImage",
-            //    column: "DonationEventId");
+            migrationBuilder.CreateIndex(
+                name: "IX_DonationImage_DonationEventId",
+                table: "DonationImage",
+                column: "DonationEventId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Pet_PetCategoryId",
-            //    table: "Pet",
-            //    column: "PetCategoryId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Pet_PetCategoryId",
+                table: "Pet",
+                column: "PetCategoryId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_PetImage_PetId",
-            //    table: "PetImage",
-            //    column: "PetId");
+            migrationBuilder.CreateIndex(
+                name: "IX_PetImage_PetId",
+                table: "PetImage",
+                column: "PetId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Transaction_DonationEventId",
-            //    table: "Transaction",
-            //    column: "DonationEventId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_DonationEventId",
+                table: "Transaction",
+                column: "DonationEventId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Transaction_TransactionStatusId",
-            //    table: "Transaction",
-            //    column: "TransactionStatusId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_TransactionStatusId",
+                table: "Transaction",
+                column: "TransactionStatusId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Transaction_TransactionTypeId",
-            //    table: "Transaction",
-            //    column: "TransactionTypeId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_TransactionTypeId",
+                table: "Transaction",
+                column: "TransactionTypeId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_Transaction_UserId",
-            //    table: "Transaction",
-            //    column: "UserId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_UserId",
+                table: "Transaction",
+                column: "UserId");
 
-            //migrationBuilder.CreateIndex(
-            //    name: "IX_UserRole_RoleId",
-            //    table: "UserRole",
-            //    column: "RoleId");
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRole_RoleId",
+                table: "UserRole",
+                column: "RoleId");
         }
 
         /// <inheritdoc />

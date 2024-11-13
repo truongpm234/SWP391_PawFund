@@ -27,7 +27,7 @@ namespace MyWebApp1.Controllers
             _adoptionService = adoptionService;
         }
 
-        [Authorize(Policy = "StaffOnly")]
+        [Authorize(Policy = "ManagerOrStaff")]
         [HttpPut("update-pet-by-staff/{petId}")]
         public async Task<IActionResult> UpdatePet(int petId, [FromBody] PetUpdateDTO updatedPet)
         {
@@ -42,14 +42,35 @@ namespace MyWebApp1.Controllers
             }
         }
 
-
         [Authorize(Policy = "StaffOnly")]
+        [HttpPost("AddNewPet-by-staff")]
+        public async Task<IActionResult> AddNewPet([FromBody] AddNewPetDTO newPetDTO)
+        {
+            try
+            {
+                // Lấy UserId của staff từ token
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    return Unauthorized("User ID not found in token.");
+                }
+
+                var result = await _staffService.AddNewPetForStaff(newPetDTO, userId);
+
+                return Ok(new { Message = "Pet added to shelter successfully", Pet = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        [Authorize(Policy = "ManagerOrStaff")]
         [HttpGet("get-pet-in-shelter-by-staff")]
         public async Task<IActionResult> GetPetsByShelterForStaff()
         {
             try
             {
-                // Lấy userId từ token (claims)
                 var userId = int.Parse(User.FindFirst("UserId")?.Value);
 
                 var pets = await _staffService.GetPetsByShelterForStaff(userId);
@@ -61,8 +82,8 @@ namespace MyWebApp1.Controllers
             }
         }
 
-        [Authorize(Policy = "StaffOnly")]
-        [HttpPut("approve-adoption/{adoptionId}")]
+        [Authorize(Policy = "ManagerOrStaff")]
+        [HttpPut("approve-adoption-request/{adoptionId}")]
         public async Task<IActionResult> ApproveAdoptionByStaff(int adoptionId, [FromBody] ApproveAdoptionRequestDto request)
         {
             try
@@ -86,8 +107,8 @@ namespace MyWebApp1.Controllers
         }
 
 
-        [Authorize]
-        [HttpGet("get-all-adoptions-by-staff")]
+        [Authorize(Policy = "ManagerOrStaff")]
+        [HttpGet("get-all-adoptions-by-staff-and-manager")]
         public IActionResult GetAdoptions()
         {
             try

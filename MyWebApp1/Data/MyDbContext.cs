@@ -30,6 +30,9 @@ namespace MyWebApp1.Data
         public DbSet<MyWebApp1.Models.Transaction> Transactions { get; set; }
         public DbSet<MyWebApp1.Models.TransactionStatus> TransactionStatuses { get; set; }
         public DbSet<TransactionType> TransactionTypes { get; set; }
+        public DbSet<UserApprove> UserApproves { get; set; }
+        public DbSet<AdoptionConfirmation> AdoptionConfirmations { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -73,8 +76,13 @@ namespace MyWebApp1.Data
                 .WithOne(pi => pi.Pet)  
                 .HasForeignKey(pi => pi.PetId)
                 .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<AdoptionConfirmation>()
+        .HasKey(ac => ac.ConfirmationId);
+
+            modelBuilder.Entity<AdoptionConfirmation>()
+                .ToTable("AdoptionConfirmation");
+
         }
     }
 }
