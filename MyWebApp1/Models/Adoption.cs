@@ -1,5 +1,6 @@
 ﻿using MyWebApp1.Models;
 using MyWebApp1.Models.MyWebApp1.Models;
+using Org.BouncyCastle.Asn1.X509;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -20,7 +21,8 @@ namespace MyWebApp1.Models
         public string? SelfDescription { get; set; } 
         public bool? HasPetExperience { get; set; }
         public string? ReasonForAdopting { get; set; }  
+        public DateTime? createDate { get; set; }
         [JsonIgnore]
-        public string? Reason { get; set; } 
+        public string Reason { get; set; }
     }
 }

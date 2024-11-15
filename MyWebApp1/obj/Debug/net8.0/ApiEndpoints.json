@@ -1,8 +1,29 @@
 [
   {
     "ContainingType": "MyWebApp1.Controllers.AdminController",
+    "Method": "ApproveUser",
+    "RelativePath": "api/Admin/approve-info-user",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "approveId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "isApproved",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdminController",
     "Method": "ApproveManagerRequest",
-    "RelativePath": "api/Admin/approveManagerRequest/{userId}",
+    "RelativePath": "api/Admin/approve-Manager-Request/{userId}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -27,6 +48,22 @@
   },
   {
     "ContainingType": "MyWebApp1.Controllers.AdminController",
+    "Method": "ChangeUserRole",
+    "RelativePath": "api/Admin/changeRole",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MyWebApp1.DTO.ChangeRoleRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdminController",
     "Method": "DeleteUser",
     "RelativePath": "api/Admin/delete-user/{userId}",
     "HttpMethod": "DELETE",
@@ -44,7 +81,7 @@
   {
     "ContainingType": "MyWebApp1.Controllers.AdminController",
     "Method": "GetAllManagerRequests",
-    "RelativePath": "api/Admin/get-all-requests",
+    "RelativePath": "api/Admin/get-all-manager-requests",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -60,6 +97,16 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdminController",
+    "Method": "GetPendingApproveRequests",
+    "RelativePath": "api/Admin/get-pending-approve-requests-list",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "MyWebApp1.Controllers.AdminController",
@@ -132,6 +179,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.AdoptionController",
+    "Method": "SendReminders",
+    "RelativePath": "api/Adoption/send-reminders",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -331,22 +388,17 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "MyWebApp1.Controllers.ManagerController",
-    "Method": "ApprovePet",
-    "RelativePath": "api/Manager/approve-pet/{petId}/{shelterId}",
+    "ContainingType": "MyWebApp1.Controllers.ImageUploadController",
+    "Method": "UploadImage",
+    "RelativePath": "api/ImageUpload/upload",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "petId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "shelterId",
-        "Type": "System.Int32",
-        "IsRequired": true
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -371,6 +423,26 @@
     "ContainingType": "MyWebApp1.Controllers.ManagerController",
     "Method": "GetAllPets",
     "RelativePath": "api/Manager/get-all-pet-by-manager",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.ManagerController",
+    "Method": "GetApprovedRequests",
+    "RelativePath": "api/Manager/list-approved-requests",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.ManagerController",
+    "Method": "GetPendingRequests",
+    "RelativePath": "api/Manager/list-pending-requests",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -458,8 +530,24 @@
   },
   {
     "ContainingType": "MyWebApp1.Controllers.StaffController",
+    "Method": "AddNewPet",
+    "RelativePath": "api/staff/AddNewPet-by-staff",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newPetDTO",
+        "Type": "MyWebApp1.DTO.AddNewPetDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.StaffController",
     "Method": "ApproveAdoptionByStaff",
-    "RelativePath": "api/staff/approve-adoption/{adoptionId}",
+    "RelativePath": "api/staff/approve-adoption-request/{adoptionId}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -480,11 +568,27 @@
   {
     "ContainingType": "MyWebApp1.Controllers.StaffController",
     "Method": "GetAdoptions",
-    "RelativePath": "api/staff/get-all-adoptions-by-staff",
+    "RelativePath": "api/staff/get-all-adoptions-by-staff-and-manager",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.StaffController",
+    "Method": "GetAdoptionsByShelterId",
+    "RelativePath": "api/staff/get-lists-adoptions-by-{shelterId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "shelterId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -495,6 +599,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MyWebApp1.Controllers.StaffController",
+    "Method": "GetShelterId",
+    "RelativePath": "api/staff/getShelterId",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "staffId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -571,16 +691,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "TransactionController",
+    "Method": "GetTransactionsForStaff",
+    "RelativePath": "api/Transaction/shelter-transactions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MyWebApp1.Controllers.UsersController",
-    "Method": "AddNewPet",
-    "RelativePath": "api/Users/AddNewPet",
+    "Method": "RequestApproval",
+    "RelativePath": "api/Users/create-request-approve-info-user",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "newPetDTO",
-        "Type": "MyWebApp1.DTO.AddNewPetDTO",
+        "Name": "request",
+        "Type": "MyWebApp1.DTO.UserApproveRequest",
         "IsRequired": true
       }
     ],
@@ -637,26 +773,6 @@
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MyWebApp1.Controllers.UsersController",
-    "Method": "RequestManagerRole",
-    "RelativePath": "api/Users/request-role-manager",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "MyWebApp1.Models.MyWebApp1.Models.User",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
   },
   {
     "ContainingType": "MyWebApp1.Controllers.UsersController",

@@ -5,6 +5,7 @@ using MyWebApp1.Data;
 using MyWebApp1.Models.MyWebApp1.Models;
 using MyWebApp1.Models;
 using MyWebApp1.DTO;
+using SendGrid.Helpers.Mail;
 
 namespace MyWebApp1.Services
 {
@@ -19,6 +20,58 @@ namespace MyWebApp1.Services
             _emailService = emailService;
         }
 
+        public List<UserApprove> GetPendingApproveRequests()
+        {
+            var pendingRequests = _dbContext.UserApproves
+                                             .Where(ua => ua.IsApprovedUser == false)
+                                             .ToList();
+
+            return pendingRequests;
+        }
+
+
+        public async Task<bool> ApproveUser(int approveId, bool isApproved)
+        {
+            var userApprove = await _dbContext.UserApproves.FindAsync(approveId);
+
+            if (userApprove != null)
+            {
+                userApprove.IsApprovedUser = isApproved;
+
+                var user = await _dbContext.Users.FindAsync(userApprove.UserId);
+                if (user != null)
+                {
+                    user.IsApprovedUser = isApproved;
+                }
+
+                _dbContext.Entry(userApprove).State = EntityState.Modified;
+                if (user != null)
+                {
+                    _dbContext.Entry(user).State = EntityState.Modified;
+                }
+
+                await _dbContext.SaveChangesAsync();
+
+                if (user == null || string.IsNullOrEmpty(user.Email))
+                {
+                    throw new Exception("User email not found.");
+                }
+
+                var approvalStatus = isApproved ? "approved" : "denied";
+                var mailrequest = new Mailrequest
+                {
+                    ToEmail = user.Email,
+                    Subject = "Approval Status Notification from PawFund",
+                    Body = $"Hello {user.Username}, your information has been approved successfully. Thank you! From PawFund Team."
+                };
+
+                await _emailService.SendEmail(mailrequest);
+
+                return true;
+            }
+
+            return false;
+        }
         public List<User> GetUsers()
         {
             return _dbContext.Users.ToList();
@@ -27,6 +80,23 @@ namespace MyWebApp1.Services
         public User GetUser(int id)
         {
             return _dbContext.Users.FirstOrDefault(x => x.UserId == id);
+        }
+
+        public async Task<bool> ChangeUserRole(int userId, int newRoleId)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.RoleId = newRoleId;
+
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<User> RemoveUserRole(int userId)
@@ -46,7 +116,7 @@ namespace MyWebApp1.Services
             }
 
             user.IsApproved = false;
-            user.IsApprovedUser = false;
+            //user.IsApprovedUser = false;
 
             var userRoleId = 2;
             var userRoleForUser = await _dbContext.Roles.FirstOrDefaultAsync(r => r.RoleId == userRoleId);
@@ -69,7 +139,8 @@ namespace MyWebApp1.Services
         {
             // lay list nhung user chua duoc duyet manager
             return await _dbContext.Users
-                .Where(u => u.IsApprovedUser && !u.IsApproved)
+                //.Where(u => u.IsApprovedUser && !u.IsApproved)
+                .Where(u => !u.IsApproved)
                 .ToListAsync();
         }
 
@@ -81,8 +152,9 @@ namespace MyWebApp1.Services
                 throw new Exception("User not found.");
             }
 
-            if (!user.IsApprovedUser || user.IsApproved)
-            {
+            //if (!user.IsApprovedUser || user.IsApproved)
+            if (user.IsApproved)
+                {
                 throw new Exception("This user has not requested or is already approved for the manager role.");
             }
 

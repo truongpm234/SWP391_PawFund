@@ -43,7 +43,6 @@ namespace MyWebApp1.Controllers
 
             int userId = int.Parse(userIdClaim.Value);
 
-            // Tạo DonationEvent mới với UserCreatedId được lấy từ userId
             var newEvent = new DonationEvent
             {
                 EventName = eventDto.EventName,

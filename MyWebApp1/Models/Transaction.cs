@@ -23,10 +23,10 @@ namespace MyWebApp1.Models
         public int TransactionTypeId { get; set; }
 
         [Required]
-        public int ShelterId { get; set; } // Thêm trường ShelterId
+        public int ShelterId { get; set; }
 
         [MaxLength(200)]
-        public string Note { get; set; } // Thêm trường Note
+        public string Note { get; set; }
 
         [ForeignKey("ShelterId")]
         public Shelter Shelter { get; set; }

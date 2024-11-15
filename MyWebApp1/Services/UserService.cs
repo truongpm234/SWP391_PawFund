@@ -50,7 +50,8 @@ namespace MyWebApp1.Services
                     Password = userDTO.Password,
                     IsApprovedUser = false,
                     IsApproved = false,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.Now,
+                    RoleId = 2
                 };
 
                 _dbContext.Users.Add(newUser);
@@ -218,6 +219,43 @@ namespace MyWebApp1.Services
             }
         }
 
+        public async Task<int> CreateUserApproveRequest(UserApproveRequest request, int userId)
+        {
+            var userApprove = new UserApprove
+            {
+                UserId = userId,
+                Address = request.Address,
+                PhoneNumber = request.PhoneNumber,
+                Occupation = request.Occupation,
+                IDCardNumber = request.IDCardNumber,
+                PetCareCapacity = request.PetCareCapacity,
+                DateGet = request.DateGet,
+                PlaceGet = request.PlaceGet,
+                UsualAddress = request.UsualAddress,
+                IsApprovedUser = false
+            };
+
+            _dbContext.UserApproves.Add(userApprove);
+            await _dbContext.SaveChangesAsync();
+
+            // Gửi email
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user != null)
+            {
+                var mailRequest = new Mailrequest
+                {
+                    ToEmail = user.Email,
+                    Subject = "User Approval Request Submitted",
+                    Body = "Your user approval request has been successfully submitted and is awaiting review."
+                };
+
+                //gửi email
+                await _emailService.SendEmail(mailRequest);
+            }
+
+            return userApprove.ApproveId;
+        }
+
         public async Task<User> RequestManagerRole()
         {
             var authHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
@@ -246,57 +284,19 @@ namespace MyWebApp1.Services
                 throw new Exception("User not found.");
             }
 
-            if (user.IsApprovedUser)
-            {
+            //if (user.IsApprovedUser)
+            if (user.IsApproved)
+                {
                 throw new Exception("User has already requested the manager role.");
             }
 
-            user.IsApprovedUser = true;
+            //user.IsApprovedUser = true;
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
 
             return user;
         }
 
-        public async Task<Models.Pet> AddNewPet(Models.Pet pet, int userId)
-        {
-            pet.UserId = userId;
-
-            await _dbContext.Pets.AddAsync(pet);
-
-            if (pet.PetImages != null && pet.PetImages.Any())
-            {
-                foreach (var image in pet.PetImages)
-                {
-                    image.PetId = pet.PetId;
-                    await _dbContext.PetImages.AddAsync(image);
-                }
-            }
-
-            await _dbContext.SaveChangesAsync();
-
-            var userEmail = await _dbContext.Users
-                .Where(u => u.UserId == userId)
-                .Select(u => u.Email)
-                .FirstOrDefaultAsync();
-
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                throw new Exception("User email not found.");
-            }
-
-            // Gửi email thông báo
-            Mailrequest mailrequest = new Mailrequest
-            {
-                ToEmail = userEmail,
-                Subject = "Pet Request Notification from PawFund",
-                Body = "Your request to add a pet on PawFund is awaiting approval. Please wait! Thank you for your contribution."
-            };
-
-            await _emailService.SendEmail(mailrequest);
-
-            return pet;
-        }
 
         public async Task<List<PetListDTO>> GetAllApprovedPets()
         {
@@ -315,6 +315,8 @@ namespace MyWebApp1.Services
                     Description = pet.Description,
                     Color = pet.Color,
                     Size = pet.Size,
+                    ImageUrl = pet.PetImages != null && pet.PetImages.Any()
+                    ? pet.PetImages.FirstOrDefault().ImageUrl : null,
                     ContactPhoneNumber = pet.ContactPhoneNumber,
                     ContactEmail = pet.ContactEmail,
                     PetCategoryId = pet.PetCategoryId,
@@ -322,42 +324,48 @@ namespace MyWebApp1.Services
                     IsApproved = pet.IsApproved,
                     ApprovedByUserId = pet.ApprovedByUserId,
                     ShelterId = pet.ShelterId,
-                    ShelterName = _dbContext.Shelters
+                    ShelterLocation = _dbContext.Shelters
                         .Where(shelter => shelter.ShelterId == pet.ShelterId)
-                        .Select(shelter => shelter.ShelterName)
+                        .Select(shelter => shelter.ShelterLocation)
                         .FirstOrDefault()
                 })
                 .ToListAsync();
         }
-
-        public async Task<PetResponse> GetApprovedPet(int petId)
+        public async Task<PetListDTO> GetApprovedPet(int petId)
         {
-            // Chỉ trả về pet có isApproved = true
             var pet = await _dbContext.Pets
-                .FirstOrDefaultAsync(pet => pet.PetId == petId && pet.IsApproved == true);
+                .Include(p => p.PetImages) // Bao gồm PetImages để lấy hình ảnh
+                .Include(p => p.ShelterName)   // Bao gồm Shelter để lấy thông tin shelter
+                .FirstOrDefaultAsync(p => p.PetId == petId && p.IsApproved == true);
 
-            // Kiểm tra nếu không tìm thấy pet hoặc pet chưa được duyệt
             if (pet == null)
             {
-                return null; // Hoặc trả về giá trị phù hợp để báo lỗi không tìm thấy pet
+                return null;
             }
 
-            return new PetResponse()
+            return new PetListDTO()
             {
                 PetId = pet.PetId,
                 PetName = pet.PetName,
+                PetType = pet.PetType,
+                Age = pet.Age,
+                Gender = pet.Gender,
                 Address = pet.Address,
                 MedicalCondition = pet.MedicalCondition,
                 Description = pet.Description,
-                Size = pet.Size,
                 Color = pet.Color,
+                Size = pet.Size,
+                ImageUrl = pet.PetImages != null && pet.PetImages.Any()
+                    ? pet.PetImages.FirstOrDefault().ImageUrl : null,
                 ContactPhoneNumber = pet.ContactPhoneNumber,
                 ContactEmail = pet.ContactEmail,
-                Age = pet.Age,
-                Gender = pet.Gender,
-                PetType = pet.PetType,
+                PetCategoryId = pet.PetCategoryId,
                 IsAdopted = pet.IsAdopted,
-                IsApproved = pet.IsApproved
+                IsApproved = pet.IsApproved,
+                ApprovedByUserId = pet.ApprovedByUserId,
+                ShelterId = pet.ShelterId,
+                ShelterLocation = pet.ShelterName?.ShelterLocation,
+                ShelterName = pet.ShelterName?.ShelterName
             };
         }
 
@@ -384,10 +392,10 @@ namespace MyWebApp1.Services
 
         public async Task<List<Pet>> GetPetsByShelter(int shelterId)
         {
-            // Lấy danh sách thú cưng đã được duyệt (Approved = true) thuộc shelter
             var pets = await _dbContext.Pets
-                                     .Where(p => p.ShelterId == shelterId && p.IsApproved == true)
-                                     .ToListAsync();
+                .Include(p => p.PetImages)  // Eager load the PetImages
+                .Where(p => p.ShelterId == shelterId && p.IsApproved)
+                .ToListAsync();
             return pets;
         }
 

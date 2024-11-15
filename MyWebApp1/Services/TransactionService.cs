@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using MyWebApp1.Data;
 using MyWebApp1.Models;
 using Cursus_Api.Helper;
+using Microsoft.EntityFrameworkCore;
 public class TransactionService
 {
     private readonly MyDbContext _context;
@@ -26,8 +27,8 @@ public class TransactionService
             UserId = userId,
             TransactionStatusId = 1,
             TransactionTypeId = transactionTypeId,
-            ShelterId = shelterId, // Sử dụng giá trị ShelterId
-            Note = note // Sử dụng giá trị Note
+            ShelterId = shelterId, 
+            Note = note
         };
         _context.Transactions.Add(transaction);
         _context.SaveChanges();
@@ -86,5 +87,33 @@ public class TransactionService
         string paymentUrl = vnPay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
         Console.WriteLine("Generated Payment URL: " + paymentUrl);
         return paymentUrl;
+    }
+
+    public async Task<List<Transaction>> GetTransactionsByShelterForStaffAsync(int userId)
+    {
+        var user = await _context.Users
+                                 .Include(u => u.Shelter)
+                                 .FirstOrDefaultAsync(u => u.UserId == userId);
+
+        if (user == null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        var roleId = await _context.UserRoles
+                                   .Where(ur => ur.UserId == user.UserId)
+                                   .Select(ur => ur.RoleId)
+                                   .FirstOrDefaultAsync();
+
+        if (roleId != 4)
+        {
+            throw new Exception("User is not a staff.");
+        }
+
+        var transactions = await _context.Transactions
+                                         .Where(t => t.ShelterId == user.ShelterId)
+                                         .ToListAsync();
+
+        return transactions;
     }
 }

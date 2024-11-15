@@ -91,4 +91,18 @@ public class TransactionController : ControllerBase
             return BadRequest("Transaction failed or invalid");
         }
     }
+
+    [HttpGet("shelter-transactions")]
+    public async Task<IActionResult> GetTransactionsForStaff(int userId)
+    {
+        try
+        {
+            var transactions = await _transactionService.GetTransactionsByShelterForStaffAsync(userId);
+            return Ok(transactions);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }

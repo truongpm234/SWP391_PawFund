@@ -27,7 +27,7 @@ namespace MyWebApp1.Controllers
             _adoptionService = adoptionService;
         }
 
-        [Authorize(Policy = "StaffOnly")]
+        [Authorize(Policy = "ManagerOrStaff")]
         [HttpPut("update-pet-by-staff/{petId}")]
         public async Task<IActionResult> UpdatePet(int petId, [FromBody] PetUpdateDTO updatedPet)
         {
@@ -42,14 +42,53 @@ namespace MyWebApp1.Controllers
             }
         }
 
+        [HttpGet("getShelterId")]
+        public async Task<IActionResult> GetShelterId([FromQuery] int staffId)
+        {
+            if (staffId <= 0)
+            {
+                return BadRequest("Invalid staff ID.");
+            }
+
+            var shelterId = await _staffService.GetShelterIdByStaffId(staffId);
+
+            if (shelterId == null)
+            {
+                return NotFound("Staff not found or no shelter assigned.");
+            }
+
+            return Ok(new { ShelterId = shelterId });
+        }
 
         [Authorize(Policy = "StaffOnly")]
+        [HttpPost("AddNewPet-by-staff")]
+        public async Task<IActionResult> AddNewPet([FromBody] AddNewPetDTO newPetDTO)
+        {
+            try
+            {
+                // Lấy UserId của staff từ token
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    return Unauthorized("User ID not found in token.");
+                }
+
+                var result = await _staffService.AddNewPetForStaff(newPetDTO, userId);
+
+                return Ok(new { Message = "Pet added to shelter successfully", Pet = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        [Authorize(Policy = "ManagerOrStaff")]
         [HttpGet("get-pet-in-shelter-by-staff")]
         public async Task<IActionResult> GetPetsByShelterForStaff()
         {
             try
             {
-                // Lấy userId từ token (claims)
                 var userId = int.Parse(User.FindFirst("UserId")?.Value);
 
                 var pets = await _staffService.GetPetsByShelterForStaff(userId);
@@ -61,8 +100,8 @@ namespace MyWebApp1.Controllers
             }
         }
 
-        [Authorize(Policy = "StaffOnly")]
-        [HttpPut("approve-adoption/{adoptionId}")]
+        [Authorize(Policy = "ManagerOrStaff")]
+        [HttpPut("approve-adoption-request/{adoptionId}")]
         public async Task<IActionResult> ApproveAdoptionByStaff(int adoptionId, [FromBody] ApproveAdoptionRequestDto request)
         {
             try
@@ -86,8 +125,8 @@ namespace MyWebApp1.Controllers
         }
 
 
-        [Authorize]
-        [HttpGet("get-all-adoptions-by-staff")]
+        [Authorize(Policy = "ManagerOrStaff")]
+        [HttpGet("get-all-adoptions-by-staff-and-manager")]
         public IActionResult GetAdoptions()
         {
             try
@@ -99,6 +138,15 @@ namespace MyWebApp1.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [Authorize(Policy = "ManagerOrStaff")]
+
+        [HttpGet("get-lists-adoptions-by-{shelterId}")]
+        public IActionResult GetAdoptionsByShelterId(int shelterId)
+        {
+            var adoptions = _staffService.GetAdoptionsByShelterId(shelterId);
+            return Ok(adoptions);
         }
 
     }

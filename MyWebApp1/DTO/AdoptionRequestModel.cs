@@ -28,5 +28,6 @@ namespace MyWebApp1.DTO
         public string ReasonForAdopting { get; set; } 
 
         public string Note { get; set; }  
+        public DateTime createDate { get; set; }
     }
 }

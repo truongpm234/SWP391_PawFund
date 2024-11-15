@@ -5731,11 +5731,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\SE_FALL2024_S5\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
+      "projectUniqueName": "E:\\code_send\\MyWebApp1\\MyWebApp1\\MyWebApp1\\MyWebApp1.csproj",
       "projectName": "MyWebApp1",
-      "projectPath": "E:\\SE_FALL2024_S5\\SWP391_PawFund\\MyWebApp1\\MyWebApp1.csproj",
+      "projectPath": "E:\\code_send\\MyWebApp1\\MyWebApp1\\MyWebApp1\\MyWebApp1.csproj",
       "packagesPath": "C:\\Users\\ghoul\\.nuget\\packages\\",
-      "outputPath": "E:\\SE_FALL2024_S5\\SWP391_PawFund\\MyWebApp1\\obj\\",
+      "outputPath": "E:\\code_send\\MyWebApp1\\MyWebApp1\\MyWebApp1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5877,5 +5877,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "System.IO.FileSystem.AccessControl 5.0.0 depends on System.Security.AccessControl (>= 5.0.0) but System.Security.AccessControl 5.0.0 was not found. An approximate best match of System.Security.AccessControl 6.0.0 was resolved.",
+      "libraryId": "System.Security.AccessControl",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }
