@@ -12,7 +12,7 @@ namespace MyWebApp1.Models
         public int AdoptionId { get; set; }
         public int UserId { get; set; }
         public int PetId { get; set; }
-        public bool IsApproved { get; set; }
+        public int IsApproved { get; set; }
         public string? Note { get; set; }
         public string? FullName { get; set; }  
         public string? Address { get; set; }  
@@ -23,6 +23,6 @@ namespace MyWebApp1.Models
         public string? ReasonForAdopting { get; set; }  
         public DateTime? createDate { get; set; }
         [JsonIgnore]
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
     }
 }

@@ -59,7 +59,7 @@ namespace MyWebApp1.Services
                 SelfDescription = request.SelfDescription,
                 HasPetExperience = request.HasPetExperience,
                 ReasonForAdopting = request.ReasonForAdopting,
-                IsApproved = false,
+                IsApproved = 2,
                 Note = request.Note,
                 createDate = request.createDate,
             };
@@ -100,7 +100,7 @@ namespace MyWebApp1.Services
                 return false;
             }
 
-            adoption.IsApproved = true;
+            adoption.IsApproved = 1;
 
             var pet = _context.Pets.FirstOrDefault(p => p.PetId == adoption.PetId);
             if (pet != null)
@@ -130,6 +130,7 @@ namespace MyWebApp1.Services
                                     a.SelfDescription,
                                     a.HasPetExperience,
                                     a.ReasonForAdopting,
+                                    a.createDate,
                                     a.Reason
                                 };
 

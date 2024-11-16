@@ -250,7 +250,6 @@ namespace MyWebApp1.Services
             return pets;
         }
 
-
         public async Task<bool> ApproveAdoptionByStaff(int userId, int adoptionId, ApproveAdoptionRequestDto request)
         {
             var user = await _context.Users
@@ -282,7 +281,7 @@ namespace MyWebApp1.Services
             adoption.IsApproved = request.IsApproved;
 
             //từ chối
-            if (!request.IsApproved)
+            if (request.IsApproved != 1)
             {
                 adoption.Reason = request.Reason;
             }
@@ -321,7 +320,7 @@ namespace MyWebApp1.Services
                             join u in _context.Users on a.UserId equals u.UserId
                             join p in _context.Pets on a.PetId equals p.PetId
                             join s in _context.Shelters on p.ShelterId equals s.ShelterId 
-                            where a.IsApproved == false 
+                            //where a.IsApproved == 2 && a.IsApproved == 0 && a.IsApproved == 1
                             select new
                             {
                                 a.AdoptionId,
@@ -334,7 +333,8 @@ namespace MyWebApp1.Services
                                 ShelterName = s.ShelterName,
                                 a.SelfDescription,
                                 a.HasPetExperience,
-                                a.ReasonForAdopting
+                                a.ReasonForAdopting,
+                                a.Reason
                             };
 
             return adoptions.ToList();
@@ -346,7 +346,7 @@ namespace MyWebApp1.Services
                             join u in _context.Users on a.UserId equals u.UserId
                             join p in _context.Pets on a.PetId equals p.PetId
                             join s in _context.Shelters on p.ShelterId equals s.ShelterId
-                            where a.IsApproved == false && p.ShelterId == shelterId
+                            where p.ShelterId == shelterId
                             select new
                             {
                                 a.AdoptionId,
@@ -359,7 +359,10 @@ namespace MyWebApp1.Services
                                 ShelterName = s.ShelterName,
                                 a.SelfDescription,
                                 a.HasPetExperience,
-                                a.ReasonForAdopting
+                                a.ReasonForAdopting,
+                                a.createDate,
+                                a.Reason
+
                             };
 
             return adoptions.ToList();

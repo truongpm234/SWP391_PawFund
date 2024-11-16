@@ -5,7 +5,7 @@ namespace MyWebApp1.DTO
     public class ApproveAdoptionRequestDto
     {
         [Required]
-        public bool IsApproved { get; set; }
+        public int IsApproved { get; set; }
         public string? Reason { get; set; }
     }
 
