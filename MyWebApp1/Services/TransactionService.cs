@@ -8,6 +8,7 @@ using MyWebApp1.Data;
 using MyWebApp1.Models;
 using Cursus_Api.Helper;
 using Microsoft.EntityFrameworkCore;
+using MyWebApp1.DTO;
 public class TransactionService
 {
     private readonly MyDbContext _context;
@@ -28,7 +29,8 @@ public class TransactionService
             TransactionStatusId = 1,
             TransactionTypeId = transactionTypeId,
             ShelterId = shelterId, 
-            Note = note
+            Note = note,
+            TransactionDate = DateTime.Now
         };
         _context.Transactions.Add(transaction);
         _context.SaveChanges();
@@ -89,7 +91,54 @@ public class TransactionService
         return paymentUrl;
     }
 
-    public async Task<List<Transaction>> GetTransactionsByShelterForStaffAsync(int userId)
+    public async Task<List<TransactionDto>> GetTransactionsByShelterForStaffAsync(int userId)
+    {
+        var user = await _context.Users
+                                 .Include(u => u.Shelter)
+                                 .FirstOrDefaultAsync(u => u.UserId == userId);
+
+        if (user == null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        // Kiểm tra role của user
+        var roleId = await _context.UserRoles
+                                   .Where(ur => ur.UserId == user.UserId)
+                                   .Select(ur => ur.RoleId)
+                                   .FirstOrDefaultAsync();
+
+        if (roleId != 4)
+        {
+            throw new Exception("User is not a staff.");
+        }
+
+        var transactions = await _context.Transactions
+                                         .Where(t => t.ShelterId == user.ShelterId)
+                                         .Include(t => t.User)
+                                         .Include(t => t.Shelter)
+                                         .Select(t => new TransactionDto
+                                         {
+                                             TransactionId = t.TransactionId,
+                                             TransactionAmount = t.TransactionAmount,
+                                             DonationEventId = t.DonationEventId,
+                                             UserId = t.UserId,
+                                             TransactionStatusId = t.TransactionStatusId,
+                                             TransactionTypeId = t.TransactionTypeId,
+                                             ShelterId = t.ShelterId,
+                                             ShelterName = t.Shelter.ShelterName,
+                                             Note = t.Note,
+                                             TransactionDate = t.TransactionDate,
+                                             FullName = t.User.Fullname,
+                                             Email = t.User.Email
+                                         })
+                                         .ToListAsync();
+
+        return transactions;
+    }
+
+
+    public async Task<List<Transaction>> GetTransactionsByUserId(int userId)
     {
         var user = await _context.Users
                                  .Include(u => u.Shelter)
@@ -105,14 +154,17 @@ public class TransactionService
                                    .Select(ur => ur.RoleId)
                                    .FirstOrDefaultAsync();
 
-        if (roleId != 4)
-        {
-            throw new Exception("User is not a staff.");
-        }
+        //if (roleId != 4)
+        //{
+        //    throw new Exception("User is not a staff.");
+        //}
 
         var transactions = await _context.Transactions
-                                         .Where(t => t.ShelterId == user.ShelterId)
+                                         .Where(u => u.UserId == user.UserId)
                                          .ToListAsync();
+        var shelter = await _context.Shelters
+                                        //.Where(u => u.UserId == user.UserId)
+                                        .ToListAsync();
 
         return transactions;
     }

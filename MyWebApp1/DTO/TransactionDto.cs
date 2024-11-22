@@ -1,37 +1,24 @@
-﻿using MyWebApp1.Models.MyWebApp1.Models;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using MyWebApp1.Models;
+using MyWebApp1.Models.MyWebApp1.Models;
 
-namespace MyWebApp1.Models
+namespace MyWebApp1.DTO
 {
-    [Table("Transaction")]
-    public class Transaction
+    public class TransactionDto
     {
-        [Key]
         public int TransactionId { get; set; }
-
-        [Required]
         public decimal TransactionAmount { get; set; }
         public int? DonationEventId { get; set; }
-
-        [Required]
         public int UserId { get; set; }
-
-        [Required]
         public int TransactionStatusId { get; set; }
-
-        [Required]
         public int TransactionTypeId { get; set; }
-
-        [Required]
         public int ShelterId { get; set; }
-
-        [MaxLength(200)]
         public string Note { get; set; }
         public DateTime? TransactionDate { get; set; }
-
-        [ForeignKey("ShelterId")]
-        public Shelter Shelter { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string ShelterName { get; set; }
         public User User { get; set; }
+        public Shelter Shelter { get; set; }
     }
+
 }

@@ -42,10 +42,10 @@ public class TransactionController : ControllerBase
             // Tạo giao dịch
             int transactionId = _transactionService.CreateTransaction(
                 request.TransactionAmount,
-                userId, // Sử dụng userId lấy từ JWT
+                userId,
                 request.TransactionTypeId,
-                request.ShelterId, // Thêm giá trị ShelterId
-                request.Note // Thêm giá trị Note
+                request.ShelterId,
+                request.Note
             );
 
             // Tạo URL thanh toán
@@ -98,6 +98,20 @@ public class TransactionController : ControllerBase
         try
         {
             var transactions = await _transactionService.GetTransactionsByShelterForStaffAsync(userId);
+            return Ok(transactions);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("shelter-transactions-by-user")]
+    public async Task<IActionResult> GetTransactionsByUserId(int userId)
+    {
+        try
+        {
+            var transactions = await _transactionService.GetTransactionsByUserId(userId);
             return Ok(transactions);
         }
         catch (Exception ex)

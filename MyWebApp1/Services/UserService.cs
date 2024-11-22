@@ -232,7 +232,6 @@ namespace MyWebApp1.Services
                 DateGet = request.DateGet,
                 PlaceGet = request.PlaceGet,
                 UsualAddress = request.UsualAddress,
-                IsApprovedUser = false
             };
 
             _dbContext.UserApproves.Add(userApprove);
@@ -302,7 +301,7 @@ namespace MyWebApp1.Services
         {
             //list các pet có isApproved = true và isAdopted = false
             return await _dbContext.Pets
-                .Where(pet => pet.IsApproved && !pet.IsAdopted)
+                .Where(pet => pet.IsApproved && pet.IsAdopted == false)
                 .Select(pet => new PetListDTO
                 {
                     PetId = pet.PetId,
@@ -334,8 +333,8 @@ namespace MyWebApp1.Services
         public async Task<PetListDTO> GetApprovedPet(int petId)
         {
             var pet = await _dbContext.Pets
-                .Include(p => p.PetImages) // Bao gồm PetImages để lấy hình ảnh
-                .Include(p => p.ShelterName)   // Bao gồm Shelter để lấy thông tin shelter
+                .Include(p => p.PetImages) //lấy hình ảnh
+                .Include(p => p.ShelterName)//lấy thông tin shelter
                 .FirstOrDefaultAsync(p => p.PetId == petId && p.IsApproved == true);
 
             if (pet == null)
@@ -365,7 +364,8 @@ namespace MyWebApp1.Services
                 ApprovedByUserId = pet.ApprovedByUserId,
                 ShelterId = pet.ShelterId,
                 ShelterLocation = pet.ShelterName?.ShelterLocation,
-                ShelterName = pet.ShelterName?.ShelterName
+                ShelterName = pet.ShelterName?.ShelterName,
+                CreateAt = pet.CreatedAt
             };
         }
 
@@ -393,8 +393,8 @@ namespace MyWebApp1.Services
         public async Task<List<Pet>> GetPetsByShelter(int shelterId)
         {
             var pets = await _dbContext.Pets
-                .Include(p => p.PetImages)  // Eager load the PetImages
-                .Where(p => p.ShelterId == shelterId && p.IsApproved)
+                .Include(p => p.PetImages)
+                .Where(p => p.ShelterId == shelterId && p.IsApproved && p.IsAdopted == false)
                 .ToListAsync();
             return pets;
         }

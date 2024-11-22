@@ -109,9 +109,26 @@ namespace MyWebApp1.Controllers
             }
             else
             {
-                return NotFound(new { Message = "No pending approve requests found" });
+                return Ok(new { Message = "No pending approve requests found", Data = pendingRequests });
             }
         }
+
+        //[HttpGet("approved-or-pending-requests")]
+        //public IActionResult GetApprovedOrPendingRequests()
+        //{
+        //    try
+        //    {
+        //        // Gọi phương thức từ service để lấy danh sách yêu cầu
+        //        var requests = _adminService.GetApprovedOrPendingRequests();
+
+        //        // Trả về danh sách
+        //        return Ok(requests);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new { Message = "An error occurred while fetching requests.", Details = ex.Message });
+        //    }
+        //}
 
 
         //[Authorize(Policy = "AdminOnly")]
@@ -156,8 +173,6 @@ namespace MyWebApp1.Controllers
             else
                 return NoContent();
         }
-
-        
 
         //[Authorize(Policy = "AdminOnly")]
         [HttpDelete("remove-user-role/{userId}")]
@@ -219,6 +234,19 @@ namespace MyWebApp1.Controllers
             }
         }
 
+        [HttpGet("dashboard/adoption-transaction")]
+        public async Task<IActionResult> GetDashboardAdoption()
+        {
+            try
+            {
+                var stats = await _adminService.GetDashboardAdoption();
+                return Ok(stats);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
     }
 
 }

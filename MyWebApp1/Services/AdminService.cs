@@ -13,65 +13,93 @@ namespace MyWebApp1.Services
     {
         private readonly MyDbContext _dbContext;
         private readonly IEmailService _emailService;
+        private readonly AdoptionService _adoption;
 
-        public AdminService(MyDbContext dbContext, IEmailService emailService)
+        public AdminService(MyDbContext dbContext, IEmailService emailService, AdoptionService adoption)
         {
             _dbContext = dbContext;
             _emailService = emailService;
+            _adoption = adoption;
         }
 
         public List<UserApprove> GetPendingApproveRequests()
         {
             var pendingRequests = _dbContext.UserApproves
-                                             .Where(ua => ua.IsApprovedUser == false)
+                                             //.Where(ua => ua.IsApprovedUser == false)
                                              .ToList();
 
             return pendingRequests;
         }
 
-
         public async Task<bool> ApproveUser(int approveId, bool isApproved)
         {
             var userApprove = await _dbContext.UserApproves.FindAsync(approveId);
 
-            if (userApprove != null)
+            if (userApprove == null)
             {
-                userApprove.IsApprovedUser = isApproved;
+                throw new Exception("Approval request not found.");
+            }
+
+            Mailrequest mailrequest = null;
+
+            // IsApprovedUser là false, xóa request và gửi email
+            if (!isApproved)
+            {
+                _dbContext.UserApproves.Remove(userApprove);
 
                 var user = await _dbContext.Users.FindAsync(userApprove.UserId);
                 if (user != null)
                 {
-                    user.IsApprovedUser = isApproved;
-                }
-
-                _dbContext.Entry(userApprove).State = EntityState.Modified;
-                if (user != null)
-                {
+                    user.IsApprovedUser = false;
                     _dbContext.Entry(user).State = EntityState.Modified;
+
+                    mailrequest = new Mailrequest
+                    {
+                        ToEmail = user.Email,
+                        Subject = "Approval Status Notification from PawFund",
+                        Body = $"Hello {user.Username}, your approval request has been denied. Please contact PawFund for further information."
+                    };
+
+                    await _emailService.SendEmail(mailrequest);
                 }
 
                 await _dbContext.SaveChangesAsync();
 
-                if (user == null || string.IsNullOrEmpty(user.Email))
-                {
-                    throw new Exception("User email not found.");
-                }
-
-                var approvalStatus = isApproved ? "approved" : "denied";
-                var mailrequest = new Mailrequest
-                {
-                    ToEmail = user.Email,
-                    Subject = "Approval Status Notification from PawFund",
-                    Body = $"Hello {user.Username}, your information has been approved successfully. Thank you! From PawFund Team."
-                };
-
-                await _emailService.SendEmail(mailrequest);
-
                 return true;
             }
 
-            return false;
+            // IsApprovedUser là true
+            userApprove.IsApprovedUser = true;
+
+            var linkedUser = await _dbContext.Users.FindAsync(userApprove.UserId);
+            if (linkedUser != null)
+            {
+                linkedUser.IsApprovedUser = true;
+                _dbContext.Entry(linkedUser).State = EntityState.Modified;
+
+                mailrequest = new Mailrequest
+                {
+                    ToEmail = linkedUser.Email,
+                    Subject = "Approval Status Notification from PawFund",
+                    Body = $"Hello {linkedUser.Username}, your information has been approved successfully. Thank you! From PawFund Team."
+                };
+
+                await _emailService.SendEmail(mailrequest);
+            }
+
+            _dbContext.Entry(userApprove).State = EntityState.Modified;
+
+            await _dbContext.SaveChangesAsync();
+
+            if (linkedUser == null || string.IsNullOrEmpty(linkedUser.Email))
+            {
+                throw new Exception("User email not found.");
+            }
+
+            return true;
         }
+
+
         public List<User> GetUsers()
         {
             return _dbContext.Users.ToList();
@@ -217,6 +245,41 @@ namespace MyWebApp1.Services
             await _dbContext.SaveChangesAsync();
 
             return true;
+        }
+       
+        public async Task<DashboardStatsDto> GetDashboardAdoption()
+        {
+            var adoptionRequests = _dbContext.Adoptions;
+
+            var totalAdoptionRequests = await adoptionRequests.CountAsync();
+
+            var approvedAdoptionRequests = await adoptionRequests.CountAsync(r => r.IsApproved == 1);
+
+            var pendingAdoptionRequests = await adoptionRequests.CountAsync(r => r.IsApproved == 2);
+
+            var rejectedAdoptionRequests = await adoptionRequests.CountAsync(r => r.IsApproved == 0);
+
+            var shelterDonations = await _dbContext.Transactions
+                                                  .Where(t => t.TransactionTypeId == 1)
+                                                  .GroupBy(t => t.ShelterId)
+                                                  .Select(g => new ShelterDonationDto
+                                                  {
+                                                      ShelterId = g.Key,
+                                                      TotalDonation = g.Sum(t => t.TransactionAmount)
+                                                  })
+                                                  .ToListAsync();
+
+            var totalDonations = shelterDonations.Sum(s => s.TotalDonation);
+
+            return new DashboardStatsDto
+            {
+                TotalAdoptionRequests = totalAdoptionRequests,
+                ApprovedAdoptionRequests = approvedAdoptionRequests,
+                PendingAdoptionRequests = pendingAdoptionRequests,
+                RejectedAdoptionRequests = rejectedAdoptionRequests,
+                ShelterDonations = shelterDonations,
+                TotalDonations = totalDonations
+            };
         }
 
     }

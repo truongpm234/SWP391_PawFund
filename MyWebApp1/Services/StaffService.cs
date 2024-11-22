@@ -271,24 +271,38 @@ namespace MyWebApp1.Services
             }
 
             var adoption = await _context.Adoptions.FindAsync(adoptionId);
+
+            if (adoption == null)
+            {
+                throw new Exception("Adoption request not found.");
+            }
+
             var pet = await _context.Pets.FindAsync(adoption.PetId);
+
+            if (pet == null)
+            {
+                throw new Exception("Pet not found.");
+            }
 
             if (pet.ShelterId != user.ShelterId)
             {
                 throw new Exception("You can only approve adoptions for pets in your shelter.");
             }
-            // Cập nhật trạng thái phê duyệt cho yêu cầu nhận nuôi
-            adoption.IsApproved = request.IsApproved;
 
-            //từ chối
-            if (request.IsApproved != 1)
+            adoption.IsApproved = request.IsApproved;
+            if (request.IsApproved != 2)
             {
                 adoption.Reason = request.Reason;
             }
-            else
+
+            if (request.IsApproved == 1)
             {
-                //phê duyệt
                 pet.IsAdopted = true;
+            }
+            else if (request.IsApproved == 0 || request.IsApproved == 2)
+            {
+                pet.IsAdopted = false;
+                adoption.Reason = request.Reason; 
             }
 
             await _context.SaveChangesAsync();
@@ -299,7 +313,6 @@ namespace MyWebApp1.Services
                 throw new Exception("Email not found.");
             }
 
-            // Gửi email thông báo
             Mailrequest mailrequest = new Mailrequest
             {
                 ToEmail = userEmail,
@@ -311,7 +324,6 @@ namespace MyWebApp1.Services
 
             return true;
         }
-
 
         public IEnumerable<object> GetAdoptions()
         {

@@ -43,6 +43,7 @@
         public int? ShelterId { get; set; }
         public string? ShelterLocation { get; set; }
         public string ShelterName { get; set; }
+        public DateTime CreateAt { get; set; }
 
     }
 }
