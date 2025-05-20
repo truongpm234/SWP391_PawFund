@@ -40,8 +40,6 @@ Người dùng có thể đăng ký, gửi đơn xin nhận nuôi, quản lý da
 1. Clone this repository  
 2. Configure your database connection string in `appsettings.json`  
 3. Build and run the application with your preferred IDE or CLI  
-4. Access API via `https://localhost:{port}/api/...`  
-
 ---
 
 ### 🚀 Usage
@@ -76,9 +74,9 @@ Người dùng có thể đăng ký, gửi đơn xin nhận nuôi, quản lý da
 
 We welcome contributions!  
 - Fork the repo  
-- Create a feature branch (`git checkout -b feature/your-feature`)  
-- Commit your changes (`git commit -m 'Add some feature'`)  
-- Push to branch (`git push origin feature/your-feature`)  
+- Create a feature branch 
+- Commit your changes
+- Push to branch
 - Open a Pull Request  
 
 Please make sure to follow the coding conventions and include relevant tests.
@@ -87,7 +85,7 @@ Please make sure to follow the coding conventions and include relevant tests.
 
 ### 📬 Contact
 
-For questions, feedback, or collaboration opportunities:  [Email]ghoul1645@gmail.com
+For questions, feedback, or collaboration opportunities:  [Email](ghoul1645@gmail.com)
 
 ---
 
