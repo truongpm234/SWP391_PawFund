@@ -26,8 +26,8 @@ ______________________________________________
 
 
 ### 📁 Structure
-Models/ – Entity classes
-Services/ – Business logic and email service
+Models/ – Entity classes <br>
+Services/ – Business logic and email service <br>
 Controllers/ – API endpoints
 ______________________________________________
 
