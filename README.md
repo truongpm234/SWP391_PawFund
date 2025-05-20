@@ -1,7 +1,7 @@
 ## 🐾 PawFund Platform
 PawFund is a web-based platform designed to support the adoption and fundraising of abandoned or shelter animals. It allows users to register, apply for adoption approval, manage pet listings, donate, and more.
 
-### Note: This repository contains the backend API built with ASP.NET Core and Entity Framework Core.
+##### Note: This repository contains the backend API built with ASP.NET Core and Entity Framework Core.
 👉 The frontend repository can be found here: https://github.com/tamFEDev/pawfundFE
 
 #### 🌟 Features
