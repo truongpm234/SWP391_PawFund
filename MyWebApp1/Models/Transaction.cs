@@ -1,5 +1,4 @@
-﻿using MyWebApp1.Models.MyWebApp1.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWebApp1.Models
@@ -12,11 +11,6 @@ namespace MyWebApp1.Models
 
         [Required]
         public decimal TransactionAmount { get; set; }
-
-        public bool IsMoneyDonation { get; set; }
-
-        public bool IsResourceDonation { get; set; }
-
         public int? DonationEventId { get; set; }
 
         [Required]
@@ -28,8 +22,13 @@ namespace MyWebApp1.Models
         [Required]
         public int TransactionTypeId { get; set; }
 
-        // Navigation properties
-       
+        [Required]
+        public int ShelterId { get; set; } // Thêm trường ShelterId
 
+        [MaxLength(200)]
+        public string Note { get; set; } // Thêm trường Note
+
+        [ForeignKey("ShelterId")]
+        public Shelter Shelter { get; set; }
     }
 }

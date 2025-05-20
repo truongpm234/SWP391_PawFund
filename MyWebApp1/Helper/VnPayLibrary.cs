@@ -90,7 +90,6 @@ namespace Cursus_Api.Helper
                                 WebUtility.UrlEncode(kv.Value) + "&");
                 }
             }
-
             if (data.Length > 0)
             {
                 data.Remove(data.Length - 1, 1);
